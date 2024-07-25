@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="PyIgnoreUnresolved" pattern="file[ballisticakit]:*||file:tools/pcommand" />
+</component>

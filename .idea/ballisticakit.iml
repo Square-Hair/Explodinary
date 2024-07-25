@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/ba_data/python" isTestSource="false" />
+      <excludePattern pattern=".assetcache" />
+      <excludePattern pattern=".cache*" />
+      <excludePattern pattern=".clang-format" />
+      <excludePattern pattern=".dir-locals.el" />
+      <excludePattern pattern=".dmypy.json" />
+      <excludePattern pattern=".git" />
+      <excludePattern pattern=".hg" />
+      <excludePattern pattern=".irony" />
+      <excludePattern pattern=".mypy.ini" />
+      <excludePattern pattern=".mypy_cache" />
+      <excludePattern pattern=".projectile" />
+      <excludePattern pattern=".pycheckers" />
+      <excludePattern pattern=".pylintrc" />
+      <excludePattern pattern=".style.yapf" />
+      <excludePattern pattern=".gitmodules" />
+      <excludePattern pattern=".svn" />
+      <excludePattern pattern=".xc_build_path.json" />
+      <excludePattern pattern="CVS" />
+      <excludePattern pattern="__pycache__" />
+      <excludePattern pattern="_svn" />
+      <excludePattern pattern="vssver.scc" />
+      <excludePattern pattern="vssver2.scc" />
+      <excludePattern pattern="manifest.json" />
+      <excludePattern pattern=".spinoffdata" />
+      <excludePattern pattern=".asset_manifest_*.json" />
+      <excludePattern pattern=".efrocachemap" />
+      <excludePattern pattern=".pytest_cache" />
+      <excludePattern pattern=".editorconfig" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.11 (pyba11)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

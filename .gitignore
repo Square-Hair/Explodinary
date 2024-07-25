@@ -1,0 +1,7 @@
+# We don't want to track these
+*.pyc
+*.ini
+.vscode
+
+__pycache__
+debug.log
