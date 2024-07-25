@@ -55,7 +55,7 @@ class PowerupBoxFactory:
         self.tex_bomb =                 bs.gettexture('powerupBomb')
         self.tex_punch =                bs.gettexture('powerupPunch')
         self.tex_dash =                 bs.gettexture('bse_powerupDash')
-        self.tex_fly_punch =            bs.gettexture('bse_chaosJumpymania')
+        self.tex_fly_punch =            bs.gettexture('bse_powerupFlyingPunch'),
         self.tex_ice_bombs =            bs.gettexture('powerupIceBombs')
         self.tex_sticky_bombs =         bs.gettexture('powerupStickyBombs')
         self.tex_tacky_bombs =          bs.gettexture('bse_powerupTackyBombs')

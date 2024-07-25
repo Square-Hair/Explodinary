@@ -43,7 +43,7 @@ class ExplodinarySettings(bui.Window):
         height = self.height = 575 if uiscale is bui.UIScale.SMALL else 550
         width = self.width = 900 if uiscale is bui.UIScale.SMALL else 550
         spacing = 32
-        
+
         self._have_selected_child = False
 
         base_scale = (
@@ -119,7 +119,7 @@ class ExplodinarySettings(bui.Window):
             self.travel_buttons[x] = bui.buttonwidget(
                 parent=self._root_widget,
                 position=npos,
-                size=(45,45),  
+                size=(45,45),
                 scale=1,
                 text_scale=1.2,
                 autoselect=True,
@@ -153,7 +153,7 @@ class ExplodinarySettings(bui.Window):
         height = self.height = 575 if uiscale is bui.UIScale.SMALL else 550
         width = self.width = 900 if uiscale is bui.UIScale.SMALL else 550
         spacing = 32
-        
+
         self._have_selected_child = False
 
         base_scale = (
@@ -172,7 +172,7 @@ class ExplodinarySettings(bui.Window):
 
         for c in self._root_widget.get_children():
             if not c in self._dont_delete: c.delete()
-        
+
         for i,b in enumerate(self.travel_buttons):
             if (self._section == 0 and i == 0) or (self._section == self.tab_amount and i == 1):
                 bui.buttonwidget(
@@ -217,7 +217,7 @@ class ExplodinarySettings(bui.Window):
                 )
             s_pos_y -= 60
 
-            ### Item Distributions 
+            ### Item Distributions
             settingtitle = bui.textwidget(
                 parent=self._root_widget,
                 position=(s_pos_x,s_pos_y),
@@ -263,7 +263,7 @@ class ExplodinarySettings(bui.Window):
             alldists = all_powerup_dists()
 
             for x in alldists.keys():
-                dist_choice[0].append(x) 
+                dist_choice[0].append(x)
                 dist_choice[1].append(bui.Lstr(resource=f'{suffix}{alldists.get(x)[1]}.t'))
 
             pp = popup.PopupMenu( # hehe, pp
@@ -334,7 +334,7 @@ class ExplodinarySettings(bui.Window):
             bui.buttonwidget(edit=cm.get_button(),
                             label=bui.Lstr(resource='configureText'),
                             on_activate_call=self._chaos_press)
-        
+
             # Cutscene Skip
             thk = f'{self._r}.skipscene.choices'
             cts = self._build_setting(
@@ -353,7 +353,7 @@ class ExplodinarySettings(bui.Window):
             bui.textwidget(edit=self._subtitle,
                           text=bui.Lstr(resource=self._r + '.Customization'),
                           )
-            
+
             # Menu Theme
             thk = f'{self._r}.menuTheme.themes'
             mt = self._build_setting(
@@ -426,7 +426,7 @@ class ExplodinarySettings(bui.Window):
         def return_current_selection_description(pointer:str) -> str:
             try: return(self._r + f'.powerupDist.dists.{all_powerup_dists().get(pointer)[1]}.d')
             except: return(self._r + f'.powerupDist.dists.??.d')
-        
+
         sub = self._powerupsuba
         psub_w = self.width/1.9
         psub_h = self.width/3.5
@@ -496,7 +496,7 @@ class ExplodinarySettings(bui.Window):
 
             def indicator_text() -> str:
                 return(bui.Lstr(resource=f'{self._r}.powerupDist.rarity.{"{:02d}".format(me[1])}'))
-            
+
             indicate = bui.textwidget(
                 parent=subc,
                 position=(icopos_x + (-2 * (45*3.3 / self.prevscale)), icopos_y - (row_pad*1.15) - ((45/self.prevscale)-1)*3.3),
@@ -540,7 +540,7 @@ class ExplodinarySettings(bui.Window):
         #        edit=pp.get_button(),
         #        down_widget=subc,
         #    )
-        
+
         ## Wire our travel buttons so we don't loop around & select to the dist. button once we scroll all the way up
         #bui.buttonwidget( # Up to Dist. button
         #    edit=btnl[0],
@@ -562,7 +562,7 @@ class ExplodinarySettings(bui.Window):
             from bascenev1lib.mainmenu import MainMenuSession
             bui.app.ui_v1.set_main_menu_location('Settings Window')
             bascenev1.new_host_session(MainMenuSession)
-        else: 
+        else:
             bui.app.ui_v1.set_main_menu_window(
                 allsettings.AllSettingsWindow(
                     transition='in_left'
@@ -602,7 +602,7 @@ class ExplodinarySettings(bui.Window):
             theme_choices_display: list | None = None,
             on_change_call: any | None = None
     ) -> popup.PopupMenu:
-        
+
         # Default to True & False settings if not assigned
         if not choices: choices = [True,False]
         if not choices_display:
@@ -638,7 +638,7 @@ class ExplodinarySettings(bui.Window):
             h_align='center',
             v_align='center',
         )
-        
+
         # Subtitle if it exists
         if subtitle:
             bui.textwidget(
