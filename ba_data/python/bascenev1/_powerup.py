@@ -7,10 +7,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-import bascenev1 as bs
-
 if TYPE_CHECKING:
     from typing import Sequence
+
+    import bascenev1
 
 
 @dataclass
@@ -19,95 +19,42 @@ class PowerupMessage:
 
     Category: **Message Classes**
 
-    This message is normally received by touching a bs.PowerupBox.
+    This message is normally received by touching a bascenev1.PowerupBox.
     """
 
     poweruptype: str
     """The type of powerup to be granted (a string).
-       See bs.Powerup.poweruptype for available type values."""
+       See bascenev1.Powerup.poweruptype for available type values."""
 
-    sourcenode: bs.Node | None = None
-    """The node the powerup came from, or None otherwise.
-       If a powerup is accepted, a bs.PowerupAcceptMessage should be sent
-       back to the sourcenode to inform it of the fact. This will generally
-       cause the powerup box to make a sound and disappear or whatnot."""
-
-    showtooltip: bool = True
-    """Whether we show a powerup tooltip or not.
-       Used on Chaos Mode when providing players with powerups.
-       If True, it will take in consideration player settings regardless."""
+    sourcenode: bascenev1.Node | None = None
+    """The node the powerup game from, or None otherwise.
+       If a powerup is accepted, a bascenev1.PowerupAcceptMessage should be
+       sent back to the sourcenode to inform it of the fact. This will
+       generally cause the powerup box to make a sound and disappear or
+       whatnot."""
 
 
 @dataclass
 class PowerupAcceptMessage:
-    """A message informing a bs.Powerup that it was accepted.
+    """A message informing a bascenev1.Powerup that it was accepted.
 
     Category: **Message Classes**
 
-    This is generally sent in response to a bs.PowerupMessage
+    This is generally sent in response to a bascenev1.PowerupMessage
     to inform the box (or whoever granted it) that it can go away.
     """
 
-def all_powerup_dists() -> set:
-    """Get all the powerups!"""
-    return {
-
-        "Explodinary": [[
-         ('triple_bombs', 3), ('ice_bombs', 3), ('punch', 1), ('fly_punch', 1), ('dash', 1),
-         ('impact_bombs', 3), ('land_mines', 1), ('lite_mines', 1), ('flutter_mines', 1), ('glue_mines', 1), ('sticky_bombs', 3),
-         ('tacky_bombs', 3), ('clouder_bombs', 3), ('steampunk_bombs', 2), ('cluster_bombs', 2), ('toxic_bombs', 2), ('vital_bombs', 1), ('shield', 1), ('present', 1), ('health', 1), ('curse', 1)
-        ], "00"
-        ],
-
-        "Vanilla": [[
-         ('triple_bombs', 3), ('ice_bombs', 3), ('punch', 1), ('fly_punch', 0), ('dash', 0),
-         ('impact_bombs', 3), ('land_mines', 2), ('lite_mines', 0), ('flutter_mines', 0), ('glue_mines', 0), ('sticky_bombs', 3),
-         ('tacky_bombs', 0), ('clouder_bombs', 0), ('steampunk_bombs', 0), ('cluster_bombs', 0),  ('toxic_bombs', 0), ('vital_bombs', 0), ('shield', 1), ('present', 0), ('health', 1), ('curse', 1)
-        ], "01"
-        ],
-
-        "Simple": [[
-         ('triple_bombs', 3), ('ice_bombs', 3), ('punch', 1), ('fly_punch', 0), ('dash', 0),
-         ('impact_bombs', 3), ('land_mines', 2), ('lite_mines', 0), ('flutter_mines', 1), ('glue_mines', 0), ('sticky_bombs', 3),
-         ('tacky_bombs', 3), ('clouder_bombs', 2), ('steampunk_bombs', 0), ('cluster_bombs', 0),  ('toxic_bombs', 0), ('vital_bombs', 0), ('shield', 1), ('present', 1), ('health', 1), ('curse', 1)
-        ], "02"
-        ],
-
-        "Competitive": [[
-         ('triple_bombs', 3), ('ice_bombs', 3), ('punch', 0), ('fly_punch', 1), ('dash', 1),
-         ('impact_bombs', 3), ('land_mines', 2), ('lite_mines', 1), ('flutter_mines', 1), ('glue_mines', 1), ('sticky_bombs', 3),
-         ('tacky_bombs', 3), ('clouder_bombs', 3), ('steampunk_bombs', 3), ('cluster_bombs', 1),  ('toxic_bombs', 2), ('vital_bombs', 1), ('shield', 0), ('present', 1), ('health', 0), ('curse', 0)
-        ], "03"
-        ],
-
-        "Chaos": [[
-         ('triple_bombs', 3), ('ice_bombs', 0), ('punch', 0), ('fly_punch', 0), ('dash', 0),
-         ('impact_bombs', 0), ('land_mines', 0), ('lite_mines', 0), ('flutter_mines', 2), ('glue_mines', 2), ('sticky_bombs', 3),
-         ('tacky_bombs', 3), ('clouder_bombs', 3), ('steampunk_bombs', 0), ('cluster_bombs', 0),  ('toxic_bombs', 0), ('vital_bombs', 0), ('shield', 0), ('present', 3), ('health', 0), ('curse', 1)
-        ], "04"
-        ],
-
-        "No Powerups": [[
-         ('triple_bombs', 0), ('ice_bombs', 0), ('punch', 0), ('fly_punch', 0), ('dash', 0),
-         ('impact_bombs', 0), ('land_mines', 0), ('lite_mines', 0), ('flutter_mines', 0), ('glue_mines', 0), ('sticky_bombs', 0),
-         ('tacky_bombs', 0), ('clouder_bombs', 0), ('steampunk_bombs', 0), ('cluster_bombs', 0),  ('toxic_bombs', 0), ('vital_bombs', 0), ('shield', 0), ('present', 0), ('health', 0), ('curse', 0)
-        ], "05"
-        ],
-
-    }
 
 def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
     """Standard set of powerups."""
-    from bascenev1._coopsession import CoopSession
-    #import bascenev1 as bs
-
-    all_dists = all_powerup_dists()
-    try:
-        if not isinstance(bs.getsession(), CoopSession):
-            dist = all_dists.get(bs.app.config.get('BSE: Powerup Distribution', 'Explodinary'))[0]
-        else:
-            dist = all_dists.get('Explodinary')[0]
-    except:
-        dist = all_dists.get('Explodinary')[0]
-
-    return dist
+    return (
+        ('triple_bombs', 3),
+        ('ice_bombs', 3),
+        ('punch', 3),
+        ('impact_bombs', 3),
+        ('land_mines', 2),
+        ('sticky_bombs', 3),
+        ('shield', 2),
+        ('health', 1),
+        ('curse', 1),
+    )

@@ -126,7 +126,7 @@ class SpecialChar(Enum):
     OUYA_BUTTON_U = 23
     OUYA_BUTTON_Y = 24
     OUYA_BUTTON_A = 25
-    OUYA_LOGO = 26
+    TOKEN = 26
     LOGO = 27
     TICKET = 28
     GOOGLE_PLAY_GAMES_LOGO = 29

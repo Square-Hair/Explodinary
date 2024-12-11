@@ -39,7 +39,8 @@ class MainMenuWindow(bui.Window):
             bui.set_analytics_screen('Main Menu')
             self._show_remote_app_info_on_first_launch()
 
-        # Make a vanilla container; we'll modify it to our needs in refresh.
+        # Make a vanilla container; we'll modify it to our needs in
+        # refresh.
         super().__init__(
             root_widget=bui.containerwidget(
                 transition=transition,
@@ -91,7 +92,6 @@ class MainMenuWindow(bui.Window):
             0.27, bui.WeakCall(self._check_refresh), repeat=True
         )
 
-    # noinspection PyUnresolvedReferences
     @staticmethod
     def _preload_modules() -> None:
         """Preload modules we use; avoids hitches (called in bg thread)."""
@@ -162,8 +162,9 @@ class MainMenuWindow(bui.Window):
         if now < self._next_refresh_allow_time:
             return
 
-        # Don't refresh for the first few seconds the game is up so we don't
-        # interrupt the transition in.
+        # Don't refresh for the first few seconds the game is up so we
+        # don't interrupt the transition in.
+
         # bui.app.main_menu_window_refresh_check_count += 1
         # if bui.app.main_menu_window_refresh_check_count < 4:
         #     return
@@ -254,7 +255,7 @@ class MainMenuWindow(bui.Window):
                 size=(self._button_width, self._button_height),
                 scale=scale,
                 autoselect=self._use_autoselect,
-                label=bui.Lstr(resource=self._r + '.settingsText'),
+                label=bui.Lstr(resource=f'{self._r}.settingsText'),
                 transition_delay=self._tdelay,
                 on_activate_call=self._settings,
             )
@@ -323,7 +324,7 @@ class MainMenuWindow(bui.Window):
                     scale=scale,
                     size=(self._button_width, self._button_height),
                     autoselect=self._use_autoselect,
-                    label=bui.Lstr(resource=self._r + '.leavePartyText'),
+                    label=bui.Lstr(resource=f'{self._r}.leavePartyText'),
                     on_activate_call=self._confirm_leave_party,
                 )
 
@@ -413,8 +414,8 @@ class MainMenuWindow(bui.Window):
         else:
             self._quit_button = None
 
-            # If we're not in-game, have no quit button, and this is android,
-            # we want back presses to quit our activity.
+            # If we're not in-game, have no quit button, and this is
+            # android, we want back presses to quit our activity.
             if (
                 not self._in_game
                 and not self._have_quit_button
@@ -428,9 +429,9 @@ class MainMenuWindow(bui.Window):
                     edit=self._root_widget, on_cancel_call=_do_quit
                 )
 
-        # Add speed-up/slow-down buttons for replays.
-        # (ideally this should be part of a fading-out playback bar like most
-        # media players but this works for now).
+        # Add speed-up/slow-down buttons for replays. Ideally this
+        # should be part of a fading-out playback bar like most media
+        # players but this works for now.
         if bs.is_in_replay():
             b_size = 50.0
             b_buffer_1 = 50.0
@@ -605,13 +606,13 @@ class MainMenuWindow(bui.Window):
             def _set_allow_time() -> None:
                 self._next_refresh_allow_time = bui.apptime() + 2.5
 
-            # Slight hack: widget transitions currently only progress when
-            # frames are being drawn, but this tends to get called before
-            # frame drawing even starts, meaning we don't know exactly how
-            # long we should wait before refreshing to avoid interrupting
-            # the transition. To make things a bit better, let's do a
-            # redundant set of the time in a deferred call which hopefully
-            # happens closer to actual frame draw times.
+            # Slight hack: widget transitions currently only progress
+            # when frames are being drawn, but this tends to get called
+            # before frame drawing even starts, meaning we don't know
+            # exactly how long we should wait before refreshing to avoid
+            # interrupting the transition. To make things a bit better,
+            # let's do a redundant set of the time in a deferred call
+            # which hopefully happens closer to actual frame draw times.
             _set_allow_time()
             bui.pushcall(_set_allow_time)
 
@@ -880,7 +881,7 @@ class MainMenuWindow(bui.Window):
             scale=scale,
             autoselect=self._use_autoselect,
             size=(self._button_width, self._button_height),
-            label=bui.Lstr(resource=self._r + '.howToPlayText'),
+            label=bui.Lstr(resource=f'{self._r}.howToPlayText'),
             transition_delay=self._tdelay,
             on_activate_call=self._howtoplay,
         )
@@ -912,7 +913,7 @@ class MainMenuWindow(bui.Window):
             position=(h - self._button_width * 0.5 * scale, v),
             size=(self._button_width, self._button_height),
             autoselect=self._use_autoselect,
-            label=bui.Lstr(resource=self._r + '.creditsText'),
+            label=bui.Lstr(resource=f'{self._r}.creditsText'),
             scale=scale,
             transition_delay=self._tdelay,
             on_activate_call=self._credits,
@@ -1005,7 +1006,7 @@ class MainMenuWindow(bui.Window):
             position=(h - self._button_width / 2, v),
             size=(self._button_width, self._button_height),
             scale=scale,
-            label=bui.Lstr(resource=self._r + '.resumeText'),
+            label=bui.Lstr(resource=f'{self._r}.resumeText'),
             autoselect=self._use_autoselect,
             on_activate_call=self._resume,
         )
@@ -1056,7 +1057,7 @@ class MainMenuWindow(bui.Window):
                 and player_name[-1] != '>'
             ):
                 txt = bui.Lstr(
-                    resource=self._r + '.justPlayerText',
+                    resource=f'{self._r}.justPlayerText',
                     subs=[('${NAME}', player_name)],
                 )
             else:
@@ -1070,7 +1071,7 @@ class MainMenuWindow(bui.Window):
                     * (0.64 if player_name != '' else 0.5),
                 ),
                 size=(0, 0),
-                text=bui.Lstr(resource=self._r + '.leaveGameText'),
+                text=bui.Lstr(resource=f'{self._r}.leaveGameText'),
                 scale=(0.83 if player_name != '' else 1.0),
                 color=(0.75, 1.0, 0.7),
                 h_align='center',
@@ -1209,7 +1210,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.exitToMenuText'),
+            bui.Lstr(resource=f'{self._r}.exitToMenuText'),
             self._end_game,
             cancel_is_selected=True,
         )
@@ -1221,7 +1222,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.exitToMenuText'),
+            bui.Lstr(resource=f'{self._r}.exitToMenuText'),
             self._end_game,
             cancel_is_selected=True,
         )
@@ -1233,7 +1234,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.exitToMenuText'),
+            bui.Lstr(resource=f'{self._r}.exitToMenuText'),
             self._end_game,
             cancel_is_selected=True,
         )
@@ -1245,7 +1246,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.leavePartyConfirmText'),
+            bui.Lstr(resource=f'{self._r}.leavePartyConfirmText'),
             self._leave_party,
             cancel_is_selected=True,
         )

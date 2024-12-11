@@ -152,7 +152,7 @@ class ControlsSettingsWindow(bui.Window):
             parent=self._root_widget,
             position=(0, height - 49),
             size=(width, 25),
-            text=bui.Lstr(resource=self._r + '.titleText'),
+            text=bui.Lstr(resource=f'{self._r}.titleText'),
             color=bui.app.ui_v1.title_color,
             h_align='center',
             v_align='top',
@@ -173,7 +173,7 @@ class ControlsSettingsWindow(bui.Window):
                 position=((width - button_width) / 2, v),
                 size=(button_width, 43),
                 autoselect=True,
-                label=bui.Lstr(resource=self._r + '.configureTouchText'),
+                label=bui.Lstr(resource=f'{self._r}.configureTouchText'),
                 on_activate_call=self._do_touchscreen,
             )
             if bui.app.ui_v1.use_toolbars:
@@ -197,7 +197,7 @@ class ControlsSettingsWindow(bui.Window):
                 position=((width - button_width) / 2 - 7, v),
                 size=(button_width, 43),
                 autoselect=True,
-                label=bui.Lstr(resource=self._r + '.configureControllersText'),
+                label=bui.Lstr(resource=f'{self._r}.configureControllersText'),
                 on_activate_call=self._do_gamepads,
             )
             if bui.app.ui_v1.use_toolbars:
@@ -223,11 +223,14 @@ class ControlsSettingsWindow(bui.Window):
         if show_keyboard:
             self._keyboard_button = btn = bui.buttonwidget(
                 parent=self._root_widget,
-                position=((width - button_width) / 2 + 5, v),
+                position=((width - button_width) / 2 - 5, v),
                 size=(button_width, 43),
                 autoselect=True,
-                label=bui.Lstr(resource=self._r + '.configureKeyboardText'),
+                label=bui.Lstr(resource=f'{self._r}.configureKeyboardText'),
                 on_activate_call=self._config_keyboard,
+            )
+            bui.widget(
+                edit=self._keyboard_button, left_widget=self._keyboard_button
             )
             if bui.app.ui_v1.use_toolbars:
                 bui.widget(
@@ -249,10 +252,14 @@ class ControlsSettingsWindow(bui.Window):
                 position=((width - button_width) / 2 - 3, v),
                 size=(button_width, 43),
                 autoselect=True,
-                label=bui.Lstr(resource=self._r + '.configureKeyboard2Text'),
+                label=bui.Lstr(resource=f'{self._r}.configureKeyboard2Text'),
                 on_activate_call=self._config_keyboard2,
             )
             v -= spacing
+            bui.widget(
+                edit=self._keyboard_2_button,
+                left_widget=self._keyboard_2_button,
+            )
         if show_space_2:
             v -= space_height
         if show_remote:
@@ -261,8 +268,11 @@ class ControlsSettingsWindow(bui.Window):
                 position=((width - button_width) / 2 - 5, v),
                 size=(button_width, 43),
                 autoselect=True,
-                label=bui.Lstr(resource=self._r + '.configureMobileText'),
+                label=bui.Lstr(resource=f'{self._r}.configureMobileText'),
                 on_activate_call=self._do_mobile_devices,
+            )
+            bui.widget(
+                edit=self._idevices_button, left_widget=self._idevices_button
             )
             if bui.app.ui_v1.use_toolbars:
                 bui.widget(
@@ -289,7 +299,7 @@ class ControlsSettingsWindow(bui.Window):
                 bui.getsound('gunCocking').play()
                 bui.set_low_level_config_value('enablexinput', not value)
 
-            bui.checkboxwidget(
+            xinput_checkbox = bui.checkboxwidget(
                 parent=self._root_widget,
                 position=(100, v + 3),
                 size=(120, 30),
@@ -309,6 +319,11 @@ class ControlsSettingsWindow(bui.Window):
                 v_align='center',
                 color=bui.app.ui_v1.infotextcolor,
                 maxwidth=width * 0.8,
+            )
+            bui.widget(
+                edit=xinput_checkbox,
+                left_widget=xinput_checkbox,
+                right_widget=xinput_checkbox,
             )
             v -= spacing
 

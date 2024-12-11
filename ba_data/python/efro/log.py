@@ -10,13 +10,13 @@ import logging
 import datetime
 import itertools
 from enum import Enum
+from functools import partial
 from collections import deque
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Annotated, override
 from threading import Thread, current_thread, Lock
 
 from efro.util import utc_now
-from efro.call import tpartial
 from efro.terminal import Clr
 from efro.dataclassio import ioprepped, IOAttrs, dataclass_to_json
 
@@ -150,7 +150,6 @@ class LogHandler(logging.Handler):
         self._cache = deque[tuple[int, LogEntry]]()
         self._cache_index_offset = 0
         self._cache_lock = Lock()
-        # self._report_blocking_io_on_echo_error = False
         self._printed_callback_error = False
         self._thread_bootstrapped = False
         self._thread = Thread(target=self._log_thread_main, daemon=True)
@@ -179,7 +178,7 @@ class LogHandler(logging.Handler):
         # process cached entries at the same time to ensure there are no
         # race conditions that could cause entries to be skipped/etc.
         self._event_loop.call_soon_threadsafe(
-            tpartial(self._add_callback_in_thread, call, feed_existing_logs)
+            partial(self._add_callback_in_thread, call, feed_existing_logs)
         )
 
     def _add_callback_in_thread(
@@ -343,7 +342,7 @@ class LogHandler(logging.Handler):
             if __debug__:
                 formattime = echotime = time.monotonic()
             self._event_loop.call_soon_threadsafe(
-                tpartial(
+                partial(
                     self._emit_in_thread,
                     record.name,
                     record.levelno,
@@ -396,7 +395,7 @@ class LogHandler(logging.Handler):
                 echotime = time.monotonic()
 
             self._event_loop.call_soon_threadsafe(
-                tpartial(
+                partial(
                     self._emit_in_thread,
                     record.name,
                     record.levelno,
@@ -428,7 +427,7 @@ class LogHandler(logging.Handler):
                 # the bg event loop thread we've already got.
                 self._last_slow_emit_warning_time = now
                 self._event_loop.call_soon_threadsafe(
-                    tpartial(
+                    partial(
                         logging.warning,
                         'efro.log.LogHandler emit took too long'
                         ' (%.2fs total; %.2fs format, %.2fs echo,'
@@ -478,7 +477,7 @@ class LogHandler(logging.Handler):
         # another thread for each character. Perhaps should do some sort
         # of basic accumulation here?
         self._event_loop.call_soon_threadsafe(
-            tpartial(self._file_write_in_thread, name, output)
+            partial(self._file_write_in_thread, name, output)
         )
 
     def _file_write_in_thread(self, name: str, output: str) -> None:
@@ -515,11 +514,30 @@ class LogHandler(logging.Handler):
 
             traceback.print_exc(file=self._echofile)
 
+    def shutdown(self) -> None:
+        """Block until all pending logs/prints are done."""
+        done = False
+        self.file_flush('stdout')
+        self.file_flush('stderr')
+
+        def _set_done() -> None:
+            nonlocal done
+            done = True
+
+        self._event_loop.call_soon_threadsafe(_set_done)
+
+        starttime = time.monotonic()
+        while not done:
+            if time.monotonic() - starttime > 5.0:
+                print('LogHandler shutdown hung!!!', file=sys.stderr)
+                break
+            time.sleep(0.01)
+
     def file_flush(self, name: str) -> None:
         """Send raw stdout/stderr flush to the logger to be collated."""
 
         self._event_loop.call_soon_threadsafe(
-            tpartial(self._file_flush_in_thread, name)
+            partial(self._file_flush_in_thread, name)
         )
 
     def _file_flush_in_thread(self, name: str) -> None:
@@ -721,11 +739,7 @@ def setup_logging(
     # Optionally intercept Python's stdout/stderr output and generate
     # log entries from it.
     if log_stdout_stderr:
-        sys.stdout = FileLogEcho(  # type: ignore
-            sys.stdout, 'stdout', loghandler
-        )
-        sys.stderr = FileLogEcho(  # type: ignore
-            sys.stderr, 'stderr', loghandler
-        )
+        sys.stdout = FileLogEcho(sys.stdout, 'stdout', loghandler)
+        sys.stderr = FileLogEcho(sys.stderr, 'stderr', loghandler)
 
     return loghandler

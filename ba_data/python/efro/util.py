@@ -8,14 +8,12 @@ import os
 import time
 import weakref
 import datetime
-import functools
 from enum import Enum
-from typing import TYPE_CHECKING, cast, TypeVar, Generic
+from typing import TYPE_CHECKING, cast, TypeVar, Generic, overload
 
 if TYPE_CHECKING:
     import asyncio
-    from efro.call import Call as Call  # 'as Call' so we re-export.
-    from typing import Any, Callable
+    from typing import Any, Callable, Literal
 
 T = TypeVar('T')
 ValT = TypeVar('ValT')
@@ -33,13 +31,6 @@ class _EmptyObj:
 # one and return it for all cases that need an empty weak-ref.
 _g_empty_weak_ref = weakref.ref(_EmptyObj())
 assert _g_empty_weak_ref() is None
-
-
-# TODO: kill this and just use efro.call.tpartial
-if TYPE_CHECKING:
-    Call = Call
-else:
-    Call = functools.partial
 
 
 def explicit_bool(val: bool) -> bool:
@@ -536,6 +527,21 @@ def make_hash(obj: Any) -> int:
     return hash(tuple(frozenset(sorted(new_obj.items()))))
 
 
+def float_hash_from_string(s: str) -> float:
+    """Given a string value, returns a float between 0 and 1.
+
+    If consistent across processes. Can be useful for assigning db ids
+    shard values for efficient parallel processing.
+    """
+    import hashlib
+
+    hash_bytes = hashlib.md5(s.encode()).digest()
+
+    # Generate a random 64 bit int from hash digest bytes.
+    ival = int.from_bytes(hash_bytes[:8])
+    return ival / ((1 << 64) - 1)
+
+
 def asserttype(obj: Any, typ: type[T]) -> T:
     """Return an object typed as a given type.
 
@@ -898,3 +904,58 @@ def split_list(input_list: list[T], max_length: int) -> list[list[T]]:
         input_list[i : i + max_length]
         for i in range(0, len(input_list), max_length)
     ]
+
+
+def extract_flag(args: list[str], name: str) -> bool:
+    """Given a list of args and a flag name, returns whether it is present.
+
+    The arg flag, if present, is removed from the arg list.
+    """
+    from efro.error import CleanError
+
+    count = args.count(name)
+    if count > 1:
+        raise CleanError(f'Flag {name} passed multiple times.')
+    if not count:
+        return False
+    args.remove(name)
+    return True
+
+
+@overload
+def extract_arg(
+    args: list[str], name: str, required: Literal[False] = False
+) -> str | None: ...
+
+
+@overload
+def extract_arg(args: list[str], name: str, required: Literal[True]) -> str: ...
+
+
+def extract_arg(
+    args: list[str], name: str, required: bool = False
+) -> str | None:
+    """Given a list of args and an arg name, returns a value.
+
+    The arg flag and value are removed from the arg list.
+    raises CleanErrors on any problems.
+    """
+    from efro.error import CleanError
+
+    count = args.count(name)
+    if not count:
+        if required:
+            raise CleanError(f'Required argument {name} not passed.')
+        return None
+
+    if count > 1:
+        raise CleanError(f'Arg {name} passed multiple times.')
+
+    argindex = args.index(name)
+    if argindex + 1 >= len(args):
+        raise CleanError(f'No value passed after {name} arg.')
+
+    val = args[argindex + 1]
+    del args[argindex : argindex + 2]
+
+    return val

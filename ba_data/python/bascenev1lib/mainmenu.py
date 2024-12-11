@@ -8,7 +8,7 @@ from __future__ import annotations
 import time
 import random
 import weakref
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 import bascenev1 as bs
 import bauiv1 as bui
@@ -42,7 +42,9 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         self._language: str | None = None
         self._update_timer: bs.Timer | None = None
         self._news: NewsDisplay | None = None
+        self._attract_mode_timer: bs.Timer | None = None
 
+    @override
     def on_transition_in(self) -> None:
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-statements
@@ -83,7 +85,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                         'scale': scale,
                         'position': (0, 10),
                         'vr_depth': -10,
-                        'text': '\xa9 2011-2023 Eric Froemling',
+                        'text': '\xa9 2011-2024 Eric Froemling',
                     },
                 )
             )
@@ -131,8 +133,8 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     text = bs.Lstr(
                         value='${V} (${B}) (${D})',
                         subs=[
-                            ('${V}', app.env.version),
-                            ('${B}', str(app.env.build_number)),
+                            ('${V}', app.env.engine_version),
+                            ('${B}', str(app.env.engine_build_number)),
                             ('${D}', bs.Lstr(resource='debugText')),
                         ],
                     )
@@ -140,12 +142,14 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     text = bs.Lstr(
                         value='${V} (${B})',
                         subs=[
-                            ('${V}', app.env.version),
-                            ('${B}', str(app.env.build_number)),
+                            ('${V}', app.env.engine_version),
+                            ('${B}', str(app.env.engine_build_number)),
                         ],
                     )
             else:
-                text = bs.Lstr(value='${V}', subs=[('${V}', app.env.version)])
+                text = bs.Lstr(
+                    value='${V}', subs=[('${V}', app.env.engine_version)]
+                )
             scale = 0.9 if (uiscale is bs.UIScale.SMALL or vr_mode) else 0.7
             color = (1, 1, 1, 1) if vr_mode else (0.5, 0.6, 0.5, 0.7)
             self.version = bs.NodeActor(
@@ -295,6 +299,10 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         if not (env.demo or env.arcade) and not app.ui_v1.use_toolbars:
             self._news = NewsDisplay(self)
 
+        self._attract_mode_timer = bs.Timer(
+            3.12, self._update_attract_mode, repeat=True
+        )
+
         # Bring up the last place we were, or start at the main menu otherwise.
         with bs.ContextRef.empty():
             from bauiv1lib import specialoffer
@@ -317,7 +325,8 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     from bauiv1lib.kiosk import KioskWindow
 
                     bs.app.ui_v1.set_main_menu_window(
-                        KioskWindow().get_root_widget()
+                        KioskWindow().get_root_widget(),
+                        from_window=False,  # Disable check here.
                     )
                 # ..or in normal cases go back to the main menu
                 else:
@@ -326,14 +335,16 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                         from bauiv1lib.gather import GatherWindow
 
                         bs.app.ui_v1.set_main_menu_window(
-                            GatherWindow(transition=None).get_root_widget()
+                            GatherWindow(transition=None).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
                     elif main_menu_location == 'Watch':
                         # pylint: disable=cyclic-import
                         from bauiv1lib.watch import WatchWindow
 
                         bs.app.ui_v1.set_main_menu_window(
-                            WatchWindow(transition=None).get_root_widget()
+                            WatchWindow(transition=None).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
                     elif main_menu_location == 'Team Game Select':
                         # pylint: disable=cyclic-import
@@ -344,7 +355,8 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                         bs.app.ui_v1.set_main_menu_window(
                             PlaylistBrowserWindow(
                                 sessiontype=bs.DualTeamSession, transition=None
-                            ).get_root_widget()
+                            ).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
                     elif main_menu_location == 'Free-for-All Game Select':
                         # pylint: disable=cyclic-import
@@ -356,28 +368,34 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             PlaylistBrowserWindow(
                                 sessiontype=bs.FreeForAllSession,
                                 transition=None,
-                            ).get_root_widget()
+                            ).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
                     elif main_menu_location == 'Coop Select':
                         # pylint: disable=cyclic-import
                         from bauiv1lib.coop.browser import CoopBrowserWindow
 
                         bs.app.ui_v1.set_main_menu_window(
-                            CoopBrowserWindow(transition=None).get_root_widget()
+                            CoopBrowserWindow(
+                                transition=None
+                            ).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
                     elif main_menu_location == 'Benchmarks & Stress Tests':
                         # pylint: disable=cyclic-import
                         from bauiv1lib.debug import DebugWindow
 
                         bs.app.ui_v1.set_main_menu_window(
-                            DebugWindow(transition=None).get_root_widget()
+                            DebugWindow(transition=None).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
                     else:
                         # pylint: disable=cyclic-import
                         from bauiv1lib.mainmenu import MainMenuWindow
 
                         bs.app.ui_v1.set_main_menu_window(
-                            MainMenuWindow(transition=None).get_root_widget()
+                            MainMenuWindow(transition=None).get_root_widget(),
+                            from_window=False,  # Disable check here.
                         )
 
                 # attempt to show any pending offers immediately.
@@ -393,6 +411,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             bui.apptimer(2.0, specialoffer.show_offer)
 
                     bui.apptimer(2.0, try_again)
+
         app.classic.main_menu_did_initial_transition = True
 
     def _update(self) -> None:
@@ -826,6 +845,26 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
 
         bui.apptimer(0.5, _start_menu_music)
 
+    def _update_attract_mode(self) -> None:
+        if bui.app.classic is None:
+            return
+
+        if not bui.app.config.resolve('Show Demos When Idle'):
+            return
+
+        threshold = 20.0
+
+        # If we're idle *and* have been in this activity for that long,
+        # flip over to our cpu demo.
+        if bui.get_input_idle_time() > threshold and bs.time() > threshold:
+            bui.app.classic.run_stress_test(
+                playlist_type='Random',
+                playlist_name='__default__',
+                player_count=8,
+                round_duration=20,
+                attract_mode=True,
+            )
+
 
 class NewsDisplay:
     """Wrangles news display."""
@@ -1103,6 +1142,7 @@ class MainMenuSession(bs.Session):
         self._locked = False
         self.setactivity(bs.newactivity(MainMenuActivity))
 
+    @override
     def on_activity_end(self, activity: bs.Activity, results: Any) -> None:
         if self._locked:
             bui.unlock_all_input()
@@ -1110,6 +1150,7 @@ class MainMenuSession(bs.Session):
         # Any ending activity leads us into the main menu one.
         self.setactivity(bs.newactivity(MainMenuActivity))
 
+    @override
     def on_player_request(self, player: bs.SessionPlayer) -> bool:
         # Reject all player requests.
         return False
