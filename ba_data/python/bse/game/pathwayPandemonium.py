@@ -57,22 +57,22 @@ if TYPE_CHECKING:
 class Preset(Enum):
     """Play presets."""
 
-    ENDLESS = 'endless'
-    ENDLESS_TOURNAMENT = 'endless_tournament'
-    PRO = 'pro'
-    PRO_EASY = 'pro_easy'
-    UBER = 'uber'
-    UBER_EASY = 'uber_easy'
-    TOURNAMENT = 'tournament'
-    TOURNAMENT_UBER = 'tournament_uber'
+    ENDLESS = "endless"
+    ENDLESS_TOURNAMENT = "endless_tournament"
+    PRO = "pro"
+    PRO_EASY = "pro_easy"
+    UBER = "uber"
+    UBER_EASY = "uber_easy"
+    TOURNAMENT = "tournament"
+    TOURNAMENT_UBER = "tournament_uber"
 
 
 class Point(Enum):
     """Where we can spawn stuff and the corresponding map attr name."""
 
-    BOTTOM_LEFT = 'bot_spawn_bottom_left'
-    BOTTOM_RIGHT = 'bot_spawn_bottom_right'
-    START = 'bot_spawn_start'
+    BOTTOM_LEFT = "bot_spawn_bottom_left"
+    BOTTOM_RIGHT = "bot_spawn_bottom_right"
+    START = "bot_spawn_start"
 
 
 @dataclass
@@ -99,7 +99,7 @@ class Wave:
     entries: list[Spawn | Spacing | None]
 
 
-class Player(ba.Player['Team']):
+class Player(ba.Player["Team"]):
     """Our player type for this game."""
 
     def __init__(self) -> None:
@@ -114,12 +114,12 @@ class Team(ba.Team[Player]):
 class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
     """Game involving trying to bomb bots as they walk through the map."""
 
-    name = 'Pathway Pandemonium'
-    description = 'How many days do you think you\'ll last?'
+    name = "Pathway Pandemonium"
+    description = "How many days do you think you'll last?"
     tips = [
-        'Jump just as you\'re throwing to get bombs up to the highest levels.',
-        'No, you can\'t get up on the ledge. You have to throw bombs.',
-        'Whip back and forth to get more distance on your throws..',
+        "Jump just as you're throwing to get bombs up to the highest levels.",
+        "No, you can't get up on the ledge. You have to throw bombs.",
+        "Whip back and forth to get more distance on your throws..",
     ]
     default_music = ba.MusicType.RESTYE
 
@@ -150,40 +150,40 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
     }
 
     def __init__(self, settings: dict):
-        settings['map'] = 'Pathway Pandemonium'
+        settings["map"] = "Pathway Pandemonium"
         super().__init__(settings)
         shared = SharedObjects.get()
-        self._preset = Preset(settings.get('preset', 'pro'))
+        self._preset = Preset(settings.get("preset", "pro"))
 
-        self._player_death_sound = ba.getsound('playerDeath')
-        self._special_point = ba.getsound('specialPoint')
-        self._special_point2 = ba.getsound('specialPoint2')
-        self._special_point3 = ba.getsound('specialPoint3')
-        self._new_wave_sound = ba.getsound('scoreHit01')
-        self._winsound = ba.getsound('score')
-        self._cashregistersound = ba.getsound('cashRegister')
-        self._bad_guy_score_sound = ba.getsound('shieldDown')
-        self._heart_tex = ba.gettexture('heart')
-        self._heart_model_opaque = ba.getmodel('heartOpaque')
-        self._heart_model_transparent = ba.getmodel('heartTransparent')
+        self._player_death_sound = ba.getsound("playerDeath")
+        self._special_point = ba.getsound("specialPoint")
+        self._special_point2 = ba.getsound("specialPoint2")
+        self._special_point3 = ba.getsound("specialPoint3")
+        self._new_wave_sound = ba.getsound("scoreHit01")
+        self._winsound = ba.getsound("score")
+        self._cashregistersound = ba.getsound("cashRegister")
+        self._bad_guy_score_sound = ba.getsound("shieldDown")
+        self._heart_tex = ba.gettexture("heart")
+        self._heart_model_opaque = ba.getmodel("heartOpaque")
+        self._heart_model_transparent = ba.getmodel("heartTransparent")
 
         self._a_player_has_been_killed = False
-        self._spawn_center = self._map_type.defs.points['spawn1'][0:3]
-        self._tntspawnpos = self._map_type.defs.points['tnt_loc'][0:3]
-        self._tntspawnpos2 = self._map_type.defs.points['tnt_loc2'][0:3]
-        self._powerup_center = self._map_type.defs.boxes['powerup_region'][0:3]
+        self._spawn_center = self._map_type.defs.points["spawn1"][0:3]
+        self._tntspawnpos = self._map_type.defs.points["tnt_loc"][0:3]
+        self._tntspawnpos2 = self._map_type.defs.points["tnt_loc2"][0:3]
+        self._powerup_center = self._map_type.defs.boxes["powerup_region"][0:3]
         self._powerup_spread = (
-            self._map_type.defs.boxes['powerup_region'][6] * 0.5,
-            self._map_type.defs.boxes['powerup_region'][8] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][6] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][8] * 0.5,
         )
 
         self._score_region_material = ba.Material()
         self._score_region_material.add_actions(
-            conditions=('they_have_material', shared.player_material),
+            conditions=("they_have_material", shared.player_material),
             actions=(
-                ('modify_part_collision', 'collide', True),
-                ('modify_part_collision', 'physical', False),
-                ('call', 'at_connect', self._handle_reached_end),
+                ("modify_part_collision", "collide", True),
+                ("modify_part_collision", "physical", False),
+                ("call", "at_connect", self._handle_reached_end),
             ),
         )
 
@@ -197,8 +197,8 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         self._score = 0
         self._time_bonus = 0
         self._score_region: ba.Actor | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._dingsoundhigh = ba.getsound('dingSmallHigh')
+        self._dingsound = ba.getsound("dingSmall")
+        self._dingsoundhigh = ba.getsound("dingSmallHigh")
         self._exclude_powerups: list[str] | None = None
         self._have_tnt: bool | None = None
         self._waves: list[Wave] | None = None
@@ -218,51 +218,51 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         self._flawless_bonus: int | None = None
         self._wave_update_timer: ba.Timer | None = None
 
-        ba.getsession().max_players = 5 # Tada
+        ba.getsession().max_players = 5  # Tada
 
     def on_transition_in(self) -> None:
         super().on_transition_in()
 
         self._scoreboard = Scoreboard(
-            label=ba.Lstr(resource='scoreText'), score_split=0.5
+            label=ba.Lstr(resource="scoreText"), score_split=0.5
         )
         self._score_region = ba.NodeActor(
             ba.newnode(
-                'region',
+                "region",
                 attrs={
-                    'position': self.map.defs.boxes['score_region'][0:3],
-                    'scale': self.map.defs.boxes['score_region'][6:9],
-                    'type': 'box',
-                    'materials': [self._score_region_material],
+                    "position": self.map.defs.boxes["score_region"][0:3],
+                    "scale": self.map.defs.boxes["score_region"][6:9],
+                    "type": "box",
+                    "materials": [self._score_region_material],
                 },
             )
         )
-    
+
     def _day_update(self) -> None:
         self._daynum += 1
-        
+
         if self._daynum == 2:
             ba.setmusic(ba.MusicType.RESTYE2)
         elif self._daynum == 3:
             ba.setmusic(ba.MusicType.RESTYE3)
         elif self._daynum == 4:
             ba.setmusic(ba.MusicType.RESTYE4)
-            
+
         ba.timer(0.4, ba.Call(ba.playsound, self._new_wave_sound))
         textval = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='explodinary.dayText')),
-                ('${B}', str(self._daynum)),
+                ("${A}", ba.Lstr(resource="explodinary.dayText")),
+                ("${B}", str(self._daynum)),
             ],
         )
         self._day_text.node.text = textval
         show_bottom_zoom_message(
             ba.Lstr(
-                value='${A} ${B}',
+                value="${A} ${B}",
                 subs=[
-                    ('${A}', ba.Lstr(resource='explodinary.dayText')),
-                    ('${B}', str(self._daynum)),
+                    ("${A}", ba.Lstr(resource="explodinary.dayText")),
+                    ("${B}", str(self._daynum)),
                 ],
             ),
             scale=0.7,
@@ -270,42 +270,40 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
             duration=1.0,
             trail=True,
         )
-        
+
     def on_begin(self) -> None:
         super().on_begin()
         player_count = len(self.players)
-            
+
         self._day_timer = ba.Timer(
-            200, self._day_update, repeat=True, suppress_format_warning=True)
+            200, self._day_update, repeat=True, suppress_format_warning=True
+        )
         textval = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='explodinary.dayText')),
-                (
-                    '${B}',
-                    str(self._daynum)
-                ),
+                ("${A}", ba.Lstr(resource="explodinary.dayText")),
+                ("${B}", str(self._daynum)),
             ],
         )
         self._day_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'vr_depth': -10,
-                    'color': (1, 1, 1, 1),
-                    'shadow': 1.0,
-                    'flatness': 1.0,
-                    'position': (0, -40),
-                    'scale': 1.3,
-                    'text': textval,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "vr_depth": -10,
+                    "color": (1, 1, 1, 1),
+                    "shadow": 1.0,
+                    "flatness": 1.0,
+                    "position": (0, -40),
+                    "scale": 1.3,
+                    "text": textval,
                 },
             )
         )
-        ba.animate(self._day_text.node, 'opacity', {3: 0, 7.0: 1.0})
-        
+        ba.animate(self._day_text.node, "opacity", {3: 0, 7.0: 1.0})
+
         if self._preset in {Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT}:
             self._exclude_powerups = []
             self._have_tnt = True
@@ -326,22 +324,20 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         l_offs = (
             -80
             if uiscale is ba.UIScale.SMALL
-            else -40
-            if uiscale is ba.UIScale.MEDIUM
-            else 0
+            else -40 if uiscale is ba.UIScale.MEDIUM else 0
         )
 
         self._lives_bg = ba.NodeActor(
             ba.newnode(
-                'image',
+                "image",
                 attrs={
-                    'texture': self._heart_tex,
-                    'model_opaque': self._heart_model_opaque,
-                    'model_transparent': self._heart_model_transparent,
-                    'attach': 'topRight',
-                    'scale': (90, 90),
-                    'position': (-110 + l_offs, -50),
-                    'color': (0.3, 0.5, 0.8),
+                    "texture": self._heart_tex,
+                    "model_opaque": self._heart_model_opaque,
+                    "model_transparent": self._heart_model_transparent,
+                    "attach": "topRight",
+                    "scale": (90, 90),
+                    "position": (-110 + l_offs, -50),
+                    "color": (0.3, 0.5, 0.8),
                 },
             )
         )
@@ -350,18 +346,18 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         vrmode = ba.app.vr_mode
         self._lives_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'right',
-                    'h_align': 'center',
-                    'color': (1, 1, 1, 1) if vrmode else (0.8, 0.8, 0.8, 1.0),
-                    'flatness': 1.0 if vrmode else 0.5,
-                    'shadow': 1.0 if vrmode else 0.5,
-                    'vr_depth': 10,
-                    'position': (-113 + l_offs, -69),
-                    'scale': 1.3,
-                    'text': str(self._lives),
+                    "v_attach": "top",
+                    "h_attach": "right",
+                    "h_align": "center",
+                    "color": (1, 1, 1, 1) if vrmode else (0.8, 0.8, 0.8, 1.0),
+                    "flatness": 1.0 if vrmode else 0.5,
+                    "shadow": 1.0 if vrmode else 0.5,
+                    "vr_depth": 10,
+                    "position": (-113 + l_offs, -69),
+                    "scale": 1.3,
+                    "text": str(self._lives),
                 },
             )
         )
@@ -377,9 +373,9 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         pos = spaz.node.position
         ba.playsound(self._bad_guy_score_sound, position=pos)
         light = ba.newnode(
-            'light', attrs={'position': pos, 'radius': 0.5, 'color': (1, 0, 0)}
+            "light", attrs={"position": pos, "radius": 0.5, "color": (1, 0, 0)}
         )
-        ba.animate(light, 'intensity', {0.0: 0, 0.1: 1, 0.5: 0}, loop=False)
+        ba.animate(light, "intensity", {0.0: 0, 0.1: 1, 0.5: 0}, loop=False)
         ba.timer(1.0, light.delete)
         spaz.handlemessage(
             ba.DieMessage(immediate=True, how=ba.DeathType.REACHED_GOAL)
@@ -393,9 +389,9 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
             # Heartbeat behavior
             if self._lives < 4:
                 hbtime = 0.39 + (0.21 * self._lives)
-                self._lives_hbtime = ba.Timer(hbtime,
-                                              lambda: self.heart_dyin(True, hbtime),
-                                              repeat=True)
+                self._lives_hbtime = ba.Timer(
+                    hbtime, lambda: self.heart_dyin(True, hbtime), repeat=True
+                )
                 self.heart_dyin(True)
             else:
                 self._lives_hbtime = None
@@ -416,7 +412,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
                     ba.Call(
                         _safesetattr,
                         self._lives_text.node,
-                        'color',
+                        "color",
                         (1, 0, 0, 1.0),
                     ),
                 )
@@ -424,7 +420,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
                 assert self._lives_bg.node
                 ba.timer(
                     delay,
-                    ba.Call(_safesetattr, self._lives_bg.node, 'opacity', 0.5),
+                    ba.Call(_safesetattr, self._lives_bg.node, "opacity", 0.5),
                 )
                 delay += 0.125
                 ba.timer(
@@ -432,13 +428,13 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
                     ba.Call(
                         _safesetattr,
                         self._lives_text.node,
-                        'color',
+                        "color",
                         (1.0, 1.0, 0.0, 1.0),
                     ),
                 )
                 ba.timer(
                     delay,
-                    ba.Call(_safesetattr, self._lives_bg.node, 'opacity', 1.0),
+                    ba.Call(_safesetattr, self._lives_bg.node, "opacity", 1.0),
                 )
                 delay += 0.125
             ba.timer(
@@ -446,7 +442,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
                 ba.Call(
                     _safesetattr,
                     self._lives_text.node,
-                    'color',
+                    "color",
                     (0.8, 0.8, 0.8, 1.0),
                 ),
             )
@@ -496,7 +492,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         # giving out land-mine powerups. (prevents players from waiting
         # around for them on purpose and filling the map up)
         if ba.time() - self._last_wave_end_time > 60.0:
-            extra_excludes = ['land_mines', 'lite_mines', 'flutter_mines']
+            extra_excludes = ["land_mines", "lite_mines", "flutter_mines"]
         else:
             extra_excludes = []
 
@@ -533,7 +529,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
             ).autoretain()
 
     def end_game(self) -> None:
-        ba.pushcall(ba.Call(self.do_end, 'defeat'))
+        ba.pushcall(ba.Call(self.do_end, "defeat"))
         ba.setmusic(ba.MusicType.RESTYEDEFEAT)
         ba.playsound(self._player_death_sound)
         assert self._bots is not None
@@ -542,7 +538,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
     def do_end(self, outcome: str) -> None:
         """End the game now with the provided outcome."""
 
-        if outcome == 'defeat':
+        if outcome == "defeat":
             delay = 2.0
             self.fade_to_red()
         else:
@@ -554,19 +550,18 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
             fail_message = None
         else:
             score = None
-            fail_message = ba.Lstr(resource='reachWave2Text')
+            fail_message = ba.Lstr(resource="reachWave2Text")
 
         self.end(
             delay=delay,
             results={
-                'outcome': outcome,
-                'score': score,
-                'fail_message': fail_message,
-                'playerinfos': self.initialplayerinfos,
+                "outcome": outcome,
+                "score": score,
+                "fail_message": fail_message,
+                "playerinfos": self.initialplayerinfos,
             },
         )
-        
-        
+
     def _update_waves(self) -> None:
         # pylint: disable=too-many-branches
 
@@ -608,11 +603,10 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
                 ba.cameraflash()
                 ba.setmusic(ba.MusicType.VICTORY)
                 self._game_over = True
-                ba.timer(base_delay, ba.Call(self.do_end, 'victory'))
+                ba.timer(base_delay, ba.Call(self.do_end, "victory"))
                 return
 
             self._wavenum += 1
-
 
             ba.timer(0, self._start_next_wave)
 
@@ -621,10 +615,10 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         ba.playsound(self._cashregistersound)
         PopupText(
             ba.Lstr(
-                value='+${A} ${B}',
+                value="+${A} ${B}",
                 subs=[
-                    ('${A}', str(bonus)),
-                    ('${B}', ba.Lstr(resource='completionBonusText')),
+                    ("${A}", str(bonus)),
+                    ("${B}", ba.Lstr(resource="completionBonusText")),
                 ],
             ),
             color=(0.7, 0.7, 1.0, 1),
@@ -638,7 +632,6 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         bonus = self._lives * 30
         self._score += bonus
         self._update_scores()
-
 
     def _award_flawless_bonus(self) -> None:
         assert self._flawless_bonus is not None
@@ -660,7 +653,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         delay = 0.0
         bot_types: list[Spawn | Spacing | None] = []
         level = self._daynum
-            
+
         if self._preset in {Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT}:
             level = self._daynum
             wave = self._wavenum
@@ -883,7 +876,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         # dropping land-mines powerups at some point (otherwise a crafty
         # player could fill the whole map with them)
         self._last_wave_end_time = ba.time() + t_sec
-        totalwaves = str(len(self._waves)) if self._waves is not None else '??'
+        totalwaves = str(len(self._waves)) if self._waves is not None else "??"
 
     def _on_bot_spawn(self, path: int, spaz: SpazBot) -> None:
 
@@ -893,8 +886,8 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         spaz.update_callback = self._update_bot
 
         # Tack some custom attrs onto the spaz.
-        setattr(spaz, 'r_walk_row', path)
-        setattr(spaz, 'r_walk_speed', self._get_bot_speed(spaz_type))
+        setattr(spaz, "r_walk_row", path)
+        setattr(spaz, "r_walk_speed", self._get_bot_speed(spaz_type))
 
     def add_bot_at_point(
         self,
@@ -922,11 +915,11 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
             assert self._time_bonus_text.node
             assert self._time_bonus_mult
             self._time_bonus_text.node.text = ba.Lstr(
-                value='${A}: ${B}',
+                value="${A}: ${B}",
                 subs=[
-                    ('${A}', ba.Lstr(resource='timeBonusText')),
+                    ("${A}", ba.Lstr(resource="timeBonusText")),
                     (
-                        '${B}',
+                        "${B}",
                         str(int(self._time_bonus * self._time_bonus_mult)),
                     ),
                 ],
@@ -939,7 +932,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
 
     def _update_scores(self) -> None:
         score = self._score
-        
+
         assert self._scoreboard is not None
         self._scoreboard.set_team_value(self.teams[0], score, max_score=None)
 
@@ -953,52 +946,52 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         assert bot.node
 
         # FIXME: Do this in a type safe way.
-        r_walk_speed: float = getattr(bot, 'r_walk_speed')
-        r_walk_row: int = getattr(bot, 'r_walk_row')
+        r_walk_speed: float = getattr(bot, "r_walk_speed")
+        r_walk_row: int = getattr(bot, "r_walk_row")
 
         speed = r_walk_speed
         pos = bot.node.position
         boxes = self.map.defs.boxes
 
         # Bots in row 1 attempt the high road..
-        if ba.is_point_in_box(pos, boxes['b4']):
+        if ba.is_point_in_box(pos, boxes["b4"]):
             bot.node.move_up_down = speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
 
         # Row 1 and 2 bots attempt the middle road..
-        if ba.is_point_in_box(pos, boxes['b1']):
+        if ba.is_point_in_box(pos, boxes["b1"]):
             bot.node.move_up_down = speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
 
         # All bots settle for the third row.
-        if ba.is_point_in_box(pos, boxes['b7']):
+        if ba.is_point_in_box(pos, boxes["b7"]):
             bot.node.move_up_down = speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if ba.is_point_in_box(pos, boxes['b2']):
+        if ba.is_point_in_box(pos, boxes["b2"]):
             bot.node.move_up_down = -speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if ba.is_point_in_box(pos, boxes['b3']):
+        if ba.is_point_in_box(pos, boxes["b3"]):
             bot.node.move_up_down = -speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if ba.is_point_in_box(pos, boxes['b5']):
+        if ba.is_point_in_box(pos, boxes["b5"]):
             bot.node.move_up_down = -speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
         if (
-            ba.is_point_in_box(pos, boxes['b8'])
-            and not ba.is_point_in_box(pos, boxes['b9'])
-            and not ba.is_point_in_box(pos, boxes['b10'])
+            ba.is_point_in_box(pos, boxes["b8"])
+            and not ba.is_point_in_box(pos, boxes["b9"])
+            and not ba.is_point_in_box(pos, boxes["b10"])
         ) or pos == (0.0, 0.0, 0.0):
 
             # Default to walking right if we're still in the walking area.
@@ -1054,13 +1047,15 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
                             importance=importance,
                         )
                         ba.playsound(
-                            self._dingsound
-                            if importance == 1
-                            else self._dingsoundhigh,
+                            (
+                                self._dingsound
+                                if importance == 1
+                                else self._dingsoundhigh
+                            ),
                             volume=0.6,
                         )
                 except Exception:
-                    ba.print_exception('Error on SpazBotDiedMessage.')
+                    ba.print_exception("Error on SpazBotDiedMessage.")
 
             # Normally we pull scores from the score-set, but if there's no
             # player lets be explicit.
@@ -1077,49 +1072,57 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         level = self._daynum
         if level == 2:
             speed += 0.5
-        
+
         if level == 3:
             speed += 0.3
-        
+
         if level == 4:
             speed += 0.3
-        
+
         if level == 5:
             speed += 0.2
-            
+
         if speed is None:
             raise TypeError(
-                'Invalid bot type to _get_bot_speed(): ' + str(bot_type)
+                "Invalid bot type to _get_bot_speed(): " + str(bot_type)
             )
         return speed
 
     def _set_can_end_wave(self) -> None:
         self._can_end_wave = True
 
-    def heart_dyin(self,
-                   status: bool,
-                   time: float = 1.22) -> None:
-        """ Makes the UI heart beat at low health. """
-        if not (self._lives_bg or
-                self._lives_bg.node.exists()): return
-        
+    def heart_dyin(self, status: bool, time: float = 1.22) -> None:
+        """Makes the UI heart beat at low health."""
+        if not (self._lives_bg or self._lives_bg.node.exists()):
+            return
+
         heart = self._lives_bg.node
-        
+
         # Make the heart beat intensely!
         if status:
-            ba.animate_array(heart, 'scale', 2, {
-                0:(90,90),
-                time*0.1:(105,105),
-                time*0.21:(88,88),
-                time*0.42:(90,90),
-                time*0.52:(105,105),
-                time*0.63:(88,88),
-                time:(90,90),
-            })
+            ba.animate_array(
+                heart,
+                "scale",
+                2,
+                {
+                    0: (90, 90),
+                    time * 0.1: (105, 105),
+                    time * 0.21: (88, 88),
+                    time * 0.42: (90, 90),
+                    time * 0.52: (105, 105),
+                    time * 0.63: (88, 88),
+                    time: (90, 90),
+                },
+            )
 
         # Neutralize heartbeat (Done did when dead.)
         else:
-            ba.animate_array(heart, 'scale', 2, {
-                0:heart.scale,
-                time:(90,90),
-            })
+            ba.animate_array(
+                heart,
+                "scale",
+                2,
+                {
+                    0: heart.scale,
+                    time: (90, 90),
+                },
+            )

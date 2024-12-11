@@ -17,10 +17,11 @@ if TYPE_CHECKING:
 from bauiv1lib.mainmenu import MainMenuWindow as VanillaMainMenu
 from bse.lib import color as bsecolor
 
+
 class MainMenuWindow(bui.Window):
     """The main menu window, both in-game and in the main menu session."""
 
-    def __init__(self, transition: str | None = 'in_right'):
+    def __init__(self, transition: str | None = "in_right"):
         # pylint: disable=cyclic-import
         import threading
         from bascenev1lib.mainmenu import MainMenuSession
@@ -35,14 +36,14 @@ class MainMenuWindow(bui.Window):
         threading.Thread(target=self._preload_modules).start()
 
         if not self._in_game:
-            bui.set_analytics_screen('Main Menu')
+            bui.set_analytics_screen("Main Menu")
             self._show_remote_app_info_on_first_launch()
 
         # Make a vanilla container; we'll modify it to our needs in refresh.
         super().__init__(
             root_widget=bui.containerwidget(
                 transition=transition,
-                toolbar_visibility='menu_minimal_no_back',
+                toolbar_visibility="menu_minimal_no_back",
             )
         )
 
@@ -79,7 +80,7 @@ class MainMenuWindow(bui.Window):
         self._account_state_num = plus.get_v1_account_state_num()
         self._account_type = (
             plus.get_v1_account_type()
-            if self._account_state == 'signed_in'
+            if self._account_state == "signed_in"
             else None
         )
         self._refresh_timer = bui.AppTimer(
@@ -114,34 +115,36 @@ class MainMenuWindow(bui.Window):
                 force_test = False
                 bs.get_local_active_input_devices_count()
                 if (
-                    (app.env.tv or app.classic.platform == 'mac')
-                    and bui.app.config.get('launchCount', 0) <= 1
+                    (app.env.tv or app.classic.platform == "mac")
+                    and bui.app.config.get("launchCount", 0) <= 1
                 ) or force_test:
 
                     def _check_show_bs_remote_window() -> None:
                         try:
                             from bauiv1lib.getremote import GetBSRemoteWindow
 
-                            bui.getsound('swish').play()
+                            bui.getsound("swish").play()
                             GetBSRemoteWindow()
                         except Exception:
                             logging.exception(
-                                'Error showing get-remote window.'
+                                "Error showing get-remote window."
                             )
 
                     bui.apptimer(2.5, _check_show_bs_remote_window)
             except Exception:
-                logging.exception('Error showing get-remote-app info.')
+                logging.exception("Error showing get-remote-app info.")
 
     def _get_store_char_tex(self) -> str:
         plus = bui.app.plus
         assert plus is not None
         return (
-            'storeCharacterXmas'
-            if plus.get_v1_account_misc_read_val('xmas', False)
-            else 'storeCharacterEaster'
-            if plus.get_v1_account_misc_read_val('easter', False)
-            else 'storeCharacter'
+            "storeCharacterXmas"
+            if plus.get_v1_account_misc_read_val("xmas", False)
+            else (
+                "storeCharacterEaster"
+                if plus.get_v1_account_misc_read_val("easter", False)
+                else "storeCharacter"
+            )
         )
 
     def _check_refresh(self) -> None:
@@ -172,7 +175,7 @@ class MainMenuWindow(bui.Window):
             account_state = self._account_state = plus.get_v1_account_state()
             self._account_type = (
                 plus.get_v1_account_type()
-                if account_state == 'signed_in'
+                if account_state == "signed_in"
                 else None
             )
             self._save_state()
@@ -198,19 +201,19 @@ class MainMenuWindow(bui.Window):
         for child in children:
             child.delete()
 
-        self._tdelay        = 0.0
-        self._t_delay_inc   = 0.0
-        self._t_delay_play  = 0.0
-        self._button_width  = 200.0
+        self._tdelay = 0.0
+        self._t_delay_inc = 0.0
+        self._t_delay_play = 0.0
+        self._button_width = 200.0
         self._button_height = 45.0
 
-        self._r = 'mainMenu'
+        self._r = "mainMenu"
 
         app = bui.app
         assert app.classic is not None
         self._have_quit_button = app.ui_v1.uiscale is bui.UIScale.LARGE or (
-            app.classic.platform == 'windows'
-            and app.classic.subplatform == 'oculus'
+            app.classic.platform == "windows"
+            and app.classic.subplatform == "oculus"
         )
 
         self._have_store_button = not self._in_game
@@ -257,7 +260,7 @@ class MainMenuWindow(bui.Window):
 
         # Scattered eggs on easter.
         if (
-            plus.get_v1_account_misc_read_val('easter', False)
+            plus.get_v1_account_misc_read_val("easter", False)
             and not self._in_game
         ):
             icon_size = 34
@@ -269,7 +272,7 @@ class MainMenuWindow(bui.Window):
                 ),
                 transition_delay=self._tdelay,
                 size=(icon_size, icon_size),
-                texture=bui.gettexture('egg3'),
+                texture=bui.gettexture("egg3"),
                 tilt_scale=0.0,
             )
 
@@ -287,7 +290,7 @@ class MainMenuWindow(bui.Window):
                     scale=scale,
                     size=(self._button_width, self._button_height),
                     autoselect=self._use_autoselect,
-                    label=bui.Lstr(resource='replayEndText'),
+                    label=bui.Lstr(resource="replayEndText"),
                     on_activate_call=self._confirm_end_replay,
                 )
             elif bs.get_foreground_host_session() is not None:
@@ -300,9 +303,9 @@ class MainMenuWindow(bui.Window):
                     label=bui.Lstr(
                         resource=self._r
                         + (
-                            '.endTestText'
+                            ".endTestText"
                             if self._is_benchmark()
-                            else '.endGameText'
+                            else ".endGameText"
                         )
                     ),
                     on_activate_call=(
@@ -319,7 +322,7 @@ class MainMenuWindow(bui.Window):
                     scale=scale,
                     size=(self._button_width, self._button_height),
                     autoselect=self._use_autoselect,
-                    label=bui.Lstr(resource=self._r + '.leavePartyText'),
+                    label=bui.Lstr(resource=self._r + ".leavePartyText"),
                     on_activate_call=self._confirm_leave_party,
                 )
 
@@ -348,9 +351,7 @@ class MainMenuWindow(bui.Window):
             icon_size = (
                 55
                 if uiscale is bui.UIScale.SMALL
-                else 55
-                if uiscale is bui.UIScale.MEDIUM
-                else 70
+                else 55 if uiscale is bui.UIScale.MEDIUM else 70
             )
             bui.imagewidget(
                 parent=self._root_widget,
@@ -382,9 +383,9 @@ class MainMenuWindow(bui.Window):
                 label=bui.Lstr(
                     resource=self._r
                     + (
-                        '.quitText'
-                        if 'Mac' in app.classic.legacy_user_agent_string
-                        else '.exitGameText'
+                        ".quitText"
+                        if "Mac" in app.classic.legacy_user_agent_string
+                        else ".exitGameText"
                     )
                 ),
                 color=bsecolor.sok_color3,
@@ -393,7 +394,7 @@ class MainMenuWindow(bui.Window):
             )
 
             # Scattered eggs on easter.
-            if plus.get_v1_account_misc_read_val('easter', False):
+            if plus.get_v1_account_misc_read_val("easter", False):
                 icon_size = 30
                 bui.imagewidget(
                     parent=self._root_widget,
@@ -406,7 +407,7 @@ class MainMenuWindow(bui.Window):
                     ),
                     transition_delay=self._tdelay,
                     size=(icon_size, icon_size),
-                    texture=bui.gettexture('egg1'),
+                    texture=bui.gettexture("egg1"),
                     tilt_scale=0.0,
                 )
 
@@ -422,7 +423,7 @@ class MainMenuWindow(bui.Window):
             if (
                 not self._in_game
                 and not self._have_quit_button
-                and app.classic.platform == 'android'
+                and app.classic.platform == "android"
             ):
 
                 def _do_quit() -> None:
@@ -453,12 +454,12 @@ class MainMenuWindow(bui.Window):
             self._replay_speed_text = bui.textwidget(
                 parent=self._root_widget,
                 text=bui.Lstr(
-                    resource='watchWindow.playbackSpeedText',
-                    subs=[('${SPEED}', str(1.23))],
+                    resource="watchWindow.playbackSpeedText",
+                    subs=[("${SPEED}", str(1.23))],
                 ),
                 position=(h, v + v_offs + 7 * t_scale),
-                h_align='center',
-                v_align='center',
+                h_align="center",
+                v_align="center",
                 size=(0, 0),
                 scale=t_scale,
             )
@@ -476,44 +477,44 @@ class MainMenuWindow(bui.Window):
                     h - b_size - b_buffer,
                     v - b_size - b_buffer + v_offs,
                 ),
-                button_type='square',
+                button_type="square",
                 size=(b_size, b_size),
-                label='',
+                label="",
                 autoselect=True,
                 on_activate_call=bui.Call(self._change_replay_speed, -1),
             )
             bui.textwidget(
                 parent=self._root_widget,
                 draw_controller=btn,
-                text='-',
+                text="-",
                 position=(
                     h - b_size * 0.5 - b_buffer,
                     v - b_size * 0.5 - b_buffer + 5 * t_scale + v_offs,
                 ),
-                h_align='center',
-                v_align='center',
+                h_align="center",
+                v_align="center",
                 size=(0, 0),
                 scale=3.0 * t_scale,
             )
             btn = bui.buttonwidget(
                 parent=self._root_widget,
                 position=(h + b_buffer, v - b_size - b_buffer + v_offs),
-                button_type='square',
+                button_type="square",
                 size=(b_size, b_size),
-                label='',
+                label="",
                 autoselect=True,
                 on_activate_call=bui.Call(self._change_replay_speed, 1),
             )
             bui.textwidget(
                 parent=self._root_widget,
                 draw_controller=btn,
-                text='+',
+                text="+",
                 position=(
                     h + b_size * 0.5 + b_buffer,
                     v - b_size * 0.5 - b_buffer + 5 * t_scale + v_offs,
                 ),
-                h_align='center',
-                v_align='center',
+                h_align="center",
+                v_align="center",
                 size=(0, 0),
                 scale=3.0 * t_scale,
             )
@@ -551,14 +552,14 @@ class MainMenuWindow(bui.Window):
         self._height = 200.0
         enable_account_button = True
         account_type_name: str | bui.Lstr
-        if plus.get_v1_account_state() == 'signed_in':
+        if plus.get_v1_account_state() == "signed_in":
             account_type_name = plus.get_v1_account_display_string()
             account_type_icon = None
             account_textcolor = (1.0, 1.0, 1.0)
         else:
             account_type_name = bui.Lstr(
-                resource='notSignedInText',
-                fallback_resource='accountSettingsWindow.titleText',
+                resource="notSignedInText",
+                fallback_resource="accountSettingsWindow.titleText",
             )
             account_type_icon = None
             account_textcolor = (1.0, 0.2, 0.2)
@@ -566,7 +567,7 @@ class MainMenuWindow(bui.Window):
         account_type_call = self._show_account_window
         account_type_enable_button_sound = True
         b_count = 3  # play, help, credits
-        b_count += 1 # changelog
+        b_count += 1  # changelog
         """
         These buttons are no longer part of the bottom row.
 
@@ -642,9 +643,11 @@ class MainMenuWindow(bui.Window):
                 color=(0.45, 0.55, 0.45),
                 textcolor=(0.7, 0.8, 0.7),
                 label=bui.Lstr(
-                    resource='modeArcadeText'
-                    if bui.app.env.arcade
-                    else 'modeDemoText'
+                    resource=(
+                        "modeArcadeText"
+                        if bui.app.env.arcade
+                        else "modeDemoText"
+                    )
                 ),
                 transition_delay=demo_menu_delay,
                 on_activate_call=self._demo_menu_press,
@@ -655,9 +658,7 @@ class MainMenuWindow(bui.Window):
         foof = (
             -1
             if uiscale is bui.UIScale.SMALL
-            else 1
-            if uiscale is bui.UIScale.MEDIUM
-            else 3
+            else 1 if uiscale is bui.UIScale.MEDIUM else 3
         )
         h, v, scale = positions[self._p_index]
         v = v + foof
@@ -676,8 +677,8 @@ class MainMenuWindow(bui.Window):
             position=(this_h - this_b_width * 0.5, v),
             size=(this_b_width, this_b_height),
             autoselect=self._use_autoselect,
-            button_type='square',
-            label='',
+            button_type="square",
+            label="",
             color=bsecolor.sok_color2,
             transition_delay=gather_delay,
             on_activate_call=self._gather_press,
@@ -691,9 +692,9 @@ class MainMenuWindow(bui.Window):
             draw_controller=btn,
             color=(0.75, 1.0, 0.7),
             maxwidth=self._button_width * 0.33,
-            text=bui.Lstr(resource='gatherWindow.titleText'),
-            h_align='center',
-            v_align='center',
+            text=bui.Lstr(resource="gatherWindow.titleText"),
+            h_align="center",
+            v_align="center",
         )
         icon_size = this_b_width * 0.6
         bui.imagewidget(
@@ -702,7 +703,7 @@ class MainMenuWindow(bui.Window):
             draw_controller=btn,
             transition_delay=gather_delay,
             position=(this_h - 0.5 * icon_size, v + 0.31 * this_b_height),
-            texture=bui.gettexture('usersButton'),
+            texture=bui.gettexture("usersButton"),
         )
 
         # Play button.
@@ -716,7 +717,7 @@ class MainMenuWindow(bui.Window):
             scale=scale,
             text_res_scale=2.0,
             color=bsecolor.sok_color,
-            label=bui.Lstr(resource='playText'),
+            label=bui.Lstr(resource="playText"),
             transition_delay=self._t_delay_play,
             on_activate_call=self._play_press,
         )
@@ -739,8 +740,8 @@ class MainMenuWindow(bui.Window):
             position=(this_h - this_b_width * 0.5, v),
             size=(this_b_width, this_b_height),
             autoselect=self._use_autoselect,
-            button_type='square',
-            label='',
+            button_type="square",
+            label="",
             color=bsecolor.sok_color2,
             transition_delay=watch_delay,
             on_activate_call=self._watch_press,
@@ -754,9 +755,9 @@ class MainMenuWindow(bui.Window):
             color=(0.75, 1.0, 0.7),
             draw_controller=btn,
             maxwidth=self._button_width * 0.33,
-            text=bui.Lstr(resource='watchWindow.titleText'),
-            h_align='center',
-            v_align='center',
+            text=bui.Lstr(resource="watchWindow.titleText"),
+            h_align="center",
+            v_align="center",
         )
         icon_size = this_b_width * 0.55
         bui.imagewidget(
@@ -765,41 +766,41 @@ class MainMenuWindow(bui.Window):
             draw_controller=btn,
             transition_delay=watch_delay,
             position=(this_h - 0.5 * icon_size, v + 0.33 * this_b_height),
-            texture=bui.gettexture('tv'),
+            texture=bui.gettexture("tv"),
         )
         # BSE Settings button.
         if self._have_settings_button:
             self._settings_button = btn = bui.buttonwidget(
-                color           = bsecolor.sok_color2,
-                parent          = self._root_widget,
-                position        = (this_h - this_b_width * -0.73, v),
-                size            = (this_b_width, this_b_height),
-                autoselect      = self._use_autoselect,
-                button_type     = 'square',
-                label           = '',
-                transition_delay= watch_delay,
-                on_activate_call= self._settings
+                color=bsecolor.sok_color2,
+                parent=self._root_widget,
+                position=(this_h - this_b_width * -0.73, v),
+                size=(this_b_width, this_b_height),
+                autoselect=self._use_autoselect,
+                button_type="square",
+                label="",
+                transition_delay=watch_delay,
+                on_activate_call=self._settings,
             )
             bui.imagewidget(
-                parent          =self._root_widget,
-                size            =(icon_size - 0.05, icon_size - 0.05),
-                draw_controller =btn,
+                parent=self._root_widget,
+                size=(icon_size - 0.05, icon_size - 0.05),
+                draw_controller=btn,
                 transition_delay=watch_delay,
-                position        =(this_h + 1.75 * icon_size, v + 0.35 * this_b_height),
-                texture         =bui.gettexture('settingsIcon'),
+                position=(this_h + 1.75 * icon_size, v + 0.35 * this_b_height),
+                texture=bui.gettexture("settingsIcon"),
             )
             bui.textwidget(
-                parent          = self._root_widget,
-                position        = (this_h + 105, v + self._button_height * 0.33),
-                size            = (0, 0),
-                scale           = 0.75,
-                transition_delay= watch_delay,
-                color           = (0.75, 1.0, 0.7),
-                draw_controller = btn,
-                maxwidth        = self._button_width * 0.33,
-                text            = bui.Lstr(resource=self._r + '.settingsText'),
-                h_align         = 'center',
-                v_align         = 'center',
+                parent=self._root_widget,
+                position=(this_h + 105, v + self._button_height * 0.33),
+                size=(0, 0),
+                scale=0.75,
+                transition_delay=watch_delay,
+                color=(0.75, 1.0, 0.7),
+                draw_controller=btn,
+                maxwidth=self._button_width * 0.33,
+                text=bui.Lstr(resource=self._r + ".settingsText"),
+                h_align="center",
+                v_align="center",
             )
         # BSE Account button.
         if not self._in_game and enable_account_button:
@@ -808,30 +809,30 @@ class MainMenuWindow(bui.Window):
             this_b_height = self._button_height * 0.82 * scale
             transoff = -0.1
             self._account_button = bui.buttonwidget(
-                parent          = self._root_widget,
-                color           = bsecolor.sok_color2,
-                position        = (this_h - this_b_width - 65, v),
-                size            = (this_b_width, this_b_height),
-                autoselect      = self._use_autoselect,
-                button_type     = 'square',
-                label           = '',
-                transition_delay= self._tdelay + transoff,
-                enable_sound    = account_type_enable_button_sound,
-                on_activate_call= account_type_call,
+                parent=self._root_widget,
+                color=bsecolor.sok_color2,
+                position=(this_h - this_b_width - 65, v),
+                size=(this_b_width, this_b_height),
+                autoselect=self._use_autoselect,
+                button_type="square",
+                label="",
+                transition_delay=self._tdelay + transoff,
+                enable_sound=account_type_enable_button_sound,
+                on_activate_call=account_type_call,
             )
             # Text
             bui.textwidget(
-                parent          = self._root_widget,
-                position        = (this_h + 35 - this_b_width - 60, v + 18),
-                size            = (0, 0),
-                scale           = 0.78,
-                transition_delay= self._tdelay + transoff,
-                draw_controller = self._account_button,
-                color           = (0.75, 1.0, 0.7),
-                maxwidth        = self._button_width * 0.33,
-                text            = account_type_name,
-                h_align         = 'center',
-                v_align         = 'center',
+                parent=self._root_widget,
+                position=(this_h + 35 - this_b_width - 60, v + 18),
+                size=(0, 0),
+                scale=0.78,
+                transition_delay=self._tdelay + transoff,
+                draw_controller=self._account_button,
+                color=(0.75, 1.0, 0.7),
+                maxwidth=self._button_width * 0.33,
+                text=account_type_name,
+                h_align="center",
+                v_align="center",
             )
             icon_size = this_b_width * 0.55
             # Icon
@@ -841,12 +842,12 @@ class MainMenuWindow(bui.Window):
                 draw_controller=self._account_button,
                 transition_delay=self._tdelay + transoff,
                 position=(this_h + 20 - this_b_width - 65, v + 23),
-                texture=bui.gettexture('bse_accountIcon'),
+                texture=bui.gettexture("bse_accountIcon"),
             )
 
             # Scattered eggs on easter.
             if (
-                plus.get_v1_account_misc_read_val('easter', False)
+                plus.get_v1_account_misc_read_val("easter", False)
                 and not self._in_game
             ):
                 icon_size = 32
@@ -861,7 +862,7 @@ class MainMenuWindow(bui.Window):
                     ),
                     transition_delay=self._tdelay,
                     size=(icon_size, icon_size),
-                    texture=bui.gettexture('egg2'),
+                    texture=bui.gettexture("egg2"),
                     tilt_scale=0.0,
                 )
             self._tdelay += self._t_delay_inc
@@ -878,7 +879,7 @@ class MainMenuWindow(bui.Window):
             scale=scale,
             autoselect=self._use_autoselect,
             size=(self._button_width, self._button_height),
-            label=bui.Lstr(resource='explodinary.changelogText'),
+            label=bui.Lstr(resource="explodinary.changelogText"),
             transition_delay=self._tdelay,
             on_activate_call=self._what_you_know_about_changing_down_in_the_logs,
         )
@@ -893,7 +894,7 @@ class MainMenuWindow(bui.Window):
             scale=scale,
             autoselect=self._use_autoselect,
             size=(self._button_width, self._button_height),
-            label=bui.Lstr(resource=self._r + '.howToPlayText'),
+            label=bui.Lstr(resource=self._r + ".howToPlayText"),
             color=bsecolor.sok_color,
             transition_delay=self._tdelay,
             on_activate_call=self._howtoplay,
@@ -902,7 +903,7 @@ class MainMenuWindow(bui.Window):
 
         # Scattered eggs on easter.
         if (
-            plus.get_v1_account_misc_read_val('easter', False)
+            plus.get_v1_account_misc_read_val("easter", False)
             and not self._in_game
         ):
             icon_size = 28
@@ -914,7 +915,7 @@ class MainMenuWindow(bui.Window):
                 ),
                 transition_delay=self._tdelay,
                 size=(icon_size, icon_size),
-                texture=bui.gettexture('egg4'),
+                texture=bui.gettexture("egg4"),
                 tilt_scale=0.0,
             )
         # Credits button.
@@ -926,7 +927,7 @@ class MainMenuWindow(bui.Window):
             position=(h - self._button_width * 0.5 * scale, v),
             size=(self._button_width, self._button_height),
             autoselect=self._use_autoselect,
-            label=bui.Lstr(resource=self._r + '.creditsText'),
+            label=bui.Lstr(resource=self._r + ".creditsText"),
             color=bsecolor.sok_color,
             scale=scale,
             transition_delay=self._tdelay,
@@ -951,18 +952,18 @@ class MainMenuWindow(bui.Window):
                     cme_any: Any = cme  # Type check may not hold true.
                     if (
                         not isinstance(cme_any, dict)
-                        or 'label' not in cme
-                        or not isinstance(cme['label'], (str, bui.Lstr))
-                        or 'call' not in cme
-                        or not callable(cme['call'])
+                        or "label" not in cme
+                        or not isinstance(cme["label"], (str, bui.Lstr))
+                        or "call" not in cme
+                        or not callable(cme["call"])
                     ):
                         raise ValueError(
-                            'invalid custom menu entry: ' + str(cme)
+                            "invalid custom menu entry: " + str(cme)
                         )
             except Exception:
                 custom_menu_entries = []
                 logging.exception(
-                    'Error getting custom menu entries for %s.', session
+                    "Error getting custom menu entries for %s.", session
                 )
         self._width = 250.0
         self._height = 250.0 if self._input_player else 180.0
@@ -981,9 +982,7 @@ class MainMenuWindow(bui.Window):
             scale=(
                 2.15
                 if uiscale is bui.UIScale.SMALL
-                else 1.6
-                if uiscale is bui.UIScale.MEDIUM
-                else 1.0
+                else 1.6 if uiscale is bui.UIScale.MEDIUM else 1.0
             ),
         )
         h = 125.0
@@ -1010,11 +1009,11 @@ class MainMenuWindow(bui.Window):
                 size=(self._button_width, self._button_height),
                 color=(1, 1, 1, 0.5),
                 scale=0.7,
-                h_align='center',
+                h_align="center",
                 text=bui.Lstr(value=player_name),
             )
         else:
-            player_name = ''
+            player_name = ""
         h, v, scale = positions[self._p_index]
         self._p_index += 1
         btn = bui.buttonwidget(
@@ -1022,7 +1021,7 @@ class MainMenuWindow(bui.Window):
             position=(h - self._button_width / 2, v),
             size=(self._button_width, self._button_height),
             scale=scale,
-            label=bui.Lstr(resource=self._r + '.resumeText'),
+            label=bui.Lstr(resource=self._r + ".resumeText"),
             autoselect=self._use_autoselect,
             on_activate_call=self._resume,
         )
@@ -1035,12 +1034,12 @@ class MainMenuWindow(bui.Window):
 
             # Ask the entry whether we should resume when we call
             # it (defaults to true).
-            resume = bool(entry.get('resume_on_call', True))
+            resume = bool(entry.get("resume_on_call", True))
 
             if resume:
-                call = bui.Call(self._resume_and_call, entry['call'])
+                call = bui.Call(self._resume_and_call, entry["call"])
             else:
-                call = bui.Call(entry['call'], bui.WeakCall(self._resume))
+                call = bui.Call(entry["call"], bui.WeakCall(self._resume))
 
             bui.buttonwidget(
                 parent=self._root_widget,
@@ -1048,7 +1047,7 @@ class MainMenuWindow(bui.Window):
                 size=(self._button_width, self._button_height),
                 scale=scale,
                 on_activate_call=call,
-                label=entry['label'],
+                label=entry["label"],
                 autoselect=self._use_autoselect,
             )
         # Add a 'leave' button if the menu-owner has a player.
@@ -1063,18 +1062,18 @@ class MainMenuWindow(bui.Window):
                 size=(self._button_width, self._button_height),
                 scale=scale,
                 on_activate_call=self._leave,
-                label='',
+                label="",
                 autoselect=self._use_autoselect,
             )
 
             if (
-                player_name != ''
-                and player_name[0] != '<'
-                and player_name[-1] != '>'
+                player_name != ""
+                and player_name[0] != "<"
+                and player_name[-1] != ">"
             ):
                 txt = bui.Lstr(
-                    resource=self._r + '.justPlayerText',
-                    subs=[('${NAME}', player_name)],
+                    resource=self._r + ".justPlayerText",
+                    subs=[("${NAME}", player_name)],
                 )
             else:
                 txt = bui.Lstr(value=player_name)
@@ -1084,14 +1083,14 @@ class MainMenuWindow(bui.Window):
                     h,
                     v
                     + self._button_height
-                    * (0.64 if player_name != '' else 0.5),
+                    * (0.64 if player_name != "" else 0.5),
                 ),
                 size=(0, 0),
-                text=bui.Lstr(resource=self._r + '.leaveGameText'),
-                scale=(0.83 if player_name != '' else 1.0),
+                text=bui.Lstr(resource=self._r + ".leaveGameText"),
+                scale=(0.83 if player_name != "" else 1.0),
                 color=(0.75, 1.0, 0.7),
-                h_align='center',
-                v_align='center',
+                h_align="center",
+                v_align="center",
                 draw_controller=btn,
                 maxwidth=self._button_width * 0.9,
             )
@@ -1101,8 +1100,8 @@ class MainMenuWindow(bui.Window):
                 size=(0, 0),
                 text=txt,
                 color=(0.75, 1.0, 0.7),
-                h_align='center',
-                v_align='center',
+                h_align="center",
+                v_align="center",
                 draw_controller=btn,
                 scale=0.45,
                 maxwidth=self._button_width * 0.9,
@@ -1112,15 +1111,15 @@ class MainMenuWindow(bui.Window):
     def _change_replay_speed(self, offs: int) -> None:
         if not self._replay_speed_text:
             if bui.do_once():
-                print('_change_replay_speed called without widget')
+                print("_change_replay_speed called without widget")
             return
         bs.set_replay_speed_exponent(bs.get_replay_speed_exponent() + offs)
         actual_speed = pow(2.0, bs.get_replay_speed_exponent())
         bui.textwidget(
             edit=self._replay_speed_text,
             text=bui.Lstr(
-                resource='watchWindow.playbackSpeedText',
-                subs=[('${SPEED}', str(actual_speed))],
+                resource="watchWindow.playbackSpeedText",
+                subs=[("${SPEED}", str(actual_speed))],
             ),
         )
 
@@ -1135,10 +1134,10 @@ class MainMenuWindow(bui.Window):
         from bauiv1lib.kiosk import KioskWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_right')
+        bui.containerwidget(edit=self._root_widget, transition="out_right")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            KioskWindow(transition='in_left').get_root_widget()
+            KioskWindow(transition="in_left").get_root_widget()
         )
 
     def _show_account_window(self) -> None:
@@ -1146,10 +1145,12 @@ class MainMenuWindow(bui.Window):
         from bauiv1lib.account.settings import AccountSettingsWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            AccountSettingsWindow(origin_widget=self._gather_button).get_root_widget(),
+            AccountSettingsWindow(
+                origin_widget=self._gather_button
+            ).get_root_widget(),
             from_window=self._root_widget,
         )
 
@@ -1161,11 +1162,11 @@ class MainMenuWindow(bui.Window):
         plus = bui.app.plus
         assert plus is not None
 
-        if plus.get_v1_account_state() != 'signed_in':
+        if plus.get_v1_account_state() != "signed_in":
             show_sign_in_prompt()
             return
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
             StoreBrowserWindow(
@@ -1175,9 +1176,9 @@ class MainMenuWindow(bui.Window):
 
     def _is_benchmark(self) -> bool:
         session = bs.get_foreground_host_session()
-        return getattr(session, 'benchmark_type', None) == 'cpu' or (
+        return getattr(session, "benchmark_type", None) == "cpu" or (
             bui.app.classic is not None
-            and bui.app.classic.stress_test_reset_timer is not None
+            and bui.app.classic.stress_test_update_timer is not None
         )
 
     def _confirm_end_game(self) -> None:
@@ -1189,7 +1190,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.exitToMenuText'),
+            bui.Lstr(resource=self._r + ".exitToMenuText"),
             self._end_game,
             cancel_is_selected=True,
         )
@@ -1201,7 +1202,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.exitToMenuText'),
+            bui.Lstr(resource=self._r + ".exitToMenuText"),
             self._end_game,
             cancel_is_selected=True,
         )
@@ -1213,7 +1214,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.exitToMenuText'),
+            bui.Lstr(resource=self._r + ".exitToMenuText"),
             self._end_game,
             cancel_is_selected=True,
         )
@@ -1225,7 +1226,7 @@ class MainMenuWindow(bui.Window):
         # Select cancel by default; this occasionally gets called by accident
         # in a fit of button mashing and this will help reduce damage.
         ConfirmWindow(
-            bui.Lstr(resource=self._r + '.leavePartyConfirmText'),
+            bui.Lstr(resource=self._r + ".leavePartyConfirmText"),
             self._leave_party,
             cancel_is_selected=True,
         )
@@ -1237,7 +1238,7 @@ class MainMenuWindow(bui.Window):
         assert bui.app.classic is not None
         if not self._root_widget:
             return
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.classic.return_to_main_menu_session_gracefully(reset_ui=False)
 
     def _leave(self) -> None:
@@ -1250,14 +1251,16 @@ class MainMenuWindow(bui.Window):
 
     def _credits(self) -> None:
         # pylint: disable=cyclic-import
-        from bse.ui.credits.credits_menu import CreditsMenuWindow as CreditsListWindow
+        from bse.ui.credits.credits_menu import (
+            CreditsMenuWindow as CreditsListWindow,
+        )
 
         # no-op if our underlying widget is dead or on its way out.
         if not self._root_widget or self._root_widget.transitioning_out:
             return
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
             CreditsListWindow(
@@ -1275,7 +1278,7 @@ class MainMenuWindow(bui.Window):
             return
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
             HelpWindow(
@@ -1293,7 +1296,7 @@ class MainMenuWindow(bui.Window):
             return
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
             AllSettingsWindow(
@@ -1312,7 +1315,7 @@ class MainMenuWindow(bui.Window):
             bui.app.plus.show_game_service_ui()
         else:
             logging.warning(
-                'plus feature-set is required to show game service ui'
+                "plus feature-set is required to show game service ui"
             )
 
     def _save_state(self) -> None:
@@ -1323,28 +1326,28 @@ class MainMenuWindow(bui.Window):
         ui = bui.app.ui_v1
         sel = self._root_widget.get_selected_child()
         if sel == self._start_button:
-            ui.main_menu_selection = 'Start'
+            ui.main_menu_selection = "Start"
         elif sel == self._gather_button:
-            ui.main_menu_selection = 'Gather'
+            ui.main_menu_selection = "Gather"
         elif sel == self._watch_button:
-            ui.main_menu_selection = 'Watch'
+            ui.main_menu_selection = "Watch"
         elif sel == self._how_to_play_button:
-            ui.main_menu_selection = 'HowToPlay'
+            ui.main_menu_selection = "HowToPlay"
         elif sel == self._credits_button:
-            ui.main_menu_selection = 'Credits'
+            ui.main_menu_selection = "Credits"
         elif sel == self._settings_button:
-            ui.main_menu_selection = 'Settings'
+            ui.main_menu_selection = "Settings"
         elif sel == self._account_button:
-            ui.main_menu_selection = 'Account'
+            ui.main_menu_selection = "Account"
         elif sel == self._store_button:
-            ui.main_menu_selection = 'Store'
+            ui.main_menu_selection = "Store"
         elif sel == self._quit_button:
-            ui.main_menu_selection = 'Quit'
+            ui.main_menu_selection = "Quit"
         elif sel == self._demo_menu_button:
-            ui.main_menu_selection = 'DemoMenu'
+            ui.main_menu_selection = "DemoMenu"
         else:
-            print('unknown widget in main menu store selection:', sel)
-            ui.main_menu_selection = 'Start'
+            print("unknown widget in main menu store selection:", sel)
+            ui.main_menu_selection = "Start"
 
     def _restore_state(self) -> None:
         # pylint: disable=too-many-branches
@@ -1356,24 +1359,24 @@ class MainMenuWindow(bui.Window):
         sel_name = bui.app.ui_v1.main_menu_selection
         sel: bui.Widget | None
         if sel_name is None:
-            sel_name = 'Start'
-        if sel_name == 'HowToPlay':
+            sel_name = "Start"
+        if sel_name == "HowToPlay":
             sel = self._how_to_play_button
-        elif sel_name == 'Gather':
+        elif sel_name == "Gather":
             sel = self._gather_button
-        elif sel_name == 'Watch':
+        elif sel_name == "Watch":
             sel = self._watch_button
-        elif sel_name == 'Credits':
+        elif sel_name == "Credits":
             sel = self._credits_button
-        elif sel_name == 'Settings':
+        elif sel_name == "Settings":
             sel = self._settings_button
-        elif sel_name == 'Account':
+        elif sel_name == "Account":
             sel = self._account_button
-        elif sel_name == 'Store':
+        elif sel_name == "Store":
             sel = self._store_button
-        elif sel_name == 'Quit':
+        elif sel_name == "Quit":
             sel = self._quit_button
-        elif sel_name == 'DemoMenu':
+        elif sel_name == "DemoMenu":
             sel = self._demo_menu_button
         else:
             sel = self._start_button
@@ -1389,7 +1392,7 @@ class MainMenuWindow(bui.Window):
             return
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
             GatherWindow(origin_widget=self._gather_button).get_root_widget(),
@@ -1405,7 +1408,7 @@ class MainMenuWindow(bui.Window):
             return
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
             WatchWindow(origin_widget=self._watch_button).get_root_widget(),
@@ -1421,7 +1424,7 @@ class MainMenuWindow(bui.Window):
             return
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
 
         assert bui.app.classic is not None
         bui.app.ui_v1.selecting_private_party_playlist = False
@@ -1434,7 +1437,7 @@ class MainMenuWindow(bui.Window):
         assert bui.app.classic is not None
         bui.app.classic.resume()
         if self._root_widget:
-            bui.containerwidget(edit=self._root_widget, transition='out_right')
+            bui.containerwidget(edit=self._root_widget, transition="out_right")
         bui.app.ui_v1.clear_main_menu_window()
 
         # If there's callbacks waiting for this window to go away, call them.
@@ -1447,11 +1450,13 @@ class MainMenuWindow(bui.Window):
         from bse.ui.changelog import ChangelogWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
-            ChangelogWindow(origin_widget=self._how_to_play_button).get_root_widget()
+            ChangelogWindow(
+                origin_widget=self._how_to_play_button
+            ).get_root_widget()
         )
 
 
 # Replace with old main menu for testing.
-#MainMenuWindow = VanillaMainMenu
+# MainMenuWindow = VanillaMainMenu

@@ -1,0 +1,215 @@
+{
+    "name": "BombSquad Proyecto: Claypocalypse",
+    "subname": "Proyecto: Claypocalypse",
+    "createText": "Crear",
+    "deleteText": "Borrar",
+    "renameText": "Renombrar",
+    "editText": "Editar",
+    "cloneText": "Duplicar",
+    "shareText": "Compartir",
+    "dupeText":"¿Duplicar \"${A}\"?",
+    "resetMappingText": "¿Estás seguro que quieres reiniciar la config. de botónes?",
+    "resetMappingAlsoText": "Esto tambíen incluye opciones avanzadas\ny la configuración del control secundario.",
+    "pressIntro": {
+        "KeyText": "Presiona una tecla",
+        "ButtonText": "Presiona un botón",
+        "ScreenText": "Presiona la pantalla",
+        "tuco": " para comenzar"
+    },
+    "killFeed": {
+        "leftText": "${VICTIM} huyó frente a ${NAME}.",
+        "leftBetrayalText": "${NAME} decepcionó a ${VICTIM}.",
+        "leftSuicideText": "${NAME} se acobardó.",
+        "oneHitKillText": "${NAME} obliteró a ${VICTIM}.",
+        "oneHitKillMeleeText": "${NAME} aniquiló a ${VICTIM}.",
+        "cursedText": "${NAME} se llevó ${VICTIM} con él.",
+        "cursedSuicideText": "${NAME} sucumbió a su maldición.",
+        "fallText": "${NAME} aventó a ${VICTIM}.",
+        "fallSuicideText": "${NAME} no vió a donde iba.",
+        "bombText":"${NAME} explotó a ${VICTIM}.",
+        "bombSuicideText": "${NAME} se explotó a si mismo.",
+        "bumpText": "${NAME} descalabró a ${VICTIM}.",
+        "bumpBetrayalText": "${NAME} descalabró a ${VICTIM}.",
+        "bumpSuicideText": "${NAME} tuvo una concusión fatal.",
+        "shatterText": "${NAME} despedazó a ${VICTIM}.",
+        "shatterSuicideText": "${NAME} se criopreservó... pobremente."
+    },
+    "partyQueue": {
+        "status": {
+            "queue": "En cola",
+            "join": "Uniendose",
+            "joinTry": "Intento de unirse en ${A}..."
+        },
+        "onPartyNotice": "Estás alojando una fiesta,\nunirse a otra fiesta\ndesconectará a jugadores de la tuya.\n¿Deseas continuar?"
+    },
+    "rulesets": {
+        "titleText": "Reglamentos",
+        "rulesetText": "Reglas de Juego",
+        "tabs": {
+            "preset": "Predeterminados",
+            "custom": "Personalizar..."
+        },
+        "createText": "Crear",
+        "editText": "Modificar",
+        "deleteText": "Eliminar",
+        "__default__": "Claypocalypse",
+        "__default__list": "Reglamento Project: Claypocalypse",
+        "__default__desc": "Una manera fresca y emocionante de experimentar el juego.",
+        "__vanilla__": "Clásico",
+        "__vanilla__list": "Reglamento BombSquad",
+        "__vanilla__desc": "El gameplay clásico, limpio y puro de BombSquad."
+    },
+    "seriesLength": {
+        "titleText": "Duración de la Partida...",
+        "winRequirementText": "Requerimiento para Ganar",
+        "roundsText": "Rondas",
+        "bestOfText": "Mejor de",
+        "firstToText": "Primero a"
+    },
+    "translations": {
+        "gameNames": {
+            "The Hundredth Loop": "El Centésimo Ciclo",
+            "Classic PCP Onslaught": "Matanza PCP Clásica"
+        },
+        "gameDescriptions": {
+            "Fight your way on a classy BombSquad arena.": "Combate hasta la muerte en una arena BombSquad clásica."
+        },
+        "tips": {
+            "Take your time! It's gonna be\nlengthy whether you rush or not.": "¡Tomate tu tiempo! Vas a durar un\nrato aunque te apresures.",
+            "You didn't read that wrong!\n100 levels, just for you!": "¡Lo leíste bien!\n¡100 niveles, solo para ti!",
+            "This is the definitive\nMarathon if you ask me.": "Este es el maratón definitivo\nsi es que me lo preguntas.",
+            "Any reference to any other\nBombSquad mod is purely a coincidence.": "Cualquier referencia a otro mod\nde BombSquad es puramente coincidental."
+        },
+        "rulesetnames": {
+            "Health": "Salud",
+            "Max Health": "Salud Máxima",
+            "Shield Health": "Salud del Escudo",
+            "Shield Max Health": "Salud Máxima del Escudo",
+            "Shield Decay Damage": "Daño por Decadencia al Escudo",
+            "Shield Decay Rate": "Frecuencia de Decadencia al Escudo",
+            "Shield Color Inheritance": "Inheritencia de color al Escudo",
+            "Shield Color": "Color del Escudo",
+            "Shield Scale": "Escala del Escudo",
+            "Punch Power Scale": "Escala de Daño a Golpes",
+            "Punch Cooldown": "Retraso entre Golpes",
+            "Super Punch Power Scale": "Escala de Daño a Super Golpes",
+            "Super Power Cooldown": "Retraso ente Super Golpes",
+            "Jump Cooldown": "Retraso entre Saltos",
+            "Grab Cooldown": "Retraso entre Agarres",
+            "Bomb Cooldown": "Retraso entra Bombas",
+            "Default Bomb": "Bombas Predeterminadas",
+            "Default Bomb Count": "Cantidad de Bombas Predeterminadas",
+            "Default Gloves": "Guantes por Defecto",
+            "Default Shield": "Escudo por Defecto",
+            "Powerup Duration": "Duración de Powerups",
+            "Curse Duration": "Duración de la Maldición",
+            "Curse Damage Threshold": "Resistencia al daño al Maldecirse",
+            "Impact Scale": "Escala de Impacto",
+            "Self-Harm Damage Scale": "Escala de Daño Propio",
+            "Self-Harm Stun Time Scale": "Escala de noqueo al Daño Propio",
+            "Respawn Immunity Time": "Tiempo de Immunidad al Aparecer",
+            "Can Celebrate at Will": "Puede Celebrar cuando sea",
+            "Celebration Hold Time": "Retraso para Celebrar",
+            "Can Spin-out": "Puede Marearse",
+            "Can Wavedash": "Puede Girar Rápidamente"
+        },
+        "THL": {
+            "The Loop": "El Ciclo",
+            "You'll get used to it": "Te acostumbrarás a él",
+            "The Weak Loop": null,
+            "Might be a bit wack": null
+        },
+        "chat": {
+            "Run \"/help [number]\" to switch pages": "Ejecuta \"/help [número]\" para cambiar páginas",
+            "or \"/help [command]\" to show it's usage.": "o \"/help [comando]\" para mostrar su uso.",
+            "Chat cleared!": "¡Chat limpiado!",
+            "(locally)": "(localmente)",
+            "Access granted!": "¡Acceso concedido!"
+        },
+        "commands": {
+            "Usage:": "Uso:"
+        },
+        "errorC": {
+            "You don't have permissions to run this command.": "No tienes los permisos para ejecutar este comando.",
+            "Unknown command.": "Comando desconocido.",
+            "Provided command does not exist.": "El comando proveído no existe.",
+            "A command error occured!": "¡Ocurrió un error al ejecutar el comando!",
+            "Command failed.": "Falló el comando.",
+            "Check console for more details.": "Checa la consola para más detalles.",
+            "Tell the host to check console for more details.": "Dile al anfitrión que cheque la consola para más detalles.",
+            "You're not hosting a party.": "¡No estás alojando una fiesta!",
+            "\"${VALUE}\" isn't valid!": "¡\"${VALUE}\" no es válido/a!",
+            "\"${VALUE}\" isn't a valid ${TYPE}!": "¡\"${VALUE}\" no es un(a) ${TYPE} válido/a!",
+            "Falling back to ${VALUE}.": "Reasignando a ${VALUE}.",
+            "Error kicking player.": "Error expulsando jugador.",
+            "You can't ${ACTION} ${TARGET}!": "¡No puedes ${ACTION}${TARGET}!",
+            "You got kicked!\nReason: ${REASON}": "¡Has sido expulsado!\nRazón: ${REASON}",
+            "You got banned!\nTime: ${TIME} minutes\nReason: ${REASON}": "¡Has sido baneado!\nTiempo: ${TIME} minutos\nRazón: ${REASON}",
+            "Invalid map name.": "Nombre de mapa inválido.",
+            "Invalid client ID.": "ID de cliente inválido.",
+            "Invalid operator level.": "Nivel de operador inválido.",
+            "Couldn't get account ID.\nYou might not be running a party!": "No se pudo obtener ID de cuenta.\n¡Quizás no estás alojando una fiesta!"
+        },
+        "kick_kwd": {
+            "yourself": "te a ti mismo",
+            "the host": " al anfitrión",
+            "kick": "expulsar",
+            "ban": "banear",
+            "None provided": "Ningúna proveída"
+        },
+        "type": {
+            "number": "número",
+            "key": "clave",
+            "class": "clase"
+        }
+    },
+    "warning": {
+        "devToolsFirstShow": "ADVERTENCIA: ¡Estas herramientas son\núnicamente para pruebas de desarrollo!\n\nProcede si sabes lo que haces.",
+        "wickedNeedAdmin": "Necesitas ejecutar el juego como administrador para hacer esto.",
+        "wickedSettingsFalse": "Has desbloquedo cierta colleción de opciones...",
+        "wickedSettingsTrue": "...Y se desvanecieron tal cuál."
+    },
+    "error": {
+        "notRunningGameActivity": "¡No estás ejecutando una partida!",
+        "rulesetLoadFail": "Error cargando reglas de usuario.\nRevisa la consola para más información.",
+        "messageCantBeEmpty": "Mensaje no puede estar vacío.",
+        "cantUseName": "¡No puedes usar ese nombre!",
+        "queueCancelSignOff": "Cola cancelada debido al cierre de sesión.",
+        "queueUnableToJoin": "No se ha podido unir al servidor.",
+        "proLimited": "Un \"Pro Unlocker\" ha sido detectado, varias funciones han sido bloqueadas.\nPor favor, deshabilita tu plugin unlocker si quieres acceder a todo Project: Claypocalypse."
+    },
+    "discordrp": {
+        "session": {
+            "coop": {
+                "Default": "Campaña",
+                "Easy": "Campaña Fácil",
+                "Challenges": "Practica",
+                "Extra Challenges": "Desafíos Extra",
+                "Claypocalypse Coop Levels": "Claypocalypse",
+                "Claypocalypse Internal": "Claypocalypse"
+            },
+            "ffa": "Todos contra Todos",
+            "teams": "VS en Equipos",
+            "private": "Partida Privada",
+            "other": "Partida"
+        },
+        "players": {
+            "solo": "Solitario",
+            "coop": "Co-op Local",
+            "multi": "Multijugador Local",
+            "private": "Fiesta Privada",
+            "public": "Fiesta Pública",
+            "online": "Fiesta en Línea",
+            "wait": "Esperando jugadores..."
+        },
+        "idle": "Inactivo",
+        "navigate": "Navegando",
+        "spectate": "Espectando",
+        "watch": "Mirando cuidadosamente",
+        "wait": "Esperando...",
+        "play": "Jugando",
+        "replay": "Viendo una repetición",
+        "menu": "Menú Principal",
+        "lobby": "Lobby"
+    }
+}

@@ -12,16 +12,15 @@ from typing import TYPE_CHECKING
 
 import bascenev1 as bs
 import bauiv1 as bui
-
-if TYPE_CHECKING:
-    from typing import Any
+import bse
 
 from bascenev1lib import mainmenu
+
 
 class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
     """Activity showing the rotating main menu bg stuff."""
 
-    _stdassets = bs.Dependency(bs.AssetPackage, 'stdassets@1')
+    _stdassets = bs.Dependency(bs.AssetPackage, "stdassets@1")
 
     def __init__(self, settings: dict):
         super().__init__(settings)
@@ -45,10 +44,10 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         self._news: NewsDisplay | None = None
 
         # Explodinary
-        self.square_hair_name   : bs.NodeActor | None = None
-        self.splash_text        : bs.NodeActor | None = None
+        self.square_hair_name: bs.NodeActor | None = None
+        self.splash_text: bs.NodeActor | None = None
 
-        self._stage_ceiling = [(-3,20,17),(5,20,17)]
+        self._stage_ceiling = [(-3, 20, 17), (5, 20, 17)]
 
     def on_transition_in(self) -> None:
         # pylint: disable=too-many-locals
@@ -69,50 +68,50 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         vr_mode = bs.app.env.vr
 
         import datetime
+
         hour = datetime.datetime.now().hour
 
-        theme = bs.app.config.get("BSE: Menu Theme", 'Classic')
-        color = (1, 1, 1, 1) if theme == 'Forest' else (0.5, 0.6, 0.5, 0.7)
-        fade_in_sub_opacity = (
-            0.6 if theme == 'Forest' else
-            1
-        )
+        theme = bs.app.config.get("BSE: Menu Theme", "Classic")
+        color = (1, 1, 1, 1) if theme == "Forest" else (0.5, 0.6, 0.5, 0.7)
+        fade_in_sub_opacity = 0.6 if theme == "Forest" else 1
 
         # FIXME: Need a node attr for vr-specific-scale.
-        scale = ( 0.9 if (app.ui_v1.uiscale is bs.UIScale.SMALL or vr_mode) else 0.7 )
+        scale = (
+            0.9 if (app.ui_v1.uiscale is bs.UIScale.SMALL or vr_mode) else 0.7
+        )
 
         # Efro credit
         self.my_name = bs.NodeActor(
             bs.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach'  : 'bottom',
-                    'h_align'   : 'center',
-                    'color'     : color,
-                    'flatness'  : 1.0,
-                    'shadow'    : 1.0 if vr_mode else 0.5,
-                    'scale'     : scale,
-                    'position'  : (0, 10),
-                    'vr_depth'  : -10,
-                    'text'      : '\xa9 2011-2024 Eric Froemling',
+                    "v_attach": "bottom",
+                    "h_align": "center",
+                    "color": color,
+                    "flatness": 1.0,
+                    "shadow": 1.0 if vr_mode else 0.5,
+                    "scale": scale,
+                    "position": (0, 10),
+                    "vr_depth": -10,
+                    "text": "\xa9 2011-2024 Eric Froemling",
                 },
             )
         )
         # Explodinar!
         self.square_hair_name = bs.NodeActor(
             bs.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach'  : 'bottom',
-                    'h_attach'  : 'left',
-                    'h_align'   : 'left',
-                    'color'     : color,
-                    'flatness'  : 1.0,
-                    'shadow'    : 1.0 if vr_mode else 0.5,
-                    'scale'     : scale,
-                    'position'  : (10, 25),
-                    'vr_depth'  : -10,
-                    'text'      : 'Modpack by Square Hair Team\n          SoK & TrialTemp',
+                    "v_attach": "bottom",
+                    "h_attach": "left",
+                    "h_align": "left",
+                    "color": color,
+                    "flatness": 1.0,
+                    "shadow": 1.0 if vr_mode else 0.5,
+                    "scale": scale,
+                    "position": (10, 25),
+                    "vr_depth": -10,
+                    "text": "Modpack by Square Hair Team\n         SoK & 3alTemp",
                 },
             )
         )
@@ -124,31 +123,28 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         vr_mode = app.env.vr
         uiscale = app.ui_v1.uiscale
 
-        # In cases where we're doing lots of dev work lets always show the
-        # build number.
-        force_show_build_number = False
-
         if not bs.app.ui_v1.use_toolbars:
-            from bse import _metadata
+            from bse._data import explodinary as bsedata
+
             text = (
-                f'BombSquad Version: 1.7.35\n'
-                f'{_metadata.version} - {_metadata.subname}'
+                f"BombSquad Version: {bui.app.env.engine_version}\n"
+                f"{bsedata['version']} - {bsedata['title']}"
             )
             scale = 0.9 if (uiscale is bs.UIScale.SMALL or vr_mode) else 0.7
             self.version = bs.NodeActor(
                 bs.newnode(
-                    'text',
+                    "text",
                     attrs={
-                        'v_attach'  : 'bottom',
-                        'h_attach'  : 'right',
-                        'h_align'   : 'right',
-                        'flatness'  : 1.0,
-                        'vr_depth'  : -10,
-                        'shadow'    : 1.0 if vr_mode else 0.5,
-                        'color'     : color,
-                        'scale'     : scale,
-                        'position'  : (-10, 25),
-                        'text'      : text,
+                        "v_attach": "bottom",
+                        "h_attach": "right",
+                        "h_align": "right",
+                        "flatness": 1.0,
+                        "vr_depth": -10,
+                        "shadow": 1.0 if vr_mode else 0.5,
+                        "color": color,
+                        "scale": scale,
+                        "position": (-10, 25),
+                        "text": text,
                     },
                 )
             )
@@ -157,63 +153,63 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         # host is navigating menus while they're just staring at an
         # empty-ish screen.
         tval = bs.Lstr(
-            resource='hostIsNavigatingMenusText',
-            subs=[('${HOST}', plus.get_v1_account_display_string())],
+            resource="hostIsNavigatingMenusText",
+            subs=[("${HOST}", plus.get_v1_account_display_string())],
         )
         self._host_is_navigating_text = bs.NodeActor(
             bs.newnode(
-                'text',
+                "text",
                 attrs={
-                    'text': tval,
-                    'client_only': True,
-                    'position': (0, -200),
-                    'flatness': 1.0,
-                    'h_align': 'center',
+                    "text": tval,
+                    "client_only": True,
+                    "position": (0, -200),
+                    "flatness": 1.0,
+                    "h_align": "center",
                 },
             )
         )
         if not app.classic.main_menu_did_initial_transition and hasattr(
-            self, 'my_name'
+            self, "my_name"
         ):
             subname_nodes = [
                 self.my_name.node,
                 self.square_hair_name.node,
-                self.version.node
+                self.version.node,
             ]
 
             # Animate the opacity of every subtitle node.
             for node in subname_nodes:
-                bs.animate(node, 'opacity', {
-                    2.3: 0,
-                    3.0: fade_in_sub_opacity
-                })
+                bs.animate(node, "opacity", {2.3: 0, 3.0: fade_in_sub_opacity})
 
         # Splash text!
-        color = (1.0,0.88,0.0) if hour < 21 and hour > 6 else (0.15, 0.95, 0.5)
+        color = (
+            (1.0, 0.88, 0.0) if hour < 21 and hour > 6 else (0.15, 0.95, 0.5)
+        )
 
         from bse import splashes
+
         rawsplash = random.choice(splashes.splashText)
         self.splashText = bs.NodeActor(
             bs.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach':'center',
-                    'v_align':'bottom',
-                    'h_align':'left',
-                    'color': color,
-                    'shadow':1.0,
-                    'flatness':0.0,
-                    'scale':0.8,
-                    'vr_depth':-60,
-                    'maxwidth':280,
-                    'position':(79,200),
-                    'text':bs.Lstr(
-                        translate= ('explodinary.splashes', rawsplash),
-                        ),
+                    "v_attach": "center",
+                    "v_align": "bottom",
+                    "h_align": "left",
+                    "color": color,
+                    "shadow": 1.0,
+                    "flatness": 0.0,
+                    "scale": 0.8,
+                    "vr_depth": -60,
+                    "maxwidth": 280,
+                    "position": (79, 200),
+                    "text": bs.Lstr(
+                        translate=("explodinary.splashes", rawsplash),
+                    ),
                 },
             )
         )
-        bs.animate(self.splashText.node, 'opacity', {2.3: 0, 3.0: 1.0})
+        bs.animate(self.splashText.node, "opacity", {2.3: 0, 3.0: 1.0})
 
         self._update_timer = bs.Timer(1.0, self._update, repeat=True)
         self._update()
@@ -222,7 +218,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         bui.add_clean_frame_callback(bs.WeakCall(self._start_preloads))
 
         # We don't want a seed when loading splashes!
-        #random.seed()
+        # random.seed()
 
         if not (env.demo or env.arcade) and not app.ui_v1.use_toolbars:
             self._news = NewsDisplay(self)
@@ -254,7 +250,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     )
                 # ..or in normal cases go back to the main menu
                 else:
-                    if main_menu_location == 'Gather':
+                    if main_menu_location == "Gather":
                         # pylint: disable=cyclic-import
                         from bauiv1lib.gather import GatherWindow
 
@@ -262,7 +258,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             GatherWindow(transition=None).get_root_widget(),
                             from_window=False,  # Disable check here.
                         )
-                    elif main_menu_location == 'Watch':
+                    elif main_menu_location == "Watch":
                         # pylint: disable=cyclic-import
                         from bauiv1lib.watch import WatchWindow
 
@@ -270,7 +266,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             WatchWindow(transition=None).get_root_widget(),
                             from_window=False,  # Disable check here.
                         )
-                    elif main_menu_location == 'Team Game Select':
+                    elif main_menu_location == "Team Game Select":
                         # pylint: disable=cyclic-import
                         from bauiv1lib.playlist.browser import (
                             PlaylistBrowserWindow,
@@ -282,7 +278,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             ).get_root_widget(),
                             from_window=False,  # Disable check here.
                         )
-                    elif main_menu_location == 'Free-for-All Game Select':
+                    elif main_menu_location == "Free-for-All Game Select":
                         # pylint: disable=cyclic-import
                         from bauiv1lib.playlist.browser import (
                             PlaylistBrowserWindow,
@@ -295,7 +291,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             ).get_root_widget(),
                             from_window=False,  # Disable check here.
                         )
-                    elif main_menu_location == 'Coop Select':
+                    elif main_menu_location == "Coop Select":
                         # pylint: disable=cyclic-import
                         from bauiv1lib.coop.browser import CoopBrowserWindow
 
@@ -305,7 +301,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                             ).get_root_widget(),
                             from_window=False,  # Disable check here.
                         )
-                    elif main_menu_location == 'Benchmarks & Stress Tests':
+                    elif main_menu_location == "Benchmarks & Stress Tests":
                         # pylint: disable=cyclic-import
                         from bauiv1lib.debug import DebugWindow
 
@@ -340,216 +336,239 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         self.build_map()
 
     def build_map(self) -> None:
-        """ Creates our background map. """
+        """Creates our background map."""
 
-        mesh            = bs.getmesh('bse_zero')
-        trees_mesh      = bs.getmesh('bse_zero')
-        bottom_mesh     = bs.getmesh('bse_zero')
-        color_texture   = bs.gettexture('bridgitLevelColor')
-        trees_texture   = bs.gettexture('treesColor')
-        bgmesh          = bs.getmesh('bse_panoramaBG')
+        mesh = bs.getmesh("bse_zero")
+        trees_mesh = bs.getmesh("bse_zero")
+        bottom_mesh = bs.getmesh("bse_zero")
+        color_texture = bs.gettexture("bridgitLevelColor")
+        trees_texture = bs.gettexture("treesColor")
+        bgmesh = bs.getmesh("bse_panoramaBG")
 
-        theme = bs.app.config.get("BSE: Menu Theme", 'Classic')
+        theme = bs.app.config.get("BSE: Menu Theme", "Classic")
         bgtex = bs.gettexture(
-            'bse_'+(
-                'adventureBG'       if theme == 'Adventure' else
-                'littleIslandBG'    if theme == 'Island' else
-                'clayForestBG'      if theme == 'Forest' else
-                'mountainBG'        if theme == 'Mountain' else
-                'spookyBG'          if theme == 'Spooky' else
-                'panoramaBG'
+            "bse_"
+            + (
+                "adventureBG"
+                if theme == "Adventure"
+                else (
+                    "littleIslandBG"
+                    if theme == "Island"
+                    else (
+                        "clayForestBG"
+                        if theme == "Forest"
+                        else (
+                            "mountainBG"
+                            if theme == "Mountain"
+                            else (
+                                "spookyBG"
+                                if theme == "Spooky"
+                                else "panoramaBG"
+                            )
+                        )
+                    )
+                )
             )
         )
 
-
         # Load these last since most platforms don't use them.
-        vr_bottom_fill_mesh = bs.getmesh('thePadVRFillBottom')
-        vr_top_fill_mesh    = bs.getmesh('thePadVRFillTop')
+        vr_bottom_fill_mesh = bs.getmesh("thePadVRFillBottom")
+        vr_top_fill_mesh = bs.getmesh("thePadVRFillTop")
 
         gnode = self.globalsnode
         # gnode.camera_mode = 'rotate'
 
         import datetime
+
         hour = datetime.datetime.now().hour
-        theme = bs.app.config.get("BSE: Menu Theme", 'Classic')
+        theme = bs.app.config.get("BSE: Menu Theme", "Classic")
         is_night = not (hour < 21 and hour > 6)
 
         # Create a crickets sound effect if we're playing at ungodly hours!
         if is_night:
-            crickets = bs.getsound('bse_crickets')
-            bs.newnode('sound',
-                       owner=self.globalsnode,
-                       attrs={
-                           'sound':crickets,
-                           'volume':0.2
-                           }
-                       )
+            crickets = bs.getsound("bse_crickets")
+            bs.newnode(
+                "sound",
+                owner=self.globalsnode,
+                attrs={"sound": crickets, "volume": 0.2},
+            )
 
         # Adventure theme
-        if theme == 'Adventure':
+        if theme == "Adventure":
             if is_night:
-                gnode.tint              = (0.41,0.59,0.64)
-                gnode.ambient_color     = (0.88, 0.91, 1.2)
-                gnode.vignette_outer    = (0.39, 0.42, 0.49)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.41, 0.59, 0.64)
+                gnode.ambient_color = (0.88, 0.91, 1.2)
+                gnode.vignette_outer = (0.39, 0.42, 0.49)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             else:
-                gnode.tint              = (1.14, 1.1, 1.0)
-                gnode.ambient_color     = (1.06, 1.04, 1.03)
-                gnode.vignette_outer    = (0.45, 0.55, 0.54)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (1.14, 1.1, 1.0)
+                gnode.ambient_color = (1.06, 1.04, 1.03)
+                gnode.vignette_outer = (0.45, 0.55, 0.54)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             musictrack = bs.MusicTypeBSE.MENU_ADVENTURE
 
         # Island theme
-        elif theme == 'Island':
+        elif theme == "Island":
             if is_night:
-                gnode.tint              = (0.41,0.59,0.64)
-                gnode.ambient_color     = (0.88, 0.91, 1.2)
-                gnode.vignette_outer    = (0.39, 0.42, 0.49)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.41, 0.59, 0.64)
+                gnode.ambient_color = (0.88, 0.91, 1.2)
+                gnode.vignette_outer = (0.39, 0.42, 0.49)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             else:
-                gnode.tint              = (1.14, 1.1, 1.0)
-                gnode.ambient_color     = (1.06, 1.04, 1.03)
-                gnode.vignette_outer    = (0.45, 0.55, 0.54)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (1.14, 1.1, 1.0)
+                gnode.ambient_color = (1.06, 1.04, 1.03)
+                gnode.vignette_outer = (0.45, 0.55, 0.54)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             musictrack = bs.MusicTypeBSE.MENU_ISLAND
 
         # Forest theme
-        elif theme == 'Forest':
+        elif theme == "Forest":
             if is_night:
-                gnode.tint              = (0.41,0.59,0.64)
-                gnode.ambient_color     = (0.88, 0.91, 1.2)
-                gnode.vignette_outer    = (0.39, 0.42, 0.49)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.41, 0.59, 0.64)
+                gnode.ambient_color = (0.88, 0.91, 1.2)
+                gnode.vignette_outer = (0.39, 0.42, 0.49)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             else:
-                gnode.tint              = (1.14, 1.1, 1.0)
-                gnode.ambient_color     = (1.06, 1.04, 1.03)
-                gnode.vignette_outer    = (0.45, 0.55, 0.54)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (1.14, 1.1, 1.0)
+                gnode.ambient_color = (1.06, 1.04, 1.03)
+                gnode.vignette_outer = (0.45, 0.55, 0.54)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             musictrack = bs.MusicTypeBSE.MENU_FOREST
 
         # Mountain theme
-        elif theme == 'Mountain':
-            self._snow_timer: bs.Timer | None = bs.Timer(0.12, self.do_snow, repeat=True)
+        elif theme == "Mountain":
+            self._snow_timer: bs.Timer | None = bs.Timer(
+                0.12, self.do_snow, repeat=True
+            )
             if is_night:
-                gnode.tint              = (0.41,0.59,0.64)
-                gnode.ambient_color     = (0.88, 0.91, 1.2)
-                gnode.vignette_outer    = (0.39, 0.42, 0.49)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.41, 0.59, 0.64)
+                gnode.ambient_color = (0.88, 0.91, 1.2)
+                gnode.vignette_outer = (0.39, 0.42, 0.49)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             else:
-                gnode.tint              = (1.05, 1.0, 1.12)
-                gnode.ambient_color     = (1.2, 1.17, 1.1)
-                gnode.vignette_outer    = (0.6, 0.55, 0.69)
-                gnode.vignette_inner    = (0.95, 0.95, 0.93)
+                gnode.tint = (1.05, 1.0, 1.12)
+                gnode.ambient_color = (1.2, 1.17, 1.1)
+                gnode.vignette_outer = (0.6, 0.55, 0.69)
+                gnode.vignette_inner = (0.95, 0.95, 0.93)
             musictrack = bs.MusicTypeBSE.MENU_MOUNTAIN
 
         # Spooky theme
-        elif theme == 'Spooky':
+        elif theme == "Spooky":
             if is_night:
-                gnode.tint              = (0.41,0.59,0.64)
-                gnode.ambient_color     = (0.2, 0.2, 0.2)
-                gnode.vignette_outer    = (0.39, 0.42, 0.49)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.41, 0.59, 0.64)
+                gnode.ambient_color = (0.2, 0.2, 0.2)
+                gnode.vignette_outer = (0.39, 0.42, 0.49)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             else:
-                gnode.tint              = (0.6, 0.6, 0.6)
-                gnode.ambient_color     = (0.2, 0.2, 0.2)
-                gnode.vignette_outer    = (0.45, 0.55, 0.54)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.6, 0.6, 0.6)
+                gnode.ambient_color = (0.2, 0.2, 0.2)
+                gnode.vignette_outer = (0.45, 0.55, 0.54)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
             musictrack = bs.MusicTypeBSE.MENU_SPOOKY
 
         # Classic theme
         else:
             if is_night:
-                gnode.tint              = (0.41,0.59,0.64)
-                gnode.ambient_color     = (0.88, 0.91, 1.2)
-                gnode.vignette_outer    = (0.39, 0.42, 0.49)
-                gnode.vignette_inner    = (0.99, 0.98, 0.98)
+                gnode.tint = (0.41, 0.59, 0.64)
+                gnode.ambient_color = (0.88, 0.91, 1.2)
+                gnode.vignette_outer = (0.39, 0.42, 0.49)
+                gnode.vignette_inner = (0.99, 0.98, 0.98)
                 musictrack = bs.MusicTypeBSE.MENU_NIGHT
             else:
-                gnode.tint              = (1.1, 1.1, 1.0)
-                gnode.ambient_color     = (1.1, 1.1, 1.0)
-                gnode.vignette_outer    = (0.7, 0.65, 0.75)
-                gnode.vignette_inner    = (0.95, 0.95, 0.93)
+                gnode.tint = (1.1, 1.1, 1.0)
+                gnode.ambient_color = (1.1, 1.1, 1.0)
+                gnode.vignette_outer = (0.7, 0.65, 0.75)
+                gnode.vignette_inner = (0.95, 0.95, 0.93)
                 musictrack = bs.MusicTypeBSE.MENU
 
         # Play our tunes! (with a 0.15s delay.)
         bui.apptimer(0.15, bui.WeakCall(self._start_menu_music, musictrack))
 
-
         self.bottom = bs.NodeActor(
             bs.newnode(
-                'terrain',
+                "terrain",
                 attrs={
-                    'mesh'              : bottom_mesh,
-                    'lighting'          : False,
-                    'reflection'        : 'soft',
-                    'reflection_scale'  : [0.45],
-                    'color_texture'     : color_texture,
+                    "mesh": bottom_mesh,
+                    "lighting": False,
+                    "reflection": "soft",
+                    "reflection_scale": [0.45],
+                    "color_texture": color_texture,
                 },
             )
         )
         self.vr_bottom_fill = bs.NodeActor(
             bs.newnode(
-                'terrain',
+                "terrain",
                 attrs={
-                    'mesh'              : vr_bottom_fill_mesh,
-                    'lighting'          : False,
-                    'vr_only'           : True,
-                    'color_texture'     : color_texture,
+                    "mesh": vr_bottom_fill_mesh,
+                    "lighting": False,
+                    "vr_only": True,
+                    "color_texture": color_texture,
                 },
             )
         )
         self.vr_top_fill = bs.NodeActor(
             bs.newnode(
-                'terrain',
+                "terrain",
                 attrs={
-                    'mesh'              : vr_top_fill_mesh,
-                    'vr_only'           : True,
-                    'lighting'          : False,
-                    'color_texture'     : bgtex,
+                    "mesh": vr_top_fill_mesh,
+                    "vr_only": True,
+                    "lighting": False,
+                    "color_texture": bgtex,
                 },
             )
         )
         self.terrain = bs.NodeActor(
             bs.newnode(
-                'terrain',
+                "terrain",
                 attrs={
-                    'mesh'              : mesh,
-                    'color_texture'     : color_texture,
-                    'reflection'        : 'soft',
-                    'reflection_scale'  : [0.3],
+                    "mesh": mesh,
+                    "color_texture": color_texture,
+                    "reflection": "soft",
+                    "reflection_scale": [0.3],
                 },
             )
         )
         self.trees = bs.NodeActor(
             bs.newnode(
-                'terrain',
+                "terrain",
                 attrs={
-                    'mesh'              : trees_mesh,
-                    'lighting'          : False,
-                    'reflection'        : 'char',
-                    'reflection_scale'  : [0.1],
-                    'color_texture'     : trees_texture,
+                    "mesh": trees_mesh,
+                    "lighting": False,
+                    "reflection": "char",
+                    "reflection_scale": [0.1],
+                    "color_texture": trees_texture,
                 },
             )
         )
         self.bgterrain = bs.NodeActor(
             bs.newnode(
-                'terrain',
+                "terrain",
                 attrs={
-                    'mesh'          : bgmesh,
-                    'color'         : (0.92, 0.91, 0.9),
-                    'lighting'      : False,
-                    'background'    : True,
-                    'color_texture' : bgtex,
+                    "mesh": bgmesh,
+                    "color": (0.92, 0.91, 0.9),
+                    "lighting": False,
+                    "background": True,
+                    "color_texture": bgtex,
                 },
             )
         )
 
     def do_snow(self):
         from bse.custom.particle import bseVFX
-        bseVFX('snowflake',
-               ([random.uniform(self._stage_ceiling[0][i], self._stage_ceiling[1][i]) for i in range(3)]),
-               (0.2,-3,-0.2))
+
+        bseVFX(
+            "snowflake",
+            (
+                [
+                    random.uniform(
+                        self._stage_ceiling[0][i], self._stage_ceiling[1][i]
+                    )
+                    for i in range(3)
+                ]
+            ),
+            (0.2, -3, -0.2),
+        )
 
     def _update(self) -> None:
         # pylint: disable=too-many-locals
@@ -564,15 +583,15 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             if custom_texture != self._custom_logo_tex_name:
                 self._custom_logo_tex_name = custom_texture
                 self._logo_node.texture = bs.gettexture(
-                    custom_texture if custom_texture is not None else 'logo'
+                    custom_texture if custom_texture is not None else "logo"
                 )
                 self._logo_node.mesh_opaque = (
-                    None if custom_texture is not None else bs.getmesh('logo')
+                    None if custom_texture is not None else bs.getmesh("logo")
                 )
                 self._logo_node.mesh_transparent = (
                     None
                     if custom_texture is not None
-                    else bs.getmesh('logoTransparent')
+                    else bs.getmesh("logoTransparent")
                 )
 
         # If language has changed, recreate our logo text/graphics.
@@ -595,7 +614,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             # We draw higher in kiosk mode (make sure to test this
             # when making adjustments) for now we're hard-coded for
             # a few languages.. should maybe look into generalizing this?..
-            if app.lang.language == 'Chinese':
+            if app.lang.language == "Chinese":
                 base_x = -270.0
                 x = base_x - 20.0
                 spacing = 85.0 * base_scale
@@ -605,7 +624,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     113 + y + 1.2 * y_extra,
                     0.34 * base_scale,
                     delay=base_delay + 0.1,
-                    custom_texture='chTitleChar1',
+                    custom_texture="chTitleChar1",
                     jitter_scale=2.0,
                     vr_depth_offset=-30,
                 )
@@ -616,7 +635,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     110 + y + 1.2 * y_extra,
                     0.31 * base_scale,
                     delay=base_delay + 0.15,
-                    custom_texture='chTitleChar2',
+                    custom_texture="chTitleChar2",
                     jitter_scale=2.0,
                     vr_depth_offset=-30,
                 )
@@ -627,7 +646,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     110 + y + 1.2 * y_extra,
                     0.3 * base_scale,
                     delay=base_delay + 0.25,
-                    custom_texture='chTitleChar3',
+                    custom_texture="chTitleChar3",
                     jitter_scale=2.0,
                     vr_depth_offset=-30,
                 )
@@ -638,7 +657,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     110 + y + 1.2 * y_extra,
                     0.31 * base_scale,
                     delay=base_delay + 0.3,
-                    custom_texture='chTitleChar4',
+                    custom_texture="chTitleChar4",
                     jitter_scale=2.0,
                     vr_depth_offset=-30,
                 )
@@ -649,7 +668,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     105 + y + 1.2 * y_extra,
                     0.34 * base_scale,
                     delay=base_delay + 0.35,
-                    custom_texture='chTitleChar5',
+                    custom_texture="chTitleChar5",
                     jitter_scale=2.0,
                     vr_depth_offset=-30,
                 )
@@ -671,7 +690,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x = xv1
                     delay = delay1
                     self._make_word(
-                        'B',
+                        "B",
                         x - 50,
                         y - 23 + 0.8 * y_extra,
                         scale=1.3 * base_scale,
@@ -682,7 +701,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing
                     delay += delay_inc
                     self._make_word(
-                        'm',
+                        "m",
                         x,
                         y + y_extra,
                         delay=delay,
@@ -692,7 +711,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing * 1.25
                     delay += delay_inc
                     self._make_word(
-                        'b',
+                        "b",
                         x,
                         y + y_extra - 10,
                         delay=delay,
@@ -703,7 +722,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing * 0.85
                     delay += delay_inc
                     self._make_word(
-                        'S',
+                        "S",
                         x,
                         y - 25 + 0.8 * y_extra,
                         scale=1.35 * base_scale,
@@ -714,7 +733,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing
                     delay += delay_inc
                     self._make_word(
-                        'q',
+                        "q",
                         x,
                         y + y_extra,
                         delay=delay,
@@ -724,7 +743,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing * 0.9
                     delay += delay_inc
                     self._make_word(
-                        'u',
+                        "u",
                         x,
                         y + y_extra,
                         delay=delay,
@@ -735,7 +754,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing * 0.9
                     delay += delay_inc
                     self._make_word(
-                        'a',
+                        "a",
                         x,
                         y + y_extra,
                         delay=delay,
@@ -745,7 +764,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     x += spacing * 0.64
                     delay += delay_inc
                     self._make_word(
-                        'd',
+                        "d",
                         x,
                         y + y_extra - 10,
                         delay=delay,
@@ -763,112 +782,136 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 # Explodinary
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word(':',
-                                x + 20,
-                                y + y_extra - 10,
-                                delay=delay,
-                                scale=1.1 * base_scale,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    ":",
+                    x + 20,
+                    y + y_extra - 10,
+                    delay=delay,
+                    scale=1.1 * base_scale,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('E',
-                                x - 575,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "E",
+                    x - 575,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('x',
-                                x - 560,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "x",
+                    x - 560,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('p',
-                                x - 545,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "p",
+                    x - 545,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('l',
-                                x - 530,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "l",
+                    x - 530,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('o',
-                                x - 525,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "o",
+                    x - 525,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('d',
-                                x - 510,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "d",
+                    x - 510,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('i',
-                                x - 490,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "i",
+                    x - 490,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('n',
-                                x - 490,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "n",
+                    x - 490,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('a',
-                                x - 475,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "a",
+                    x - 475,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('r',
-                                x - 460,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "r",
+                    x - 460,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
                 x += spacing * 0.64
                 delay += delay_inc
-                self._make_word('y',
-                                x - 445,
-                                y + y_extra - 130,
-                                delay=delay,
-                                scale=0.65,
-                                vr_depth_offset=6,
-                                shadow=shadow)
+                self._make_word(
+                    "y",
+                    x - 445,
+                    y + y_extra - 130,
+                    delay=delay,
+                    scale=0.65,
+                    vr_depth_offset=6,
+                    shadow=shadow,
+                )
 
     def _make_word(
         self,
@@ -886,19 +929,19 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         if shadow:
             word_obj = bs.NodeActor(
                 bs.newnode(
-                    'text',
+                    "text",
                     attrs={
-                        'position': (x, y),
-                        'big': True,
-                        'color': (0.0, 0.0, 0.2, 0.08),
-                        'tilt_translate': 0.09,
-                        'opacity_scales_shadow': False,
-                        'shadow': 0.2,
-                        'vr_depth': -130,
-                        'v_align': 'center',
-                        'project_scale': 0.97 * scale,
-                        'scale': 1.0,
-                        'text': word,
+                        "position": (x, y),
+                        "big": True,
+                        "color": (0.0, 0.0, 0.2, 0.08),
+                        "tilt_translate": 0.09,
+                        "opacity_scales_shadow": False,
+                        "shadow": 0.2,
+                        "vr_depth": -130,
+                        "v_align": "center",
+                        "project_scale": 0.97 * scale,
+                        "scale": 1.0,
+                        "text": word,
                     },
                 )
             )
@@ -906,18 +949,18 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         else:
             word_obj = bs.NodeActor(
                 bs.newnode(
-                    'text',
+                    "text",
                     attrs={
-                        'position': (x, y),
-                        'big': True,
-                        'color': (1.2, 1.15, 1.15, 1.0),
-                        'tilt_translate': 0.11,
-                        'shadow': 0.2,
-                        'vr_depth': -40 + vr_depth_offset,
-                        'v_align': 'center',
-                        'project_scale': scale,
-                        'scale': 1.0,
-                        'text': word,
+                        "position": (x, y),
+                        "big": True,
+                        "color": (1.2, 1.15, 1.15, 1.0),
+                        "tilt_translate": 0.11,
+                        "shadow": 0.2,
+                        "vr_depth": -40 + vr_depth_offset,
+                        "v_align": "center",
+                        "project_scale": scale,
+                        "scale": 1.0,
+                        "text": word,
                     },
                 )
             )
@@ -931,22 +974,22 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             cmb2: bs.Node | None
             if not shadow:
                 cmb = bs.newnode(
-                    'combine', owner=word_obj.node, attrs={'size': 2}
+                    "combine", owner=word_obj.node, attrs={"size": 2}
                 )
             else:
                 cmb = None
             if shadow:
                 cmb2 = bs.newnode(
-                    'combine', owner=word_obj.node, attrs={'size': 2}
+                    "combine", owner=word_obj.node, attrs={"size": 2}
                 )
             else:
                 cmb2 = None
             if not shadow:
                 assert cmb and word_obj.node
-                cmb.connectattr('output', word_obj.node, 'position')
+                cmb.connectattr("output", word_obj.node, "position")
             if shadow:
                 assert cmb2 and word_obj.node
-                cmb2.connectattr('output', word_obj.node, 'position')
+                cmb2.connectattr("output", word_obj.node, "position")
             keys = {}
             keys2 = {}
             time_v = 0.0
@@ -957,9 +1000,9 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 keys2[time_v * self._ts] = val2 + 5
                 time_v += random.random() * 0.1
             if cmb is not None:
-                bs.animate(cmb, 'input0', keys, loop=True)
+                bs.animate(cmb, "input0", keys, loop=True)
             if cmb2 is not None:
-                bs.animate(cmb2, 'input0', keys2, loop=True)
+                bs.animate(cmb2, "input0", keys2, loop=True)
             keys = {}
             keys2 = {}
             time_v = 0
@@ -970,22 +1013,22 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 keys2[time_v * self._ts] = val2 - 9
                 time_v += random.random() * 0.1
             if cmb is not None:
-                bs.animate(cmb, 'input1', keys, loop=True)
+                bs.animate(cmb, "input1", keys, loop=True)
             if cmb2 is not None:
-                bs.animate(cmb2, 'input1', keys2, loop=True)
+                bs.animate(cmb2, "input1", keys2, loop=True)
 
         if not shadow:
             assert word_obj.node
             bs.animate(
                 word_obj.node,
-                'project_scale',
+                "project_scale",
                 {delay: 0.0, delay + 0.1: scale * 1.1, delay + 0.2: scale},
             )
         else:
             assert word_obj.node
             bs.animate(
                 word_obj.node,
-                'project_scale',
+                "project_scale",
                 {delay: 0.0, delay + 0.1: scale * 1.1, delay + 0.2: scale},
             )
 
@@ -993,8 +1036,8 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         plus = bui.app.plus
         assert plus is not None
 
-        if plus.get_v1_account_misc_read_val('easter', False):
-            return 'bse_logoEaster'
+        if plus.get_v1_account_misc_read_val("easter", False):
+            return "bse_logoEaster"
         return None
 
     # Pop the logo and menu in.
@@ -1015,26 +1058,26 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             custom_texture = self._get_custom_logo_tex_name()
         self._custom_logo_tex_name = custom_texture
         ltex = bs.gettexture(
-            custom_texture if custom_texture is not None else 'bse_logo'
+            custom_texture if custom_texture is not None else "bse_logo"
         )
-        mopaque = None #if custom_texture is not None else bs.getmesh('logo')
+        mopaque = None  # if custom_texture is not None else bs.getmesh('logo')
         mtrans = (
             None
-            #if custom_texture is not None
-            #else bs.getmesh('logoTransparent')
+            # if custom_texture is not None
+            # else bs.getmesh('logoTransparent')
         )
         logo = bs.NodeActor(
             bs.newnode(
-                'image',
+                "image",
                 attrs={
-                    'texture'           : ltex,
-                    'mesh_opaque'       : mopaque,
-                    'mesh_transparent'  : mtrans,
-                    'vr_depth'          : -10 + vr_depth_offset,
-                    'rotate'            : rotate,
-                    'attach'            : 'center',
-                    'tilt_translate'    : 0.21,
-                    'absolute_scale'    : True,
+                    "texture": ltex,
+                    "mesh_opaque": mopaque,
+                    "mesh_transparent": mtrans,
+                    "vr_depth": -10 + vr_depth_offset,
+                    "rotate": rotate,
+                    "attach": "center",
+                    "tilt_translate": 0.21,
+                    "absolute_scale": True,
                 },
             )
         )
@@ -1046,8 +1089,8 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         # leave things still).
         assert logo.node
         if not bs.app.env.vr:
-            cmb = bs.newnode('combine', owner=logo.node, attrs={'size': 2})
-            cmb.connectattr('output', logo.node, 'position')
+            cmb = bs.newnode("combine", owner=logo.node, attrs={"size": 2})
+            cmb.connectattr("output", logo.node, "position")
             keys = {}
             time_v = 0.0
 
@@ -1055,7 +1098,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             for _i in range(10):
                 keys[time_v] = x + (random.random() - 0.5) * 0.7 * jitter_scale
                 time_v += random.random() * 0.1
-            bs.animate(cmb, 'input0', keys, loop=True)
+            bs.animate(cmb, "input0", keys, loop=True)
             keys = {}
             time_v = 0.0
             for _i in range(10):
@@ -1063,20 +1106,20 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     y + (random.random() - 0.5) * 0.7 * jitter_scale
                 )
                 time_v += random.random() * 0.1
-            bs.animate(cmb, 'input1', keys, loop=True)
+            bs.animate(cmb, "input1", keys, loop=True)
         else:
             logo.node.position = (x, y)
 
-        cmb = bs.newnode('combine', owner=logo.node, attrs={'size': 2})
+        cmb = bs.newnode("combine", owner=logo.node, attrs={"size": 2})
 
         keys = {
             delay: 0.0,
             delay + 0.1: 700.0 * scale,
             delay + 0.2: 600.0 * scale,
         }
-        bs.animate(cmb, 'input0', keys)
-        bs.animate(cmb, 'input1', keys)
-        cmb.connectattr('output', logo.node, 'scale')
+        bs.animate(cmb, "input0", keys)
+        bs.animate(cmb, "input1", keys)
+        cmb.connectattr("output", logo.node, "scale")
 
     def _start_preloads(self) -> None:
         # FIXME: The func that calls us back doesn't save/restore state
@@ -1089,6 +1132,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
     def _start_menu_music(self, music: bs.MusicType | bs.MusicTypeBSE) -> None:
         assert bs.app.classic is not None
         bs.setmusic(music)
+
 
 class NewsDisplay:
     """Wrangles news display."""
@@ -1115,7 +1159,7 @@ class NewsDisplay:
         plus = bui.app.plus
         assert plus is not None
 
-        if plus.get_v1_account_state() == 'signed_in':
+        if plus.get_v1_account_state() == "signed_in":
             self._fetch_news()
             self._fetch_timer = None
 
@@ -1127,7 +1171,7 @@ class NewsDisplay:
         bs.app.classic.main_menu_last_news_fetch_time = time.time()
 
         # UPDATE - We now just pull news from MRVs.
-        news = plus.get_v1_account_misc_read_val('n', None)
+        news = plus.get_v1_account_misc_read_val("n", None)
         if news is not None:
             self._got_news(news)
 
@@ -1149,10 +1193,10 @@ class NewsDisplay:
                     for phr in self._used_phrases:
                         self._phrases.insert(0, phr)
                 val = self._phrases.pop()
-                if val == '__ACH__':
+                if val == "__ACH__":
                     vrmode = app.env.vr
                     Text(
-                        bs.Lstr(resource='nextAchievementsText'),
+                        bs.Lstr(resource="nextAchievementsText"),
                         color=((1, 1, 1, 1) if vrmode else (0.95, 0.9, 1, 0.4)),
                         host_only=True,
                         maxwidth=200,
@@ -1179,7 +1223,7 @@ class NewsDisplay:
                             -35,
                             1.0,
                             outdelay=self._message_duration,
-                            style='news',
+                            style="news",
                         )
                     if achs:
                         ach = achs.pop(random.randrange(min(8, len(achs))))
@@ -1188,7 +1232,7 @@ class NewsDisplay:
                             -35,
                             1.25,
                             outdelay=self._message_duration,
-                            style='news',
+                            style="news",
                         )
                 else:
                     spc = self._message_spacing
@@ -1199,7 +1243,7 @@ class NewsDisplay:
                         spc + self._message_duration: 0.0,
                     }
                     assert self._text.node
-                    bs.animate(self._text.node, 'opacity', keys)
+                    bs.animate(self._text.node, "opacity", keys)
                     # {k: v
                     #  for k, v in list(keys.items())})
                     self._text.node.text = val
@@ -1216,8 +1260,8 @@ class NewsDisplay:
 
             # Show upcoming achievements in non-vr versions
             # (currently too hard to read in vr).
-            self._used_phrases = (['__ACH__'] if not bs.app.env.vr else []) + [
-                s for s in news.split('<br>\n') if s != ''
+            self._used_phrases = (["__ACH__"] if not bs.app.env.vr else []) + [
+                s for s in news.split("<br>\n") if s != ""
             ]
             self._phrase_change_timer = bs.Timer(
                 (self._message_duration + self._message_spacing),
@@ -1236,19 +1280,19 @@ class NewsDisplay:
             shadow = 1.0 if bs.app.env.vr else 0.4
             self._text = bs.NodeActor(
                 bs.newnode(
-                    'text',
+                    "text",
                     attrs={
-                        'v_attach': 'top',
-                        'h_attach': 'center',
-                        'h_align': 'center',
-                        'vr_depth': -20,
-                        'shadow': shadow,
-                        'flatness': 0.8,
-                        'v_align': 'top',
-                        'color': color2,
-                        'scale': scl,
-                        'maxwidth': 900.0 / scl,
-                        'position': (0, -10),
+                        "v_attach": "top",
+                        "h_attach": "center",
+                        "h_align": "center",
+                        "vr_depth": -20,
+                        "shadow": shadow,
+                        "flatness": 0.8,
+                        "v_align": "top",
+                        "color": color2,
+                        "scale": scl,
+                        "maxwidth": 900.0 / scl,
+                        "position": (0, -10),
                     },
                 )
             )
@@ -1261,29 +1305,29 @@ def _preload1() -> None:
     Helps avoid hitches later on.
     """
     for mname in [
-        'plasticEyesTransparent',
-        'playerLineup1Transparent',
-        'playerLineup2Transparent',
-        'playerLineup3Transparent',
-        'playerLineup4Transparent',
-        'angryComputerTransparent',
-        'scrollWidgetShort',
-        'windowBGBlotch',
+        "plasticEyesTransparent",
+        "playerLineup1Transparent",
+        "playerLineup2Transparent",
+        "playerLineup3Transparent",
+        "playerLineup4Transparent",
+        "angryComputerTransparent",
+        "scrollWidgetShort",
+        "windowBGBlotch",
     ]:
         bs.getmesh(mname)
-    for tname in ['playerLineup', 'lock']:
+    for tname in ["playerLineup", "lock"]:
         bs.gettexture(tname)
     for tex in [
-        'iconRunaround',
-        'iconOnslaught',
-        'medalComplete',
-        'medalBronze',
-        'medalSilver',
-        'medalGold',
-        'characterIconMask',
+        "iconRunaround",
+        "iconOnslaught",
+        "medalComplete",
+        "medalBronze",
+        "medalSilver",
+        "medalGold",
+        "characterIconMask",
     ]:
         bs.gettexture(tex)
-    bs.gettexture('bg')
+    bs.gettexture("bg")
     from bascenev1lib.actor.powerupbox import PowerupBoxFactory
 
     PowerupBoxFactory.get()
@@ -1294,28 +1338,28 @@ def _preload2() -> None:
     # FIXME: Could integrate these loads with the classes that use them
     #  so they don't have to redundantly call the load
     #  (even if the actual result is cached).
-    for mname in ['powerup', 'powerupSimple']:
+    for mname in ["powerup", "powerupSimple"]:
         bs.getmesh(mname)
     for tname in [
-        'powerupBomb',
-        'powerupSpeed',
-        'powerupPunch',
-        'powerupIceBombs',
-        'powerupStickyBombs',
-        'powerupShield',
-        'powerupImpactBombs',
-        'powerupHealth',
+        "powerupBomb",
+        "powerupSpeed",
+        "powerupPunch",
+        "powerupIceBombs",
+        "powerupStickyBombs",
+        "powerupShield",
+        "powerupImpactBombs",
+        "powerupHealth",
     ]:
         bs.gettexture(tname)
     for sname in [
-        'powerup01',
-        'boxDrop',
-        'boxingBell',
-        'scoreHit01',
-        'scoreHit02',
-        'dripity',
-        'spawn',
-        'gong',
+        "powerup01",
+        "boxDrop",
+        "boxingBell",
+        "scoreHit01",
+        "scoreHit02",
+        "dripity",
+        "spawn",
+        "gong",
     ]:
         bs.getsound(sname)
     from bascenev1lib.actor.bomb import BombFactory
@@ -1327,31 +1371,32 @@ def _preload2() -> None:
 def _preload3() -> None:
     from bascenev1lib.actor.spazfactory import SpazFactory
 
-    for mname in ['bomb', 'bombSticky', 'impactBomb']:
+    for mname in ["bomb", "bombSticky", "impactBomb"]:
         bs.getmesh(mname)
     for tname in [
-        'bombColor',
-        'bombColorIce',
-        'bombStickyColor',
-        'impactBombColor',
-        'impactBombColorLit',
+        "bombColor",
+        "bombColorIce",
+        "bombStickyColor",
+        "impactBombColor",
+        "impactBombColorLit",
     ]:
         bs.gettexture(tname)
-    for sname in ['freeze', 'fuse01', 'activateBeep', 'warnBeep']:
+    for sname in ["freeze", "fuse01", "activateBeep", "warnBeep"]:
         bs.getsound(sname)
     SpazFactory.get()
     bui.apptimer(0.2, _preload4)
 
 
 def _preload4() -> None:
-    for tname in ['bar', 'meter', 'null', 'flagColor', 'achievementOutline']:
+    for tname in ["bar", "meter", "null", "flagColor", "achievementOutline"]:
         bs.gettexture(tname)
-    for mname in ['frameInset', 'meterTransparent', 'achievementOutline']:
+    for mname in ["frameInset", "meterTransparent", "achievementOutline"]:
         bs.getmesh(mname)
-    for sname in ['metalHit', 'metalSkid', 'refWhistle', 'achievement']:
+    for sname in ["metalHit", "metalSkid", "refWhistle", "achievement"]:
         bs.getsound(sname)
     from bascenev1lib.actor.flag import FlagFactory
 
     FlagFactory.get()
+
 
 mainmenu.MainMenuActivity = ExplodinaryMainMenuActivity

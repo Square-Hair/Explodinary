@@ -1,4 +1,5 @@
 """ Bot clones but blue! (Used in BSE's Campaign.) """
+
 # pylint: disable=too-many-lines
 
 from __future__ import annotations
@@ -14,12 +15,12 @@ if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
     from bascenev1lib.actor.flag import Flag
 
-LITE_BOT_COLOR          = (0.65, 1, 1)
-LITE_BOT_HIGHLIGHT      = (0.2, 1, 1)
-DEFAULT_BOT_COLOR       = (0.3, 0.8, 1)
-DEFAULT_BOT_HIGHLIGHT   = (0, 0.5, 1)
-PRO_BOT_COLOR           = (0.1, 0.1, 1)
-PRO_BOT_HIGHLIGHT       = (0.1, 0.1, 0.5)
+LITE_BOT_COLOR = (0.65, 1, 1)
+LITE_BOT_HIGHLIGHT = (0.2, 1, 1)
+DEFAULT_BOT_COLOR = (0.3, 0.8, 1)
+DEFAULT_BOT_HIGHLIGHT = (0, 0.5, 1)
+PRO_BOT_COLOR = (0.1, 0.1, 1)
+PRO_BOT_HIGHLIGHT = (0.1, 0.1, 0.5)
 
 
 class SpazBotPunchedMessage:
@@ -39,27 +40,24 @@ class SpazBotPunchedMessage:
         self.spazbot = spazbot
         self.damage = damage
 
+
 class SpazBotAttackedMessage:
-    """A message saying a ba.SpazBot got attacked.
-    """
+    """A message saying a ba.SpazBot got attacked."""
 
     spazbot: SpazBot
 
-    hittype:str
-    subtype:str
+    hittype: str
+    subtype: str
 
-    time:int
+    time: int
 
-    def __init__(self,
-                 spazbot: SpazBot,
-                 hittype: str,
-                 subtype: str,
-                 time: int):
+    def __init__(self, spazbot: SpazBot, hittype: str, subtype: str, time: int):
         """Instantiate a message with the given values."""
         self.spazbot = spazbot
         self.hittype = hittype
         self.subtype = subtype
         self.time = time
+
 
 class SpazBotDiedMessage:
     """A message saying a ba.SpazBot has died.
@@ -106,7 +104,7 @@ class SpazBot(Spaz):
     to the current activity.
     """
 
-    character = 'Spaz'
+    character = "Spaz"
     randchar = None
     impact_scale = 1.0
     hitpoints = 1000
@@ -123,7 +121,7 @@ class SpazBot(Spaz):
     throw_dist_min = 5.0
     throw_dist_max = 9.0
     throw_rate = 1.0
-    default_bomb_type = 'normal'
+    default_bomb_type = "normal"
     default_bomb_count = 3
     start_cursed = False
     color = DEFAULT_BOT_COLOR
@@ -132,13 +130,17 @@ class SpazBot(Spaz):
 
     def __init__(self) -> None:
         """Instantiate a spaz-bot."""
-        if self.randchar in ['ninja']:
-            self.characters = ['Snake Shadow', 'Sneaky Snake']
+        if self.randchar in ["ninja"]:
+            self.characters = ["Snake Shadow", "Sneaky Snake"]
             self.character = random.choice(self.characters)
-        elif self.randchar in ['pirate']:
-            self.characters = ['Jack Morgan', 'Ye Olde\' Sparrow', 'Jackie Panty']
+        elif self.randchar in ["pirate"]:
+            self.characters = [
+                "Jack Morgan",
+                "Ye Olde' Sparrow",
+                "Jackie Panty",
+            ]
             self.character = random.choice(self.characters)
-        
+
         super().__init__(
             color=self.color,
             highlight=self.highlight,
@@ -147,8 +149,7 @@ class SpazBot(Spaz):
             start_invincible=False,
             can_accept_powerups=self.can_accept_powerups,
         )
-        
-            
+
         # If you need to add custom behavior to a bot, set this to a callable
         # which takes one arg (the bot) and returns False if the bot's normal
         # update should be run and True if not.
@@ -167,7 +168,7 @@ class SpazBot(Spaz):
             self.charge_speed_min + self.charge_speed_max
         )
         self._lead_amount = 0.5
-        self._mode = 'wait'
+        self._mode = "wait"
         self._charge_closing_in = False
         self._last_charge_dist = 0.0
         self._running = False
@@ -244,8 +245,9 @@ class SpazBot(Spaz):
 
         if not self.node:
             return
-        
-        if not self._ai: return
+
+        if not self._ai:
+            return
 
         pos = self.node.position
         our_pos = ba.Vec3(pos[0], 0, pos[2])
@@ -258,7 +260,7 @@ class SpazBot(Spaz):
         # towards the flag and try to pick it up.
         if self.target_flag:
             if self.node.hold_node:
-                holding_flag = self.node.hold_node.getnodetype() == 'flag'
+                holding_flag = self.node.hold_node.getnodetype() == "flag"
             else:
                 holding_flag = False
 
@@ -299,7 +301,7 @@ class SpazBot(Spaz):
 
         # Not a flag-bearer. If we're holding anything but a bomb, drop it.
         if self.node.hold_node:
-            holding_bomb = self.node.hold_node.getnodetype() in ['bomb', 'prop']
+            holding_bomb = self.node.hold_node.getnodetype() in ["bomb", "prop"]
             if not holding_bomb:
                 self.node.pickup_pressed = True
                 self.node.pickup_pressed = False
@@ -340,7 +342,7 @@ class SpazBot(Spaz):
         dist = diff.length()
         to_target = diff.normalized()
 
-        if self._mode == 'throw':
+        if self._mode == "throw":
             # We can only throw if alive and well.
             if not self._dead and not self.node.knockout:
 
@@ -356,7 +358,7 @@ class SpazBot(Spaz):
                     # Otherwise our lack of held node means we successfully
                     # released our bomb; lets retreat now.
                     else:
-                        self._mode = 'flee'
+                        self._mode = "flee"
 
                 # Oh crap, we're holding a bomb; better throw it.
                 elif time_till_throw <= 0.0:
@@ -393,7 +395,7 @@ class SpazBot(Spaz):
                 self.node.move_left_right = to_target.x * speed
                 self.node.move_up_down = to_target.z * -1.0 * speed
 
-        elif self._mode == 'charge':
+        elif self._mode == "charge":
             if random.random() < 0.3:
                 self._charge_speed = random.uniform(
                     self.charge_speed_min, self.charge_speed_max
@@ -413,7 +415,7 @@ class SpazBot(Spaz):
             self.node.move_left_right = to_target.x * self._charge_speed
             self.node.move_up_down = to_target.z * -1.0 * self._charge_speed
 
-        elif self._mode == 'wait':
+        elif self._mode == "wait":
             # Every now and then, aim towards our target.
             # Other than that, just stand there.
             if ba.time(timeformat=ba.TimeFormat.MILLISECONDS) % 1234 < 100:
@@ -423,7 +425,7 @@ class SpazBot(Spaz):
                 self.node.move_left_right = 0
                 self.node.move_up_down = 0
 
-        elif self._mode == 'flee':
+        elif self._mode == "flee":
             # Even if we're a runner, only run till we get away from our
             # target (if we keep running we tend to run off edges).
             if self.run and dist < 3.0:
@@ -437,12 +439,12 @@ class SpazBot(Spaz):
 
         # We might wanna switch states unless we're doing a throw
         # (in which case that's our sole concern).
-        if self._mode != 'throw':
+        if self._mode != "throw":
 
             # If we're currently charging, keep track of how far we are
             # from our target. When this value increases it means our charge
             # is over (ran by them or something).
-            if self._mode == 'charge':
+            if self._mode == "charge":
                 if (
                     self._charge_closing_in
                     and self._last_charge_dist < dist < 3.0
@@ -456,7 +458,7 @@ class SpazBot(Spaz):
                 and random.random() < self.throwiness
                 and can_attack
             ):
-                self._mode = 'throw'
+                self._mode = "throw"
                 self._lead_amount = (
                     (0.4 + random.random() * 0.6)
                     if dist_raw > 4.0
@@ -469,7 +471,7 @@ class SpazBot(Spaz):
 
             # If we're static, always charge (which for us means barely move).
             elif self.static:
-                self._mode = 'wait'
+                self._mode = "wait"
 
             # If we're too close to charge (and aren't in the middle of an
             # existing charge) run away.
@@ -477,13 +479,13 @@ class SpazBot(Spaz):
                 # ..unless we're near an edge, in which case we've got no
                 # choice but to charge.
                 if self.map.is_point_near_edge(our_pos, self._running):
-                    if self._mode != 'charge':
-                        self._mode = 'charge'
+                    if self._mode != "charge":
+                        self._mode = "charge"
                         self._lead_amount = 0.2
                         self._charge_closing_in = True
                         self._last_charge_dist = dist
                 else:
-                    self._mode = 'flee'
+                    self._mode = "flee"
 
             # We're within charging distance, backed against an edge,
             # or farther than our max throw distance.. chaaarge!
@@ -492,8 +494,8 @@ class SpazBot(Spaz):
                 or dist > self.throw_dist_max
                 or self.map.is_point_near_edge(our_pos, self._running)
             ):
-                if self._mode != 'charge':
-                    self._mode = 'charge'
+                if self._mode != "charge":
+                    self._mode = "charge"
                     self._lead_amount = 0.01
                     self._charge_closing_in = True
                     self._last_charge_dist = dist
@@ -503,7 +505,7 @@ class SpazBot(Spaz):
             elif dist < self.throw_dist_min:
                 # Charge if either we're within charge range or
                 # cant retreat to throw.
-                self._mode = 'flee'
+                self._mode = "flee"
 
             # Do some awesome jumps if we're running.
             # FIXME: pylint: disable=too-many-boolean-expressions
@@ -525,7 +527,7 @@ class SpazBot(Spaz):
                 if random.random() < self.punchiness:
                     self.on_punch_press()
                     self.on_punch_release()
-    
+
     def on_punched(self, damage: int) -> None:
         """
         Method override; sends ba.SpazBotPunchedMessage
@@ -556,7 +558,7 @@ class SpazBot(Spaz):
             super().handlemessage(msg)  # Augment standard behavior.
             self.held_count -= 1
             if self.held_count < 0:
-                print('ERROR: spaz held_count < 0')
+                print("ERROR: spaz held_count < 0")
 
             # Let's count someone dropping us as an attack.
             try:
@@ -565,13 +567,13 @@ class SpazBot(Spaz):
                 else:
                     picked_up_by = None
             except Exception:
-                ba.print_exception('Error on SpazBot DroppedMessage.')
+                ba.print_exception("Error on SpazBot DroppedMessage.")
                 picked_up_by = None
 
             if picked_up_by:
                 self.last_player_attacked_by = picked_up_by
                 self.last_attacked_time = ba.time()
-                self.last_attacked_type = ('picked_up', 'default')
+                self.last_attacked_type = ("picked_up", "default")
 
         elif isinstance(msg, ba.DieMessage):
 
@@ -613,10 +615,15 @@ class SpazBot(Spaz):
                 self.last_player_attacked_by = source_player
                 self.last_attacked_time = ba.time()
                 self.last_attacked_type = (msg.hit_type, msg.hit_subtype)
-                ba.getactivity().handlemessage(SpazBotAttackedMessage(self, msg.hit_type, msg.hit_subtype, ba.time()))
+                ba.getactivity().handlemessage(
+                    SpazBotAttackedMessage(
+                        self, msg.hit_type, msg.hit_subtype, ba.time()
+                    )
+                )
             super().handlemessage(msg)
         else:
             super().handlemessage(msg)
+
 
 class BomberBot(SpazBot):
     """A bot that throws regular bombs and occasionally punches.
@@ -624,8 +631,9 @@ class BomberBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Spaz'
+    character = "Spaz"
     punchiness = 0.3
+
 
 class BomberBotLite(BomberBot):
     """A less aggressive yellow version of ba.BomberBot.
@@ -641,6 +649,7 @@ class BomberBotLite(BomberBot):
     charge_speed_min = 0.6
     charge_speed_max = 0.6
 
+
 class BomberBotStaticLite(BomberBotLite):
     """A less aggressive generally immobile weak version of ba.BomberBot.
 
@@ -649,6 +658,7 @@ class BomberBotStaticLite(BomberBotLite):
 
     static = True
     throw_dist_min = 0.0
+
 
 class BomberBotStatic(BomberBot):
     """A version of ba.BomberBot who generally stays in one place.
@@ -659,12 +669,14 @@ class BomberBotStatic(BomberBot):
     static = True
     throw_dist_min = 0.0
 
+
 class BomberBotPro(BomberBot):
     """A more powerful version of ba.BomberBot.
 
     category: Bot Classes
     """
-    character = 'Stolt'
+
+    character = "Stolt"
     points_mult = 2
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
@@ -675,57 +687,67 @@ class BomberBotPro(BomberBot):
     run = True
     run_dist_min = 6.0
 
+
 class BomberBotProShielded(BomberBotPro):
     """A more powerful version of ba.BomberBot who starts with shields.
 
     category: Bot Classes
     """
-    character = 'Stolt'
+
+    character = "Stolt"
     points_mult = 3
     default_shields = True
+
 
 class BomberBotProStatic(BomberBotPro):
     """A more powerful ba.BomberBot who generally stays in one place.
 
     category: Bot Classes
     """
-    character = 'Stolt'
+
+    character = "Stolt"
     static = True
     throw_dist_min = 0.0
+
 
 class BomberBotProStaticShielded(BomberBotProShielded):
     """A powerful ba.BomberBot with shields who is generally immobile.
 
     category: Bot Classes
     """
-    character = 'Stolt'
+
+    character = "Stolt"
     static = True
     throw_dist_min = 0.0
+
 
 class ToxicBot(BomberBotPro):
     """A variant of BomberBot with Toxic Bombs
 
     category: Bot Classes
     """
-    character = 'Spazzy Toxicant'
-    default_bomb_type = 'toxic'
+
+    character = "Spazzy Toxicant"
+    default_bomb_type = "toxic"
     color = DEFAULT_BOT_COLOR
     highlight = DEFAULT_BOT_HIGHLIGHT
     default_boxing_gloves = False
-    
+
+
 class BrawlerBot(SpazBot):
     """A bot who walks and punches things.
 
     category: Bot Classes
     """
 
-    character = 'Kronk'
+    character = "Kronk"
     punchiness = 0.9
     charge_dist_max = 9999.0
     charge_speed_min = 1.0
     charge_speed_max = 1.0
     throw_dist_min = 9999
     throw_dist_max = 9999
+
 
 class BrawlerBotLite(BrawlerBot):
     """A weaker version of ba.BrawlerBot.
@@ -739,13 +761,14 @@ class BrawlerBotLite(BrawlerBot):
     charge_speed_min = 0.6
     charge_speed_max = 0.6
 
+
 class GolemBot(BrawlerBot):
     """A Mini Boss.
 
     category: Bot Classes
     """
-    
-    character = 'Spaz'
+
+    character = "Spaz"
     color = LITE_BOT_COLOR
     highlight = LITE_BOT_HIGHLIGHT
     punchiness = 1
@@ -759,27 +782,28 @@ class GolemBot(BrawlerBot):
 
     def __init__(self) -> None:
         super().__init__()
-        golem_sounds = [ba.getsound('silence')]
-        self.node.color_texture =                   ba.gettexture('golemColor')
-        self.node.color_mask_texture =              ba.gettexture('golemColorMask')
-        self.node.color =                           LITE_BOT_COLOR
-        self.node.highlight =                       LITE_BOT_HIGHLIGHT
-        self.node.head_model =                      ba.getmodel('golemHead')
-        self.node.torso_model =                     ba.getmodel('golemTorso')
-        self.node.pelvis_model =                    ba.getmodel('golemPelvis')
-        self.node.upper_arm_model =                 ba.getmodel('golemUpperArm')
-        self.node.forearm_model =                   ba.getmodel('golemForeArm')
-        self.node.hand_model =                      ba.getmodel('golemHand')
-        self.node.upper_leg_model =                 ba.getmodel('golemUpperLeg')
-        self.node.lower_leg_model =                 ba.getmodel('golemLowerLeg')
-        self.node.toes_model =                      ba.getmodel('golemToes')
-        self.node.attack_sounds =                   golem_sounds
-        self.node.jump_sounds =                     golem_sounds
-        self.node.impact_sounds =                   golem_sounds
-        self.node.death_sounds =                    golem_sounds
-        self.node.pickup_sounds =                   golem_sounds
-        self.node.fall_sounds =                     golem_sounds
-        self.node.style =                           'agent'
+        golem_sounds = [ba.getsound("silence")]
+        self.node.color_texture = ba.gettexture("golemColor")
+        self.node.color_mask_texture = ba.gettexture("golemColorMask")
+        self.node.color = LITE_BOT_COLOR
+        self.node.highlight = LITE_BOT_HIGHLIGHT
+        self.node.head_model = ba.getmodel("golemHead")
+        self.node.torso_model = ba.getmodel("golemTorso")
+        self.node.pelvis_model = ba.getmodel("golemPelvis")
+        self.node.upper_arm_model = ba.getmodel("golemUpperArm")
+        self.node.forearm_model = ba.getmodel("golemForeArm")
+        self.node.hand_model = ba.getmodel("golemHand")
+        self.node.upper_leg_model = ba.getmodel("golemUpperLeg")
+        self.node.lower_leg_model = ba.getmodel("golemLowerLeg")
+        self.node.toes_model = ba.getmodel("golemToes")
+        self.node.attack_sounds = golem_sounds
+        self.node.jump_sounds = golem_sounds
+        self.node.impact_sounds = golem_sounds
+        self.node.death_sounds = golem_sounds
+        self.node.pickup_sounds = golem_sounds
+        self.node.fall_sounds = golem_sounds
+        self.node.style = "agent"
+
 
 class BrawlerBotPro(BrawlerBot):
     """A stronger version of ba.BrawlerBot.
@@ -795,6 +819,7 @@ class BrawlerBotPro(BrawlerBot):
     punchiness = 0.95
     points_mult = 2
 
+
 class BrawlerBotProShielded(BrawlerBotPro):
     """A stronger version of ba.BrawlerBot who starts with shields.
 
@@ -804,28 +829,31 @@ class BrawlerBotProShielded(BrawlerBotPro):
     default_shields = True
     points_mult = 3
 
+
 class NoirBot(BrawlerBotLite):
     """A slow moving bot that tries to punch you, and occasionally throws impact bombs..
 
     category: Bot Classes
     """
-    character = 'Kronk Noir'
+
+    character = "Kronk Noir"
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_boxing_gloves = True
-    default_bomb_type = 'impact'
+    default_bomb_type = "impact"
     throwiness = 0.4
     throw_dist_min = 2.0
     throw_dist_max = 5.0
     points_mult = 2
-    
+
+
 class ChargerBot(SpazBot):
     """A speedy melee attack bot.
 
     category: Bot Classes
     """
 
-    randchar = 'ninja'
+    randchar = "ninja"
     punchiness = 1.0
     run = True
     charge_dist_min = 10.0
@@ -836,6 +864,7 @@ class ChargerBot(SpazBot):
     throw_dist_max = 9999
     points_mult = 2
 
+
 class BouncyBot(SpazBot):
     """A speedy attacking melee bot that jumps constantly.
 
@@ -844,7 +873,7 @@ class BouncyBot(SpazBot):
 
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
-    character = 'Easter Bunny'
+    character = "Easter Bunny"
     punchiness = 0.8
     run = True
     bouncy = True
@@ -857,27 +886,32 @@ class BouncyBot(SpazBot):
     throw_dist_max = 9999
     points_mult = 2
 
+
 class ChargerBotPro(ChargerBot):
     """A stronger ba.ChargerBot.
 
     category: Bot Classes
     """
+
     randchar = None
-    character = 'Master Serpent'
+    character = "Master Serpent"
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_shields = False
     default_boxing_gloves = True
     points_mult = 3
 
+
 class ChargerBotProShielded(ChargerBotPro):
     """A stronger ba.ChargerBot who starts with shields.
 
     category: Bot Classes
     """
-    character = 'Master Serpent'
+
+    character = "Master Serpent"
     default_shields = True
     points_mult = 4
+
 
 class TriggerBot(SpazBot):
     """A slow moving bot with trigger bombs.
@@ -885,7 +919,7 @@ class TriggerBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Zoe'
+    character = "Zoe"
     punchiness = 0.75
     throwiness = 0.7
     charge_dist_max = 1.0
@@ -893,8 +927,9 @@ class TriggerBot(SpazBot):
     charge_speed_max = 0.5
     throw_dist_min = 3.5
     throw_dist_max = 5.5
-    default_bomb_type = 'impact'
+    default_bomb_type = "impact"
     points_mult = 2
+
 
 class TriggerBotStatic(TriggerBot):
     """A ba.TriggerBot who generally stays in one place.
@@ -905,12 +940,14 @@ class TriggerBotStatic(TriggerBot):
     static = True
     throw_dist_min = 0.0
 
+
 class TriggerBotPro(TriggerBot):
     """A stronger version of ba.TriggerBot.
 
     category: Bot Classes
     """
-    character = 'Z03 3000'
+
+    character = "Z03 3000"
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_bomb_count = 3
@@ -923,6 +960,7 @@ class TriggerBotPro(TriggerBot):
     run_dist_min = 6.0
     points_mult = 3
 
+
 class TriggerBotProShielded(TriggerBotPro):
     """A stronger version of ba.TriggerBot who starts with shields.
 
@@ -932,13 +970,14 @@ class TriggerBotProShielded(TriggerBotPro):
     default_shields = True
     points_mult = 4
 
+
 class StickyBot(SpazBot):
     """A crazy bot who runs and throws sticky bombs.
 
     category: Bot Classes
     """
 
-    character = 'Mel'
+    character = "Mel"
     punchiness = 0.9
     throwiness = 1.0
     run = True
@@ -949,42 +988,48 @@ class StickyBot(SpazBot):
     throw_dist_min = 0.0
     throw_dist_max = 4.0
     throw_rate = 2.0
-    default_bomb_type = 'sticky'
+    default_bomb_type = "sticky"
     default_bomb_count = 3
     points_mult = 3
+
 
 class StickyBotPro(StickyBot):
     """A stronger ba.StickyBot.
 
     category: Bot Classes
     """
+
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_shields = True
     default_boxing_gloves = True
     points_mult = 3
 
+
 class MellyBot(SpazBot):
     """A static bot that tries to bomb you.
 
     category: Bot Classes
     """
-    character = 'Melly'
+
+    character = "Melly"
     color = DEFAULT_BOT_COLOR
     highlight = DEFAULT_BOT_HIGHLIGHT
     static = True
     default_boxing_gloves = True
     throw_dist_min = 0.0
     throw_dist_max = 10.0
-    default_bomb_type = 'sticky'
+    default_bomb_type = "sticky"
     points_mult = 2
-    
+
+
 class WaiterBot(SpazBot):
     """A less crazy bot with tacky bombs.
 
     category: Bot Classes
     """
-    character = 'Melvin'
+
+    character = "Melvin"
     punchiness = 1
     throwiness = 1
     run = True
@@ -996,49 +1041,57 @@ class WaiterBot(SpazBot):
     throw_dist_min = 0.0
     throw_dist_max = 5.5
     default_bomb_count = 2
-    default_bomb_type = 'tacky'
+    default_bomb_type = "tacky"
     points_mult = 3
+
 
 class WaiterBotPro(WaiterBot):
     """A stronger version of ba.WaiterBot.
 
     category: Bot Classes
     """
+
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_bomb_count = 3
     default_boxing_gloves = True
     points_mult = 4
-    
+
+
 class WaiterBotProShielded(WaiterBotPro):
     """A stronger version of ba.WaiterBot who starts with shields.
 
     category: Bot Classes
     """
+
     default_shields = True
     points_mult = 5
-    
+
+
 class FrostyBot(SpazBot):
     """A snowman bot who throws Ice Bombs.
 
     category: Bot Classes
     """
-    character = 'Frosty'
+
+    character = "Frosty"
     points_mult = 3
     color = DEFAULT_BOT_COLOR
     highlight = DEFAULT_BOT_HIGHLIGHT
-    default_bomb_type = 'ice'
+    default_bomb_type = "ice"
     default_bomb_count = 3
     punchiness = 0.7
     throw_rate = 1.3
     run = True
     run_dist_min = 6.0
 
+
 class FrostyBotPro(FrostyBot):
     """A more powerful version of ba.FrostyBot.
 
     category: Bot Classes
     """
+
     points_mult = 2
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
@@ -1049,13 +1102,16 @@ class FrostyBotPro(FrostyBot):
     run = True
     run_dist_min = 6.0
 
+
 class FrostyBotProShielded(FrostyBotPro):
     """A more powerful version of ba.BomberBot who starts with shields.
 
     category: Bot Classes
     """
+
     points_mult = 3
     default_shields = True
+
 
 class FrostyBotStatic(StickyBot):
     """A static snowman.
@@ -1065,6 +1121,7 @@ class FrostyBotStatic(StickyBot):
 
     static = True
 
+
 class StickyBotStatic(StickyBot):
     """A crazy bot who throws sticky-bombs but generally stays in one place.
 
@@ -1073,13 +1130,14 @@ class StickyBotStatic(StickyBot):
 
     static = True
 
+
 class ExplodeyBot(SpazBot):
     """A bot who runs and explodes in 5 seconds.
 
     category: Bot Classes
     """
 
-    randchar = 'pirate'
+    randchar = "pirate"
     run = True
     charge_dist_min = 0.0
     charge_dist_max = 9999
@@ -1090,34 +1148,39 @@ class ExplodeyBot(SpazBot):
     start_cursed = True
     points_mult = 4
 
+
 class ExplodeyBotNoTimeLimit(BrawlerBotLite):
     """A bot who starts with shield and does not explode on his own. Vey slow, though.
 
     category: Bot Classes
     """
-    
-    randchar = 'pirate'
+
+    randchar = "pirate"
     start_cursed = True
     default_shields = True
     curse_time = None
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
 
+
 class ExplodeyBotShielded(ExplodeyBot):
     """A ba.ExplodeyBot who starts with shields.
 
     category: Bot Classes
     """
-    randchar = 'pirate'
+
+    randchar = "pirate"
     default_shields = True
     points_mult = 5
-    
+
+
 class SantaBot(SpazBot):
     """A running bot with Unwanted Present.
 
     category: Bot Classes
     """
-    character = 'Santa Claus'
+
+    character = "Santa Claus"
     punchiness = 0.9
     throwiness = 1.0
     color = (1, 0, 0)
@@ -1130,28 +1193,32 @@ class SantaBot(SpazBot):
     throw_dist_min = 0.0
     throw_dist_max = 4.0
     throw_rate = 2.0
-    default_bomb_type = 'present'
+    default_bomb_type = "present"
     default_bomb_count = 1
     points_mult = 4
-    
+
+
 class SantaBotPro(SantaBot):
     """A stronger ba.SantaBot.
 
     category: Bot Classes
     """
+
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_shields = True
     default_boxing_gloves = True
     points_mult = 5
-    
+
+
 class MicBot(SpazBot):
     """
     category: Bot Classes
-    
+
     A slow moving bot that ocasionally throws sky mines.
     """
-    character = 'Mictlan'
+
+    character = "Mictlan"
     punchiness = 0.5
     throwiness = 1.0
     color = (0.1, 0.1, 1)
@@ -1163,27 +1230,31 @@ class MicBot(SpazBot):
     throw_dist_min = 3
     throw_dist_max = 9999
     default_bomb_count = 6
-    default_bomb_type = 'lite_mine'
+    default_bomb_type = "lite_mine"
     points_mult = 2
-    
+
+
 class MicBotPro(MicBot):
     """A stronger ba.MicBot.
 
     category: Bot Classes
     """
+
     color = PRO_BOT_COLOR
     highlight = PRO_BOT_HIGHLIGHT
     default_shields = True
     default_boxing_gloves = True
     points_mult = 3
 
+
 class SplashBot(SpazBot):
     """
     category: Bot Classes
-    
+
     A bot that can accept powerups.
     """
-    character = 'Splash'
+
+    character = "Splash"
     punchiness = 0.5
     throwiness = 1.0
     color = DEFAULT_BOT_COLOR
@@ -1196,17 +1267,19 @@ class SplashBot(SpazBot):
     throwDistMin = 3
     throwDistMax = 9999
     default_bomb_count = 6
-    default_bomb_type = 'normal'
+    default_bomb_type = "normal"
     can_accept_powerups = True
     points_mult = 2
+
 
 class SoldatBot(SpazBot):
     """A little Soldier Boy with Flutter Bombs!
 
     category: Bot Classes
     """
-    character = 'Soldier Boy'
-    default_bomb_type = 'clouder'
+
+    character = "Soldier Boy"
+    default_bomb_type = "clouder"
     points_mult = 2
     color = DEFAULT_BOT_COLOR
     highlight = DEFAULT_BOT_HIGHLIGHT
@@ -1214,13 +1287,14 @@ class SoldatBot(SpazBot):
     punchiness = 0.7
     throw_rate = 0.8
 
+
 class OverseerBot(SpazBot):
     """A Mini Boss.
 
     category: Bot Classes
     """
-    
-    character = 'Spaz'
+
+    character = "Spaz"
     color = DEFAULT_BOT_COLOR
     highlight = DEFAULT_BOT_HIGHLIGHT
     impact_scale = 3
@@ -1244,36 +1318,38 @@ class OverseerBot(SpazBot):
     def __init__(self) -> None:
         super().__init__()
         self._ai = False
-        over_sounds = [ba.getsound('silence')]
-        self.node.color_texture =                   ba.gettexture('overseerColor')
-        self.node.color_mask_texture =              ba.gettexture('overseerColorMask')
-        self.node.head_model =                      ba.getmodel('overseerHead')
-        self.node.torso_model =                     ba.getmodel('overseerTorso')
-        self.node.pelvis_model =                    ba.getmodel('overseerPelvis')
-        self.node.upper_arm_model =                 ba.getmodel('overseerUpperArm')
-        self.node.forearm_model =                   ba.getmodel('overseerForeArm')
-        self.node.hand_model =                      ba.getmodel('overseerGlove')
-        self.node.upper_leg_model =                 ba.getmodel('overseerUpperLeg')
-        self.node.lower_leg_model =                 ba.getmodel('overseerLowerLeg')
-        self.node.toes_model =                      ba.getmodel('overseerToes')
-        self.node.attack_sounds =                   over_sounds
-        self.node.jump_sounds =                     over_sounds
-        self.node.impact_sounds =                   over_sounds
-        self.node.death_sounds =                    over_sounds
-        self.node.pickup_sounds =                   over_sounds
-        self.node.fall_sounds =                     over_sounds
-        self.node.style =                           'agent'
+        over_sounds = [ba.getsound("silence")]
+        self.node.color_texture = ba.gettexture("overseerColor")
+        self.node.color_mask_texture = ba.gettexture("overseerColorMask")
+        self.node.head_model = ba.getmodel("overseerHead")
+        self.node.torso_model = ba.getmodel("overseerTorso")
+        self.node.pelvis_model = ba.getmodel("overseerPelvis")
+        self.node.upper_arm_model = ba.getmodel("overseerUpperArm")
+        self.node.forearm_model = ba.getmodel("overseerForeArm")
+        self.node.hand_model = ba.getmodel("overseerGlove")
+        self.node.upper_leg_model = ba.getmodel("overseerUpperLeg")
+        self.node.lower_leg_model = ba.getmodel("overseerLowerLeg")
+        self.node.toes_model = ba.getmodel("overseerToes")
+        self.node.attack_sounds = over_sounds
+        self.node.jump_sounds = over_sounds
+        self.node.impact_sounds = over_sounds
+        self.node.death_sounds = over_sounds
+        self.node.pickup_sounds = over_sounds
+        self.node.fall_sounds = over_sounds
+        self.node.style = "agent"
+
 
 class OverseerClone(OverseerBot):
     hitpoints = 1
     impact_scale = 1.88
-    color =     (0.1, 0.5, 0.66)
+    color = (0.1, 0.5, 0.66)
     highlight = (0, 0.2, 0.66)
 
     def __init__(self) -> None:
         super().__init__()
         self._ai = True
-        self.node.hand_model =                      ba.getmodel('overseerHand')
+        self.node.hand_model = ba.getmodel("overseerHand")
+
 
 class SpazBotSet:
     """A container/controller for one or more ba.SpazBots.
@@ -1292,7 +1368,7 @@ class SpazBotSet:
         self._bot_lists: list[list[SpazBot]] = [
             [] for _ in range(self._bot_list_count)
         ]
-        self._spawn_sound = ba.getsound('spawn')
+        self._spawn_sound = ba.getsound("spawn")
         self._spawning_count = 0
         self._bot_update_timer: ba.Timer | None = None
         self.start_moving()
@@ -1329,36 +1405,62 @@ class SpazBotSet:
     ) -> None:
         """Spawn a bot from this set (but havoc)"""
         mult = 1.5
-        gpos, npos = [pos, [x*mult if i != 1 else 1 for i,x in enumerate(pos)]]
+        gpos, npos = [
+            pos,
+            [x * mult if i != 1 else 1 for i, x in enumerate(pos)],
+        ]
 
-        def spaz_ai_on(spaz: SpazBot): spaz._ai = True
+        def spaz_ai_on(spaz: SpazBot):
+            spaz._ai = True
 
         def do():
             spaz: SpazBot = self._spawn_bot(bot_type, npos, on_spawn_call)
             spaz._ai = False
             self._spawning_count += 1
 
-            cvel = (gpos[0]-npos[0], 3, gpos[2]-npos[2])
+            cvel = (gpos[0] - npos[0], 3, gpos[2] - npos[2])
             cprm = 30
 
             it = 15
             for x in range(it):
-                x = x # Haha he dead.
-                spaz.node.handlemessage('impulse', spaz.node.position[0], spaz.node.position[1], spaz.node.position[2],
-                                        -15, -50, -15,
-                                        50*mult*1.2, 1,
-                                        0, 0,
-                                        cvel[0]*cprm*2, 0, cvel[2]*cprm*2)
+                x = x  # Haha he dead.
+                spaz.node.handlemessage(
+                    "impulse",
+                    spaz.node.position[0],
+                    spaz.node.position[1],
+                    spaz.node.position[2],
+                    -15,
+                    -50,
+                    -15,
+                    50 * mult * 1.2,
+                    1,
+                    0,
+                    0,
+                    cvel[0] * cprm * 2,
+                    0,
+                    cvel[2] * cprm * 2,
+                )
 
-                spaz.node.handlemessage('impulse', spaz.node.position[0], spaz.node.position[1], spaz.node.position[2],
-                                        0, -100, 0,
-                                        77*mult*1.2, 1,
-                                        0, 0,
-                                        0, cvel[1]*cprm, 0)
+                spaz.node.handlemessage(
+                    "impulse",
+                    spaz.node.position[0],
+                    spaz.node.position[1],
+                    spaz.node.position[2],
+                    0,
+                    -100,
+                    0,
+                    77 * mult * 1.2,
+                    1,
+                    0,
+                    0,
+                    0,
+                    cvel[1] * cprm,
+                    0,
+                )
 
             ba.timer(0.9, lambda: spaz_ai_on(spaz))
 
-        ba.timer(max(0, spawn_time-0.9), do)
+        ba.timer(max(0, spawn_time - 0.9), do)
 
     def _spawn_bot(
         self,
@@ -1369,7 +1471,7 @@ class SpazBotSet:
         spaz = bot_type()
         ba.playsound(self._spawn_sound, position=pos)
         assert spaz.node
-        spaz.node.handlemessage('flash')
+        spaz.node.handlemessage("flash")
         spaz.node.is_area_of_interest = False
         spaz.handlemessage(ba.StandMessage(pos, random.uniform(0, 360)))
         self.add_bot(spaz)
@@ -1404,7 +1506,7 @@ class SpazBotSet:
         except Exception:
             bot_list = []
             ba.print_exception(
-                'Error updating bot list: '
+                "Error updating bot list: "
                 + str(self._bot_lists[self._bot_update_list])
             )
         self._bot_update_list = (
@@ -1429,7 +1531,7 @@ class SpazBotSet:
                         )
                     )
             except Exception:
-                ba.print_exception('Error on bot-set _update.')
+                ba.print_exception("Error on bot-set _update.")
 
         for bot in bot_list:
             bot.set_player_points(player_pts)
@@ -1504,15 +1606,15 @@ class SpazBotSet:
                         j += jump_duration
                     ba.timer(
                         random.uniform(0.0, 1.0),
-                        ba.Call(bot.node.handlemessage, 'attack_sound'),
+                        ba.Call(bot.node.handlemessage, "attack_sound"),
                     )
                     ba.timer(
                         random.uniform(1.0, 2.0),
-                        ba.Call(bot.node.handlemessage, 'attack_sound'),
+                        ba.Call(bot.node.handlemessage, "attack_sound"),
                     )
                     ba.timer(
                         random.uniform(2.0, 3.0),
-                        ba.Call(bot.node.handlemessage, 'attack_sound'),
+                        ba.Call(bot.node.handlemessage, "attack_sound"),
                     )
 
     def add_bot(self, bot: SpazBot) -> None:

@@ -28,9 +28,11 @@ class PuckDiedMessage:
 
 class Puck(ba.Actor):
     """A lovely ball. I don't want to change every puck word in this script -,-"""
+
     def setballstart(self):
         if self.node:
             self.node.gravity_scale = 1
+
     def __init__(self, position: Sequence[float] = (0.0, 1.0, 0.0)):
         super().__init__()
         shared = SharedObjects.get()
@@ -44,25 +46,30 @@ class Puck(ba.Actor):
         assert isinstance(activity, SoccerGame)
         pmats = [shared.object_material, activity.puck_material]
         self.node = ba.newnode(
-            'prop',
+            "prop",
             delegate=self,
             attrs={
-                'model': activity.puck_model,
-                'color_texture': activity.puck_tex,
-                'body': 'sphere',
-                'reflection': 'soft',
-                'reflection_scale': [0.5],
-                'shadow_size': 0.6,
-                'gravity_scale':0,
-                'is_area_of_interest': True,
-                'position': self._spawn_pos,
-                'materials': pmats,
-                'density': 1.69,
+                "model": activity.puck_model,
+                "color_texture": activity.puck_tex,
+                "body": "sphere",
+                "reflection": "soft",
+                "reflection_scale": [0.5],
+                "shadow_size": 0.6,
+                "gravity_scale": 0,
+                "is_area_of_interest": True,
+                "position": self._spawn_pos,
+                "materials": pmats,
+                "density": 1.69,
             },
         )
-        ba.animate(self.node, 'model_scale', {0: 0, 0.2: 1.3, 0.26: 1})
-        ba.timer(100,self.setballstart,timeformat = ba.TimeFormat.MILLISECONDS,timetype = ba.TimeType.SIM)
-        
+        ba.animate(self.node, "model_scale", {0: 0, 0.2: 1.3, 0.26: 1})
+        ba.timer(
+            100,
+            self.setballstart,
+            timeformat=ba.TimeFormat.MILLISECONDS,
+            timetype=ba.TimeType.SIM,
+        )
+
     def handlemessage(self, msg: Any) -> Any:
         if isinstance(msg, ba.DieMessage):
             if self.node:
@@ -80,7 +87,7 @@ class Puck(ba.Actor):
             assert self.node
             assert msg.force_direction is not None
             self.node.handlemessage(
-                'impulse',
+                "impulse",
                 msg.pos[0],
                 msg.pos[1],
                 msg.pos[2],
@@ -107,7 +114,7 @@ class Puck(ba.Actor):
             super().handlemessage(msg)
 
 
-class Player(ba.Player['Team']):
+class Player(ba.Player["Team"]):
     """Our player type for this game."""
 
 
@@ -122,39 +129,39 @@ class Team(ba.Team[Player]):
 class SoccerGame(ba.TeamGameActivity[Player, Team]):
     """Soccer game."""
 
-    name = 'Soccer'
-    description = 'Score some goals by punching the ball.'
+    name = "Soccer"
+    description = "Score some goals by punching the ball."
     available_settings = [
         ba.IntSetting(
-            'Score to Win',
+            "Score to Win",
             min_value=1,
             default=1,
             increment=1,
         ),
         ba.IntChoiceSetting(
-            'Time Limit',
+            "Time Limit",
             choices=[
-                ('None', 0),
-                ('1 Minute', 60),
-                ('2 Minutes', 120),
-                ('5 Minutes', 300),
-                ('10 Minutes', 600),
-                ('20 Minutes', 1200),
+                ("None", 0),
+                ("1 Minute", 60),
+                ("2 Minutes", 120),
+                ("5 Minutes", 300),
+                ("10 Minutes", 600),
+                ("20 Minutes", 1200),
             ],
             default=0,
         ),
         ba.FloatChoiceSetting(
-            'Respawn Times',
+            "Respawn Times",
             choices=[
-                ('Shorter', 0.25),
-                ('Short', 0.5),
-                ('Normal', 1.0),
-                ('Long', 2.0),
-                ('Longer', 4.0),
+                ("Shorter", 0.25),
+                ("Short", 0.5),
+                ("Normal", 1.0),
+                ("Long", 2.0),
+                ("Longer", 4.0),
             ],
             default=1.0,
         ),
-        ba.BoolSetting('Epic Mode', default=False),
+        ba.BoolSetting("Epic Mode", default=False),
     ]
 
     @classmethod
@@ -163,62 +170,62 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
 
     @classmethod
     def get_supported_maps(cls, sessiontype: type[ba.Session]) -> list[str]:
-        return ba.getmaps('soccer')
+        return ba.getmaps("soccer")
 
     def __init__(self, settings: dict):
         super().__init__(settings)
         shared = SharedObjects.get()
         self._scoreboard = Scoreboard()
-        self._cheer_sound = ba.getsound('cheer')
-        self._chant_sound = ba.getsound('crowdChant')
-        self._goal_sound = ba.getsound('goal')
-        self._foghorn_sound = ba.getsound('audience')
-        self._swipsound = ba.getsound('swip')
-        self._whistle_sound = ba.getsound('refWhistle')
-        self.puck_model = ba.getmodel('soccerBall')
-        self.puck_tex = ba.gettexture('soccerBallTex')
-        self._puck_sound = ba.getsound('punch01')
+        self._cheer_sound = ba.getsound("cheer")
+        self._chant_sound = ba.getsound("crowdChant")
+        self._goal_sound = ba.getsound("goal")
+        self._foghorn_sound = ba.getsound("audience")
+        self._swipsound = ba.getsound("swip")
+        self._whistle_sound = ba.getsound("refWhistle")
+        self.puck_model = ba.getmodel("soccerBall")
+        self.puck_tex = ba.gettexture("soccerBallTex")
+        self._puck_sound = ba.getsound("punch01")
         self.puck_material = ba.Material()
         self.puck_material.add_actions(
-            actions=('modify_part_collision', 'friction', 1)
+            actions=("modify_part_collision", "friction", 1)
         )
         self.puck_material.add_actions(
-            conditions=('they_have_material', shared.pickup_material),
-            actions=('modify_part_collision', 'collide', False),
+            conditions=("they_have_material", shared.pickup_material),
+            actions=("modify_part_collision", "collide", False),
         )
         self.puck_material.add_actions(
             conditions=(
-                ('we_are_younger_than', 100),
-                'and',
-                ('they_have_material', shared.object_material),
+                ("we_are_younger_than", 100),
+                "and",
+                ("they_have_material", shared.object_material),
             ),
-            actions=('modify_node_collision', 'collide', False),
+            actions=("modify_node_collision", "collide", False),
         )
         self.puck_material.add_actions(
-            conditions=('they_have_material', shared.footing_material),
-            actions=('impact_sound', self._puck_sound, 0.0, 0),
+            conditions=("they_have_material", shared.footing_material),
+            actions=("impact_sound", self._puck_sound, 0.0, 0),
         )
 
         # Keep track of which player last touched the puck
         self.puck_material.add_actions(
-            conditions=('they_have_material', shared.player_material),
-            actions=(('call', 'at_connect', self._handle_puck_player_collide),),
+            conditions=("they_have_material", shared.player_material),
+            actions=(("call", "at_connect", self._handle_puck_player_collide),),
         )
         self._score_region_material = ba.Material()
         self._score_region_material.add_actions(
-            conditions=('they_have_material', self.puck_material),
+            conditions=("they_have_material", self.puck_material),
             actions=(
-                ('modify_part_collision', 'collide', True),
-                ('modify_part_collision', 'physical', False),
-                ('call', 'at_connect', self._handle_score),
+                ("modify_part_collision", "collide", True),
+                ("modify_part_collision", "physical", False),
+                ("call", "at_connect", self._handle_score),
             ),
         )
         self._puck_spawn_pos: Sequence[float] | None = None
         self._score_regions: list[ba.NodeActor] | None = None
         self._puck: Puck | None = None
-        self._score_to_win = int(settings['Score to Win'])
-        self._time_limit = float(settings['Time Limit'])
-        self._epic_mode = bool(settings['Epic Mode'])
+        self._score_to_win = int(settings["Score to Win"])
+        self._time_limit = float(settings["Time Limit"])
+        self._epic_mode = bool(settings["Epic Mode"])
         self.slow_motion = self._epic_mode
         self.default_music = (
             ba.MusicType.EPIC if self._epic_mode else ba.MusicType.SOCCER
@@ -226,13 +233,13 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
 
     def get_instance_description(self) -> str | Sequence:
         if self._score_to_win == 1:
-            return 'Score a goal.'
-        return 'Score ${ARG1} goals.', self._score_to_win
+            return "Score a goal."
+        return "Score ${ARG1} goals.", self._score_to_win
 
     def get_instance_description_short(self) -> str | Sequence:
         if self._score_to_win == 1:
-            return 'score a goal'
-        return 'score ${ARG1} goals', self._score_to_win
+            return "score a goal"
+        return "score ${ARG1} goals", self._score_to_win
 
     def on_begin(self) -> None:
         super().on_begin()
@@ -248,12 +255,12 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
         self._score_regions.append(
             ba.NodeActor(
                 ba.newnode(
-                    'region',
+                    "region",
                     attrs={
-                        'position': defs.boxes['goal1'][0:3],
-                        'scale': defs.boxes['goal1'][6:9],
-                        'type': 'box',
-                        'materials': [self._score_region_material],
+                        "position": defs.boxes["goal1"][0:3],
+                        "scale": defs.boxes["goal1"][6:9],
+                        "type": "box",
+                        "materials": [self._score_region_material],
                     },
                 )
             )
@@ -261,12 +268,12 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
         self._score_regions.append(
             ba.NodeActor(
                 ba.newnode(
-                    'region',
+                    "region",
                     attrs={
-                        'position': defs.boxes['goal2'][0:3],
-                        'scale': defs.boxes['goal2'][6:9],
-                        'type': 'box',
-                        'materials': [self._score_region_material],
+                        "position": defs.boxes["goal2"][0:3],
+                        "scale": defs.boxes["goal2"][6:9],
+                        "type": "box",
+                        "materials": [self._score_region_material],
                     },
                 )
             )
@@ -291,7 +298,7 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
 
     def _kill_puck(self) -> None:
         self._puck = None
-    
+
     def _handle_score(self) -> None:
         """A point has been scored."""
 
@@ -302,7 +309,7 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
         # we don't want it to be able to score again.
         if self._puck.scored:
             return
-        
+
         region = ba.getcollision().sourcenode
         index = 0
         for index, score_region in enumerate(self._score_regions):
@@ -345,14 +352,14 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
         ba.timer(0.3, self._kill_puck)
 
         light = ba.newnode(
-            'light',
+            "light",
             attrs={
-                'position': ba.getcollision().position,
-                'height_attenuated': False,
-                'color': (1, 1, 1),
+                "position": ba.getcollision().position,
+                "height_attenuated": False,
+                "color": (1, 1, 1),
             },
         )
-        ba.animate(light, 'intensity', {0: 0, 0.5: 2, 1.0: 0}, loop=True)
+        ba.animate(light, "intensity", {0: 0, 0.5: 2, 1.0: 0}, loop=True)
         ba.timer(1.0, light.delete)
 
         ba.cameraflash(duration=20.0)
@@ -386,14 +393,14 @@ class SoccerGame(ba.TeamGameActivity[Player, Team]):
 
     def _flash_puck_spawn(self) -> None:
         light = ba.newnode(
-            'light',
+            "light",
             attrs={
-                'position': self._puck_spawn_pos,
-                'height_attenuated': False,
-                'color': (1, 1, 1),
+                "position": self._puck_spawn_pos,
+                "height_attenuated": False,
+                "color": (1, 1, 1),
             },
         )
-        ba.animate(light, 'intensity', {0.0: 0, 0.25: 1, 0.5: 0}, loop=True)
+        ba.animate(light, "intensity", {0.0: 0, 0.25: 1, 0.5: 0}, loop=True)
         ba.timer(1.0, light.delete)
 
     def _spawn_puck(self) -> None:

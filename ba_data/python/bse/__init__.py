@@ -1,13 +1,19 @@
-""" Initial BSE module. """
-from bse import (
+"""Explodinary's main module; loads any needed scripts on startup."""
+
+from . import (
     _music,
     wrappers,
     mainmenu,
+    config,
 )
 
-from bse.custom import (
-    appearance,
-    spazbot,
+from .custom import (
     announcer,
-    quickturn
+    appearance,
+    particle,
+    quickturn,
+    spazbot,
 )
+
+# Subsystems
+cfg = config.ClaypocalypseConfigSubsystem()

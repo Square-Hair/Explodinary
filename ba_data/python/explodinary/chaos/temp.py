@@ -25,7 +25,7 @@ from datetime import datetime
 class TempProPlayers(ChaosEvent):
     name = 'Pro Players'
     icon = 'chaosProPlayers'
-    
+
     def event(self):
         transmutes = [
             ba.app.spaz_appearances.get('Agent Johnson'),
@@ -37,36 +37,36 @@ class TempProPlayers(ChaosEvent):
             if not spaz.node.exists(): continue
             transmute_choice = random.choice(transmutes)
             self.transmute(spaz, transmute_choice)
-            
+
     def transmute(self, spaz: Spaz, transmute: Appearance):
         """ Make 'em pro. """
         # Transformio
         shared.transform_spaz_appearance(spaz, transmute)
-        
+
         # Give 'em pro powerups!
         spaz.node.handlemessage(ba.PowerupMessage(poweruptype='impact_bombs', showtooltip=False))
         spaz.node.handlemessage(ba.PowerupMessage(poweruptype='shield', showtooltip=False))
         spaz.node.handlemessage(ba.PowerupMessage(poweruptype='punch', showtooltip=False))
-            
+
 append_chaos_event(TempProPlayers)
 
 class TempHelloThere(ChaosEvent):
     name = 'Hello there!'
     icon = 'chaosHelloThere'
-    
+
     def event(self):
         sfxpool = [f'HelloThere{"{:02}".format(n)}' for n in range(3)]
         duration = self._get_config()['time'] * 2
-        
+
         creature = Creature()
         creature.fade_creature('in')
         ba.timer(max(0.01, duration-0.22), lambda: creature.fade_creature('out'))
         ba.timer(max(0.02, duration), lambda: creature.destroy_creature)
-        
+
         ba.playsound( ba.getsound( random.choice(sfxpool) ) )
-        
+
         return duration
-    
+
 class Creature:
     def __init__(
         self
@@ -86,11 +86,11 @@ class Creature:
            )
         #(random.uniform(-0.3,0.5),random.uniform(-0.05,0.1))
         self._position_creature()
-        
+
     def _position_creature(self):
         """ Positions our creature. """
-        h,v = random.uniform(-0.5,0.5), random.uniform(-0.1, -0.25) 
-        
+        h,v = random.uniform(-0.5,0.5), random.uniform(-0.1, -0.25)
+
         dpool = {
             'up': {
                 'attach': 'topCenter',
@@ -113,49 +113,49 @@ class Creature:
                 'pos': (v, h),
             }
         }
-            
+
         cpos = dpool[random.choice( list( dpool.keys() ) )]
-        
+
         self.node.attach = cpos['attach']
         self.node.rotate = cpos['rotate']
         self.node.position = cpos['pos']
-        
+
     def fade_creature(self, mode: str = 'in'):
         """ Fades our Creature in and out, provided by the user. """
         if not self.node.exists(): return
-        
+
         if mode == 'in': anim = [0,1]
         elif mode == 'out': anim = [1,0]
         else:
             raise Exception(f'Unable to fade creature with "{mode}".')
-        
+
         ba.animate(self.node, 'opacity', {
             0: anim[0],
             0.22: anim[1],
         })
-        
+
     def destroy_creature(self):
         """ KILLS the creature. :( """
         self.node.delete()
-    
+
 append_chaos_event(TempHelloThere)
 
 class TempBlurryVision(ChaosEvent):
     name = 'Blurry Vision'
     icon = 'chaosBlurryVision'
-        
+
     def event(self):
         """ Makes our vision blurry as heck. """
         if self._get_variable('is_blurry', False): return False
-        
+
         duration = self._get_config()['time'] * 2.25
-        
+
         self._set_variable('is_blurry', True)
         self.do_blur(duration)
         ba.timer(duration, self.take_it_back)
-        
+
         return duration
-        
+
     def do_blur(self, duration: float):
         """ Blur. """
         for chunk in dir(self.activity.map):
@@ -171,13 +171,13 @@ class TempBlurryVision(ChaosEvent):
                 except: continue
 
     def take_it_back(self): self._set_variable('is_blurry', False)
-        
+
 append_chaos_event(TempBlurryVision)
 
 class TempModernServer(ChaosEvent):
     name = 'Modern Server'
     icon = 'chaosModernServer'
-    
+
     def event(self):
         self.texts = [
             "Join our discord!!",
@@ -215,21 +215,21 @@ class TempModernServer(ChaosEvent):
             "@efro update game pls!!",
             "@efro add my map pls!!",
         ]
-        
+
         duration = self._get_config()['time'] * 2.333
         iterations = random.randint(30, 55+(30 if not self._is_coop else 0))
-        
+
         self.generate_mayhem(iterations, duration)
-        
+
         return duration
-                
+
     def generate_mayhem(self,
                         itr: int,
                         duration: float) -> float:
         """ Summons all those funny texts and returns the lifespan of all of them. """
-        
+
         def create_offset(d: float) -> float: return d*(random.uniform(0.07,0.4))
-        
+
         def create_text(fadein: float,
                         life: float,
                         fadeout: float):
@@ -261,29 +261,29 @@ class TempModernServer(ChaosEvent):
             })
 
             ba.timer(life, txt.delete)
-            
+
         def give_color() -> tuple: return ([random.uniform(0.75,1.2) for x in range(4)])
-        
+
         for i in range(itr):
             fi,fo = create_offset(duration), create_offset(duration)
             create_text(fi, duration, fo)
-            
+
 append_chaos_event(TempModernServer)
 
 class TempSwitcheroo(ChaosEvent):
     name = 'Switcheroo'
     icon = 'chaosSwitcheroo'
-    
+
     def event(self):
         """ Switches everyone's position! """
         # Return if we have less than 2 players and less than 2 bots
         players, bots = self._get_players(), self._get_bots()
-        
+
         if ( len(players) < 2 and
              len(bots) < 2 ): return False
-        
+
         _might_disappoint = True
-        
+
         # We handle players and bots separately; we don't want funny mischief in modes like Runaround
         for group in [players, bots]:
             allpos: list = []
@@ -307,34 +307,34 @@ class TempSwitcheroo(ChaosEvent):
                             pos = allpos[sel]
 
                         allpos.pop(sel)
-                        
+
                         ent.handlemessage(ba.StandMessage(pos))
                         _might_disappoint = False
 
         if _might_disappoint: # If this happens, we didn't teleport anyone at all
                               # And it's better if we just reroll :p
             return False
-        
+
 append_chaos_event(TempSwitcheroo)
 
 class TempMeteorShower(ChaosEvent):
     name = 'Meteor Shower'
     icon = 'chaosMeteorShower'
-    
+
     def event(self):
         self.worldbounds = self.activity.map.get_def_bound_box('map_bounds')
-        
+
         self.bombpool = (['normal']) if self._is_coop else self.get_bomb_pool()
-        
+
         duration = self._get_config()['time'] * 2.5
-        
+
         rate = 1 / (4 if self._is_coop else 8)
-        
+
         self.activity._meteor_rain_clock = ba.Timer(rate, self.do_bomb, repeat=True)
         self.activity._meteor_rain_timer = ba.Timer(duration, self.stop)
-        
+
         return duration
-        
+
     def get_bomb_pool(self) -> list:
         return (
          ['normal'] * 66 +
@@ -349,7 +349,7 @@ class TempMeteorShower(ChaosEvent):
          ['steampunk'] * 5 +
          ['clouder'] * 5
         )
-        
+
     def do_bomb(self):
         from bastd.actor.bomb import Bomb
         type = random.choice(self.bombpool)
@@ -367,11 +367,11 @@ class TempMeteorShower(ChaosEvent):
         )
 
         Bomb(position=pos, velocity=vel, bomb_type=type).autoretain()
-        
+
     def stop(self):
         self.activity._meteor_rain_clock = None
         self.activity._meteor_rain_timer = None
-        
+
 append_chaos_event(TempMeteorShower)
 
 class TempAnvil(ChaosEvent):
@@ -380,7 +380,7 @@ class TempAnvil(ChaosEvent):
     blacklist = [
         ba.CoopSession
     ]
-    
+
     def event(self):
         self._anvilmat = ba.Material()
         self._anvilmat.add_actions(
@@ -390,9 +390,9 @@ class TempAnvil(ChaosEvent):
                 ('modify_part_collision', 'physical', False),
             ),
         )
-        
+
         if len(self._get_everyone()) < 1: return False
-        
+
         ceilingpoint = self.activity.map.get_def_bound_box('map_bounds')[4]
         evtime = self._get_config()['time']; delay = random.uniform(0, min(3, evtime/3))
 
@@ -400,17 +400,17 @@ class TempAnvil(ChaosEvent):
             if spaz.is_alive() and spaz.node.exists():
                 avp = ([x if i != 1 else (min(ceilingpoint - 0.5, x + 7)) for i, x in enumerate(spaz.node.position)])
                 Anvil(evtime*0.9, avp, self._is_coop, self._anvilmat).autoretain()
-        
+
         def do_it():
             for entity in self._get_everyone():
                 do_anvil(entity)
-                
+
         ba.timer(delay, do_it)
-            
+
         return {
             'delay': delay + 0.1
         }
-    
+
 class Anvil(ba.Actor):
     def __init__(self,
                  frequency: float,
@@ -465,14 +465,14 @@ class Anvil(ba.Actor):
             })
         ba.animate(self.node, 'model_scale', {0: 0, 0.2: 1.3, 0.26: self.node.model_scale})
         ba.timer(self._len, self._handle_magic_disappear)
-    
+
     def _squash(self):
         from bastd.actor.spaz import Spaz
         from bastd.actor.bomb import Bomb, Blast
         from bastd.actor.powerupbox import PowerupBox
         collision = ba.getcollision()
         try:
-            if not self.node.velocity[1] < -10: return 
+            if not self.node.velocity[1] < -10: return
             them = collision.opposingnode.getdelegate(ba.Actor, None)
             tnode = them.node
             they = type(them)
@@ -530,7 +530,7 @@ append_chaos_event(TempAnvil)
 class TempMexicoFilter(ChaosEvent):
     name = 'Obligatory Mexico Filter'
     icon = 'chaosMexicanFilter'
-    
+
     blacklist = [
         pathwayPandemonium.PathwayPandemoniumGame,
     ]
@@ -538,33 +538,33 @@ class TempMexicoFilter(ChaosEvent):
     def event(self):
         if self._get_variable('vfx', False): return False
         self._set_variable('vfx', True)
-        
+
         duration = self._get_config()['time'] * 1.6
-        
+
         self.do_sepia(duration)
         ba.timer(duration, ba.Call(self._set_variable, 'vfx', False))
-        
+
         return duration
-                
+
     def do_sepia(self, duration):
         """ Sepias the screen. """
         g = self.activity.globalsnode
-        
+
         duration = (max(0.3, duration))
-        
+
         ba.animate_array(g, 'tint', 3, {
             0: g.tint,
             0.1: (1.5, 1.2, 0.4),
             duration - 0.1: (1.5, 1.2, 0.4),
             duration:  g.tint,
         })
-        
+
 append_chaos_event(TempMexicoFilter)
-        
+
 class TempStreamerMode(ChaosEvent):
     name = 'Streamer Mode'
     icon = 'chaosStreamerMode'
-    
+
     def event(self):
         transmutes = [ba.app.spaz_appearances.get(x) for x in get_appearances()]
 
@@ -572,47 +572,47 @@ class TempStreamerMode(ChaosEvent):
             if not spaz.node.exists(): continue
             transmute_choice = random.choice(transmutes)
             self.transmute(spaz, transmute_choice)
-            
+
         # Add "is_area_of_interest" to bots so the camera follows them as well
         for bot in self._get_bots():
             bot.node.is_area_of_interest = True
-            
+
     def transmute(self, spaz: Spaz, transmute: Appearance):
         """ Confuse the heck out of everyone by randomizing everyone's character and name! """
         # Transformio
         shared.transform_spaz_appearance(spaz, transmute)
-        
+
         main, high = self.random_color(), self.random_color()
         spaz.node.color     = main
         spaz.node.name_color= main
         spaz.node.highlight = high
         spaz.node.name      = random.choice( ba.internal.get_random_names() )
-        
+
     def random_color(self): return tuple([random.randint(0,255)/255 for x in range(3)])
-            
+
 append_chaos_event(TempStreamerMode)
 
 class TempSuddenEggHunt(ChaosEvent):
     name = 'Sudden Egg Hunt'
     icon = 'chaosEggHunt'
-    
+
     blacklist = [
         ba.CoopSession
     ]
-    
+
     def event(self):
         self.eggmat = ba.Material()
         self.eggmat.add_actions(
             conditions=('they_have_material', SharedObjects.get().player_material),
             actions=(('call', 'at_connect', self._egg_pickup),),
         )
-        
+
         self.worldbounds = self.activity.map.get_def_bound_box('map_bounds')
-        
+
         # Bunnies!
         for entity in self._get_everyone():
             self.bunnify(entity)
-        
+
         # Egg spawning
         egg_a = random.randint(20, 30)
         for _ in range(egg_a):
@@ -621,9 +621,9 @@ class TempSuddenEggHunt(ChaosEvent):
                 random.uniform(self.worldbounds[4], self.worldbounds[4],) - 0.5,
                 random.uniform(self.worldbounds[2], self.worldbounds[5],) * 0.76,
             )
-            
+
             lifespan = (self._get_config()['time'] * 4) * random.uniform(0.6, 1.2)
-            
+
             ExplosiveEgg(pos, self.eggmat, lifespan).autoretain()
 
     def _egg_pickup(self) -> None:
@@ -637,20 +637,20 @@ class TempSuddenEggHunt(ChaosEvent):
                 Spaz, True)
         except ba.NotFoundError:
             return
-        
+
         # Summon an explosion in the egg's position and delete it afterwards
         Blast(egg.node.position, (0,0,0), 2.5, 'normal', spaz.source_player)
         egg.handlemessage(ba.DieMessage())
-        
+
     def bunnify(self,
                 spaz: Spaz):
         """ Transforms this spaz into a bunny. """
         # Don't run if this player's spaz node doesn't exist.
         if not spaz.node.exists(): return
-        
+
         # Get our appearance set
         basebun = ba.app.spaz_appearances.get('Easter Bunny')
-        
+
         # Override sounds
         spaz.node.attack_sounds         = [ba.getsound(s) for s in basebun.attack_sounds]
         spaz.node.jump_sounds           = [ba.getsound(s) for s in basebun.jump_sounds]
@@ -679,7 +679,7 @@ class ExplosiveEgg(ba.Actor):
                  eggmat: ba.Material,
                  lifespan: float):
         super().__init__()
-        
+
         shared = SharedObjects.get()
 
         texpool = [
@@ -688,10 +688,10 @@ class ExplosiveEgg(ba.Actor):
             ba.gettexture('bombStickyColor'),
         ]
         ctex = random.choice(texpool)
-        
+
         self._spawn_pos = (position[0], position[1] + 0.5, position[2])
         mats = [shared.object_material, eggmat]
-        
+
         self.node = ba.newnode(
             'prop',
             delegate=self,
@@ -709,7 +709,7 @@ class ExplosiveEgg(ba.Actor):
                 'materials': mats,
             },
         )
-        
+
         # Death anim
         ba.animate(self.node, 'model_scale', {
             0:self.node.model_scale,
@@ -746,20 +746,20 @@ class ExplosiveEgg(ba.Actor):
                 )
         else:
             super().handlemessage(msg)
-            
+
 append_chaos_event(TempSuddenEggHunt)
 
 class TempNothing(ChaosEvent):
     name = 'Nothing!'
     icon = 'chaosNothing'
-    
+
     def event(self):
-        real = random.uniform(1,10) < 9 
-        
+        real = random.uniform(1,10) < 9
+
         # If we're "real", don't do absolutely nothing
         if real:
             return
-        
+
         # Else, fake a nothing, and then pick another event afterwards
         else:
             delay = self._get_config()['time'] * random.uniform(0.4, 0.7)
@@ -770,7 +770,7 @@ class TempNothing(ChaosEvent):
                 'announce': False,
                 'delay': delay
             }
-        
+
     def fake_announce(self,
                       txt: str | ba.Lstr = None ):
         """ Does a fake announce text thing. """
@@ -792,29 +792,29 @@ append_chaos_event(TempNothing)
 class TempDashing(ChaosEvent):
     name = 'Quite Dashing'
     icon = 'powerupDash'
-    
+
     def event(self):
         spaz: Spaz
-        
+
         for spaz in self._get_players():
             spaz.reset_powerup_count()
             spaz.set_dash_count(
                 (6 if self._is_coop else
                 ( spaz.dash_count + random.randint(4,12) ) ))
             bseVFX('puff', spaz.node.position, (0,-1,0))
-            
+
 append_chaos_event(TempDashing)
 
 class TempEpicTime(ChaosEvent):
     name = 'So Epic!'
     icon = 'chaosEpic'
-    
+
     def event(self):
         if self._get_variable('so_epic', False): return False
         self._set_variable('so_epic', True)
 
         #self.announce()
-        
+
         self.clock = duration = ( self._get_config()['time'] * 1.8 ) * ( 1.5 if self.activity.globalsnode.slow_motion else 1 )
         self.clock *= 30
 
@@ -830,25 +830,25 @@ class TempEpicTime(ChaosEvent):
             'time': duration,
             'timetype': ba.TimeType.BASE
         }
-        
+
     def _update(self):
         if not self.activity.globalsnode.paused:
             self.time_down()
-            
+
     def time_down(self):
         self.clock -= 1
-        
+
         if self.clock <= 0:
             self.switch_mode()
             self.timer = None
-        
+
     def switch_mode(self, end = True):
         """ Toggles slow motion. """
         self.activity.globalsnode.slow_motion = not self.activity.globalsnode.slow_motion
         # Set variable to False when ending
         if end:
             self._set_variable('so_epic', False)
-            
+
     def announce(self):
         ZoomText(
             ba.Lstr(translate=('chaosEventNames', f'So {"Epic" if not self.activity.globalsnode.slow_motion else "Normal"}!')),
@@ -860,16 +860,16 @@ class TempEpicTime(ChaosEvent):
             trail=True,
             color=(0.7,1.1,0.95),
         ).autoretain()
-            
+
 append_chaos_event(TempEpicTime)
 
 class TempDiscordStage(ChaosEvent):
     name = 'Coffee Time!'
     icon = 'chaosCoffee'
-    
+
     def event(self):
         """"""
-        
+
 class StagePopupManager:
     """"""
 
@@ -878,7 +878,7 @@ class StagePopupManager:
 class TempWindowsNotifications(ChaosEvent):
     name = 'Windows Alerts'
     icon = 'chaosWindows'
-    
+
     def event(self):
         self.phandler = WindowsPopupHandler()
 
@@ -886,10 +886,10 @@ class WindowsPopupHandler:
     def __init__(self) -> None:
         self._dying = False
         self.notifs: dict = {}; self.itr = -1
-    
+
     def add_notif(self):
         itr = self.itr = self.itr + 1
-        
+
         self.notifs[itr](
             ba.newnode(
                 'text',
@@ -909,10 +909,10 @@ class WindowsPopupHandler:
                 },
             )
         )
-        
+
     def die(self):
         self._dying = True
-        
+
 class WindowsPopupNode:
     def __init__(
         self,
@@ -932,57 +932,57 @@ class WindowsPopupNode:
         msgtop = message_header
         msg = message
         thb = side_image
-        
+
         titleextra = 38.35 if title else 0
         headerextra = 26 if msgtop else 0
         msgjust = ((20 + (17.55 * (len(msg.splitlines())))) + (8 if thb and len(msg.splitlines()) < 2 else 0)) if msg else 0
         sx,sy = size[0], (size[1] + msgjust + titleextra + headerextra)
-        
+
         ox,oy = -17,53
         ics = 16
         xbs = 10
         bis = 59
         smult = 0.63
-        
+
         imgoff = bis + 16 if thb else 0
-        
+
         bgsize = ([s * smult for s in [sx,sy]])
         offset = ([(p * smult) - ((bgsize[i] / 2) * (1 if i == 0 else -1)) for i,p in enumerate([ox,oy])])
-        
+
         basepos = ([(p - ((sx,sy)[i]/2 *smult)) for i,p in enumerate(offset)])
-                
+
         icotex = ba.gettexture(icon) if type(icon) is str else icon
         bartex = (ba.gettexture(thb) if type(thb) is str else thb) if thb else None
-        
+
         icos = ics*smult; icosize = ([icos for _ in range(2)])
         icooff = ((icos/2) + (16*smult),
                   -(icos/2) + ((sy - 19)*smult))
         icopos = ([p + (icooff[i]) for i,p in enumerate(basepos)])
-        
+
         bims = bis*smult; bimsize = ([bims for _ in range(2)])
-        
+
         xbsi = xbs*smult; xbsize = ([xbsi for _ in range(2)])
         xboff = (((sx-22)*smult) - (xbsi/2),
                  ((sy-21)*smult) - (xbsi/2),
                  )
         xbpos = ([p + (xboff[i]) for i,p in enumerate(basepos)])
-        
+
         appoffx = (10,0)
         apppos = ([p + (appoffx[i]) for i,p in enumerate(icopos)])
-        
+
         tleoff = ((16*smult),
                   ((sy - 61)*smult))
         tlepos = ([p + (tleoff[i]) for i,p in enumerate(basepos)])
-        
+
         simoff = (16 + (bis/2), 37.35-10-(bis/2) +msgjust)
         simpos = ([p + (simoff[i]*smult) for i,p in enumerate(basepos)])
-        
+
         mtloff = (16 + imgoff, 37.35-20 +msgjust)
         mtlpos = ([p + (mtloff[i]*smult) for i,p in enumerate(basepos)])
 
         msgoff = (16 + imgoff, 26.35-20 +msgjust)
         msgpos = ([p + (msgoff[i]*smult) for i,p in enumerate(basepos)])
-        
+
         self.backgroundblur: ba.Node = ba.newnode(
             'image',
             attrs={
@@ -996,7 +996,7 @@ class WindowsPopupNode:
                 'attach': 'bottomRight',
             },
         )
-        
+
         self.background: ba.Node = ba.newnode(
             'image',
             attrs={
@@ -1010,7 +1010,7 @@ class WindowsPopupNode:
                 'attach': 'bottomRight',
             },
         )
-        
+
         self.icon: ba.Node = ba.newnode(
             'image',
             attrs={
@@ -1024,7 +1024,7 @@ class WindowsPopupNode:
                 'attach': 'bottomRight',
             },
         )
-        
+
         self.xicon: ba.Node = ba.newnode(
             'image',
             attrs={
@@ -1038,7 +1038,7 @@ class WindowsPopupNode:
                 'attach': 'bottomRight',
             },
         )
-        
+
         self.app_text: ba.Node = ba.newnode(
             'text',
             attrs={
@@ -1054,7 +1054,7 @@ class WindowsPopupNode:
                 'scale': 0.4905*smult,# 0.3088
             },
         )
-        
+
         if title:
             self.app_title: ba.Node = ba.newnode(
                 'text',
@@ -1071,7 +1071,7 @@ class WindowsPopupNode:
                     'scale': 0.5873*smult,
                 },
             )
-        
+
         if msgtop:
             self.msg_title: ba.Node = ba.newnode(
                 'text',
@@ -1088,7 +1088,7 @@ class WindowsPopupNode:
                     'scale': 0.5873*smult,
                 },
             )
-        
+
         if msg:
             self.msg_body: ba.Node = ba.newnode(
                 'text',
@@ -1104,7 +1104,7 @@ class WindowsPopupNode:
                     'scale': 0.553*smult,
                 },
             )
-        
+
         if thb:
             self.sidepic: ba.Node = ba.newnode(
                 'image',
@@ -1119,42 +1119,42 @@ class WindowsPopupNode:
                     'attach': 'bottomRight',
                 },
             )
-        
+
         if sound: self._sound(sound)
 
     def _sound(self,
                sound):
         sound = ba.getsound(sound) if type(sound) is str else sound
         ba.playsound(sound)
-        
+
 class TempGameReset(ChaosEvent):
     name = 'Game Reset'
     icon = 'chaosReset'
-    
+
     blacklist = [
         ba.CoopSession
     ]
-    
+
     def event(self):
         """ Resets everyone's scores and kills thrown bombs. """
         # Make the event less likely to happen by rolling a random 0 to 1 number
         if not random.random() > 0.975: return False
-            
+
         self.reset_scores()
-        
+
         delist = [Bomb, Egg, Flag, PowerupBox, Puck]
-        
+
         for node in ba.getnodes():
             try:
                 for tdel in delist:
                     if node.getdelegate(tdel, None):
                         self.node_fulmination(node)
             except ba.NodeNotFoundError: continue
-        
+
         for player in self.activity.players:
             self.reset_lives(player)
             self.relocate_player(player)
-        
+
     def node_fulmination(self, node: ba.Node):
         """ Nukes the provided node with a cool puff animation. """
         if not node.exists(): return
@@ -1167,53 +1167,53 @@ class TempGameReset(ChaosEvent):
                vel)
         if node.getdelegate(Spaz, None): return
         node.handlemessage(ba.DieMessage())
-        
+
     def reset_scores(self):
         """ Resets all players' scores. """
         try:
             for team in self.activity.teams:
                 team.score = 0
         except: return
-        
+
         try:
             self.activity._update_scoreboard()
         except: return
-        
+
     def reset_lives(self, player: Spaz):
         """ Resets a player's lives in modes like Elimination. """
         try:
             player.lives = self.activity.settings_raw['Lives Per Player']+1
             self.activity._update_icons()
         except: return
-        
+
     def relocate_player(self, player):
         """ StandMessage-s a player to their respective respawn location. """
         spaz: Spaz = player.actor
         if not spaz.node.exists(): return
-        
+
         # Cool particles
         bseVFX('puff',
                spaz.node.position,
                spaz.node.velocity)
-        
+
         # Relocate
         position = (self.activity.map.get_start_position(player.team.id) if isinstance(self.session, ba.DualTeamSession) else
                     self.activity.map.get_ffa_start_position(self.activity.players))
         spaz.node.handlemessage(ba.StandMessage(position, random.uniform(0,360)))
-        
+
         # Reset some standard values
         spaz.hitpoints = spaz.hitpoints_max
         spaz.node.hurt = 0
-        
+
         if spaz.shield:
             spaz.shield.delete()
             spaz.shield = None
             spaz.shield_decay_timer = None
-        
+
         # Unvital, reset count powerups
         spaz.unvital()
         spaz.reset_powerup_count()
-        
+
         # Remove triple bombs
         spaz.node.mini_billboard_1_texture = ba.gettexture('empty')
         spaz.node.mini_billboard_1_start_time = 0
@@ -1221,7 +1221,7 @@ class TempGameReset(ChaosEvent):
         spaz._multi_bomb_wear_off_flash_timer = None
         spaz._multi_bomb_wear_off_timer = None
         spaz._multi_bomb_wear_off()
-        
+
         # Remove bomb type
         spaz.node.mini_billboard_2_texture = ba.gettexture('empty')
         spaz.node.mini_billboard_2_start_time = 0
@@ -1229,7 +1229,7 @@ class TempGameReset(ChaosEvent):
         spaz._bomb_wear_off_flash_timer = None
         spaz._bomb_wear_off_timer = None
         spaz._bomb_wear_off()
-        
+
         # Remove gloves
         spaz.node.mini_billboard_3_texture = ba.gettexture('empty')
         spaz.node.mini_billboard_3_start_time = 0
@@ -1238,27 +1238,27 @@ class TempGameReset(ChaosEvent):
         spaz._boxing_gloves_wear_off_timer = None
         spaz._flying_gloves_wear_off()
         spaz._gloves_wear_off()
-        
+
         # Call a healie cuz I'm too lazy to remove all negative effects manually
         spaz.handlemessage(ba.PowerupMessage('health', None, False))
-        
+
         # Unfreeze
         spaz.handlemessage(ba.ThawMessage())
-        
+
 append_chaos_event(TempGameReset)
 
 class TempPowerupBait(ChaosEvent):
     name = 'Powerup Bait'
     icon = 'chaosBait'
-    
+
     blacklist = [
         ba.CoopSession
     ]
-    
+
     def event(self):
         """ Switches and replaces all powerups with curses! :)
             Also increases their lifespan just for the funsies. """
-        
+
         texpool = [
             'powerupBomb',
             'powerupPunch',
@@ -1282,7 +1282,7 @@ class TempPowerupBait(ChaosEvent):
             'powerupSkyMines',
             'powerupPresent',
             ]
-        
+
         node: ba.Node
         for node in ba.getnodes():
             if node.getdelegate(PowerupBox, None):
@@ -1296,34 +1296,34 @@ class TempPowerupBait(ChaosEvent):
                     DEFAULT_POWERUP_INTERVAL - 0.75,
                     ba.WeakCall(powerup.handlemessage, ba.DieMessage()),
                 )
-                
+
                 node.color_texture = ba.gettexture(random.choice(texpool))
                 node.flashing = False
-                    
+
 append_chaos_event(TempPowerupBait)
 
 class TempPowerupBlast(ChaosEvent):
     name = 'Powerup Blast'
     icon = 'chaosPowerupBlast'
-    
+
     def event(self):
         """ Spawns a powerup in top of a powerup in top of a powerup in top of a powerup in top... """
         nodes = []
-        
+
         node: ba.Node
         for node in ba.getnodes():
             if node.getdelegate(PowerupBox, None):
                 nodes.append(node)
-                
+
         # Reroll event if there's no powerup boxes
         if not len(nodes) > 0: return False
-                
+
         eitr = [3, 15]
         for i in range(len(nodes)):
             if i > 9:
                 eitr = [max(1, eitr[1]*0.33), max(1, eitr[1] - 1)]
                 eitr = ([int(v) for v in eitr])
-            
+
         for node in nodes:
             offs = 0.4
             itr = random.randint(eitr[0], eitr[1])
@@ -1335,48 +1335,48 @@ class TempPowerupBlast(ChaosEvent):
                         excludetypes='curse' if self._is_coop else None
                         ),
                 ).autoretain()
-                    
+
 append_chaos_event(TempPowerupBlast)
 
 class TempDrunkCameraMan(ChaosEvent):
     name = 'Drunk Cameraman'
     icon = 'chaosCamera'
-    
+
     def event(self):
         if self._get_variable('drunken', False): return False
         self._set_variable('drunken', True)
-        
+
         self.defaults = {}
-        
+
         self.update_defaults()
-            
+
         duration = self._get_config()['time'] * 1.5
         self.switches = switches = random.randint(int(duration/2), int(duration*2))
         self.st = switchtime = duration/switches
-        
+
         self.camera_routine()
-        
+
         return duration
-    
+
     def update_defaults(self):
         for node in ba.getnodes():
             try:
                 if self.defaults.get(node, 'nope') != 'nope': continue
                 self.defaults[node] = node.is_area_of_interest
             except: continue
-        
+
     def restore_defaults(self):
         for group in self.defaults.items():
             try:
                 node = group[0]; d = group[1]
                 node.is_area_of_interest = d
             except ba.NodeNotFoundError: continue
-            
+
         self._set_variable('drunken', False)
-            
+
     def camera_routine(self, itr:int = 0):
         self.update_defaults()
-        
+
         itr += 1
         if not itr > self.switches:
             cnodes = []
@@ -1385,33 +1385,33 @@ class TempDrunkCameraMan(ChaosEvent):
                     node.is_area_of_interest = False
                     cnodes.append(node)
                 except: continue
-                
+
             random.choice(cnodes).is_area_of_interest = True
-            
+
             ba.timer(self.st, ba.Call(self.camera_routine, itr))
-            
+
         else: self.restore_defaults()
-        
+
 append_chaos_event(TempDrunkCameraMan)
 
 class TempScreenFilter(ChaosEvent):
     name = 'Screen Filter'
     icon = 'chaosFilter'
-    
+
     def event(self):
         if self._get_variable('vfx', False): return False
         self._set_variable('vfx', True)
-        
+
         self.overlay: ba.Node | None = None
-        
+
         self.d = duration = self._get_config()['time'] * 2.15
-        
+
         color = ([random.uniform(0,1) for _ in range(3)])
         self.overlap_image(color)
         ba.timer(duration, self.overgone)
-        
+
         return duration
-    
+
     def overlap_image(self,
                       color: tuple):
         """ Creates an overlay image with the provided color. """
@@ -1425,12 +1425,12 @@ class TempScreenFilter(ChaosEvent):
                 'opacity': 0,
             },
         )
-        
+
         ba.animate(self.overlay, 'opacity', {
             0               : 0,
             self.d*0.075    : 0.66,
         })
-        
+
     def overgone(self):
         """ Deletes the overlay. """
         if self.overlay:
@@ -1439,28 +1439,28 @@ class TempScreenFilter(ChaosEvent):
                 self.d*0.075    : 0,
             })
             ba.timer(self.d*0.08, self.overlay.delete)
-            
+
         self._set_variable('vfx', False)
-        
+
 append_chaos_event(TempScreenFilter)
 
 class TempBrokenScreen(ChaosEvent):
     name = 'Oops! Broken Screen!'
     icon = 'chaosBrokenScreen'
-    
+
     def event(self):
         if self._get_variable('vfx', False): return False
         self._set_variable('vfx', True)
-        
+
         self.overlay: ba.Node | None = None
-        
-        self.d = duration = self._get_config()['time'] * 1.77 
-        
+
+        self.d = duration = self._get_config()['time'] * 1.77
+
         self.overlap_image()
         ba.timer(duration, self.overgone)
-        
+
         return duration
-    
+
     def overlap_image(self):
         """ Creates an overlay image with the provided color. """
         self.overlay = ba.newnode(
@@ -1473,15 +1473,15 @@ class TempBrokenScreen(ChaosEvent):
                 'opacity': 0,
             },
         )
-        
+
         ba.playsound(ba.getsound('youDroppedYourAudioFileSilly'), volume=2.7)
-        
+
         ba.animate(self.overlay, 'opacity', {
             0               : 0,
             self.d*0.004    : 1,
             self.d*0.88     : 0.77,
         })
-        
+
     def overgone(self):
         """ Deletes the overlay. """
         if self.overlay:
@@ -1490,28 +1490,28 @@ class TempBrokenScreen(ChaosEvent):
                 1   : 0,
             })
             ba.timer(2, self.overlay.delete)
-            
+
         self._set_variable('vfx', False)
-        
+
 append_chaos_event(TempBrokenScreen)
 
 class TempGetGlued(ChaosEvent):
     name = 'Get Glued'
     icon = 'chaosGlued'
-    
+
     def event(self):
         duration = max(0.75, min(1.35, self._get_config()['time']*0.14))
-        
+
         if not len(self._get_everyone()) > 0: return False
-        
+
         for spaz in self._get_everyone():
             if not spaz.node.exists(): continue
-            
+
             p = ([p + (1.5 if i == 1 else 0) for i,p in enumerate(spaz.node.position)])
             v = ([v*1.1 for v in spaz.node.velocity])
             max_time    = duration
             radius      = 0.6
-            
+
             Glue((
                 p[0],
                 p[1],
@@ -1520,7 +1520,7 @@ class TempGetGlued(ChaosEvent):
                  v,
                  max_time
                  ).autoretain()
-            
+
             Glue((
                 p[0]-radius,
                 p[1],
@@ -1547,7 +1547,7 @@ class TempGetGlued(ChaosEvent):
                  v,
                  max_time
                  ).autoretain()
-            
+
             Glue((
                 p[0]+radius*0.75,
                 p[1],
@@ -1556,7 +1556,7 @@ class TempGetGlued(ChaosEvent):
                  v,
                  max_time
                  ).autoretain()
-            
+
             Glue((
                 p[0]+radius,
                 p[1],
@@ -1565,7 +1565,7 @@ class TempGetGlued(ChaosEvent):
                  v,
                  max_time
                  ).autoretain()
-            
+
             Glue((
                 p[0]+radius*0.75,
                 p[1],
@@ -1574,7 +1574,7 @@ class TempGetGlued(ChaosEvent):
                  v,
                  max_time
                  ).autoretain()
-            
+
             Glue((
                 p[0],
                 p[1],
@@ -1592,19 +1592,19 @@ class TempGetGlued(ChaosEvent):
                  v,
                  max_time
                  ).autoretain()
-            
+
         return duration
-                
+
 append_chaos_event(TempGetGlued)
 
 class TempMindBlown(ChaosEvent):
     name = 'Mind Blown'
     icon = 'chaosMindBlown'
-    
+
     def event(self):
         """ Explodes everyone's heads. """
         victims = []
-        
+
         for spaz in self._get_everyone():
             if not spaz.node.head_model == ba.getmodel('zero') and spaz.node.exists() and spaz.is_alive():
                 victims.append(spaz)
@@ -1616,19 +1616,19 @@ class TempMindBlown(ChaosEvent):
             spaz.node.head_model = ba.getmodel('zero')
             spaz.node.style = 'bones'
             spaz.node.handlemessage('knockout', 1000)
-            
+
             pos = ([p + (0.5 if i == 1 else 0) for i,p in enumerate(spaz.node.position)])
             vel = ([v * (1.25 if i == 1 else 0.9) + (1.2 if i == 1 else 0) for i,v in enumerate(spaz.node.velocity)])
             bseVFX('confetti', pos, vel)
-            
+
         ba.playsound(ba.getsound('headBlown'), volume=2.4)
-            
+
     def do_blast(self,
                  spaz: Spaz):
         """ Creates a fake decorative explosion. """
         pos = ([p + (0.5 if i == 1 else 0) for i,p in enumerate(spaz.node.position)])
         vel = ([v * 0.77 for v in spaz.node.velocity])
-        
+
         explosion = ba.newnode(
             'explosion',
             attrs={
@@ -1638,7 +1638,7 @@ class TempMindBlown(ChaosEvent):
                 'color': spaz.node.color,
             },
         )
-        
+
         ba.emitfx(
             position=pos,
             emit_type='distortion',
@@ -1649,30 +1649,30 @@ class TempMindBlown(ChaosEvent):
                   count=6,
                   spread=0.7,
                   chunk_type='metal')
-        
+
         ba.timer(2, explosion.delete)
-        
+
 append_chaos_event(TempMindBlown)
 
 class TempWiimotes(ChaosEvent):
     name = 'Wiimotes'
     icon = ''
-    
+
     def event(self):
         pass
-    
+
 class WiiCursor:
     pass
 
 class TempEvilBouncies(ChaosEvent):
     name = 'Evil Bouncies'
     icon = 'chaosJumpies'
-    
+
     def event(self):
         duration = self._get_config()['time'] * (2 if self._is_coop else random.randint(4, 6))
-        
+
         did = False
-        
+
         for defs in [
             self.activity.map.powerup_spawn_points,
             ]:
@@ -1683,11 +1683,11 @@ class TempEvilBouncies(ChaosEvent):
                 did = True
 
         if not did: return False
-            
+
         return duration
 
 class ChaoticJumpPad(ba.Actor):
-    
+
     def __init__(
         self,
         position: tuple,
@@ -1697,11 +1697,11 @@ class ChaoticJumpPad(ba.Actor):
         super().__init__()
         self.bounce_sound = ba.getsound('jumpPadSilly')
         self.dying = False
-        
+
         self.pos = position
-        
+
         shared = SharedObjects.get()
-        
+
         matpad = ba.Material()
         matpad.add_actions(
             conditions=('they_have_material', shared.pickup_material),
@@ -1723,7 +1723,7 @@ class ChaoticJumpPad(ba.Actor):
                 ),
             actions=(('call', 'at_connect', self.used_pad),),
         )
-        
+
         self.node = ba.newnode(
             'prop',
             delegate=self,
@@ -1741,7 +1741,7 @@ class ChaoticJumpPad(ba.Actor):
                 'materials': [matpad],
             },
         )
-        
+
         self.light = ba.newnode(
             'light',
              owner=self.node,
@@ -1749,24 +1749,24 @@ class ChaoticJumpPad(ba.Actor):
                      'radius':0.0,
                      'intensity':0.0,
                      'color': (1,0,1),
-                     'volume_intensity_scale': 1.0}) 
-        
+                     'volume_intensity_scale': 1.0})
+
         self.node.connectattr('position',self.light,'position')
-        
+
         self.repo_timer = ba.Timer(0.01, self.repo)
         ba.timer(lifespan, self.fancy_die)
-        
+
     def repo(self):
         if not self.node.exists():
             self.repo_timer = None
             return
-        
+
         self.handlemessage(ba.StandMessage(self.pos, 0))
-        
+
     def used_pad(self):
         """ Sends whoever / whatever used this node flying! (Only applies to certain nodes.) """
         if self.dying: return
-        
+
         node = ba.getcollision().opposingnode
         ntype = node.getnodetype()
         is_spaz = ntype == 'spaz'
@@ -1779,13 +1779,13 @@ class ChaoticJumpPad(ba.Actor):
                                    0, 25, 0,
                                    yforce, 0.05, 0, 0,
                                    0, 20*400, 0)
-                
+
                 node.handlemessage('impulse', node.position[0], node.position[1], node.position[2],
                                    0, 25, 0,
                                    xforce, 0.05, 0, 0,
                                    v[0]*15*2, 0, v[2]*15*2)
         else: return
-                
+
         ba.playsound(self.bounce_sound, 1.1, position=self.node.position)
         ba.emitfx(position=self.node.position,
           velocity=self.node.velocity,
@@ -1796,68 +1796,68 @@ class ChaoticJumpPad(ba.Actor):
         ba.animate(self.node, 'model_scale', {0: 1.0, 0.2: 1.5, 0.4: 1.0,})
         ba.animate(self.light,'intensity',{0: 0.75, 1: 0.0})
         ba.animate(self.light,'radius',{0: 0.2, 1: 0.0})
-        
+
     def fancy_die(self):
         """ Does an animation before dying. """
         if self.dying: return
-        
+
         self.dying = True
         ba.animate(self.node, 'model_scale', {0: self.node.model_scale, 0.5: 0,})
         ba.timer(1, self.die)
-        
+
     def die(self):
         """ Kill both node and light. """
         self.dying = True
         self.node.delete()
         self.light.delete()
-    
+
     def handlemessage(self, msg: Any) -> Any:
         if isinstance(msg, ba.DieMessage):
             self.die()
         elif isinstance(msg, ba.OutOfBoundsMessage):
             self.die()
         return super().handlemessage(msg)
-    
-append_chaos_event(TempEvilBouncies)    
-        
+
+append_chaos_event(TempEvilBouncies)
+
 class TempMoonGravity(ChaosEvent):
     name = 'Moon Gravity'
     icon = 'chaosMoonGravity'
-    
+
     blacklist = [
         runaround.RunaroundGame,
         kablooyaRunaround.RunaroundGame,
         explodinaryRunaround.RunaroundGame,
         pathwayPandemonium.PathwayPandemoniumGame
     ]
-    
+
     def event(self):
         if self._get_variable('moon_theory', False): return False
         self._set_variable('moon_theory', True)
-        
+
         duration = self._get_config()['time'] * 3
         time = 1/8
         self.itr = duration/time
         self.citr = 0
-    
+
         self.moon_theory()
         self.moon_timer = ba.Timer(time, self.moon_theory, repeat=True)
-        
+
         return duration
-    
+
     def moon_theory(self):
         """ https://open.spotify.com/track/4AyjstjONX27kSFbVG0Hgq?si=74c88208ce074ed7 """
         for node in ba.getnodes():
             if node.exists() and node.getnodetype() in ['spaz', 'prop', 'bomb']:
                 self.do_impulse(node)
-                
+
         if self.citr > self.itr:
             self._set_variable('moon_theory', False)
             self.moon_timer = None
             return
-        
+
         self.citr += 1
-    
+
     def do_impulse(self,
                    node):
         """ Gives a tiny impulse upwards to give the illusion we have low gravity. """
@@ -1866,25 +1866,25 @@ class TempMoonGravity(ChaosEvent):
                            0, 25, 0,
                            32, 0.05, 0, 0,
                            0, 0.8, 0)
-        
+
 append_chaos_event(TempMoonGravity)
 
 class Temp16to9Ratio(ChaosEvent):
     name = 'Cinematic Mode'
     icon = 'chaosCinema'
-    
+
     def event(self):
         if self._get_variable('as_ratio', False): return False
         self._set_variable('as_ratio', True)
-        
+
         self.overlay: ba.Node | None = None
-        
+
         self.d = duration = self._get_config()['time'] * 3
         self.overlap_image()
-        
+
         ba.timer(duration, self.overgone)
         return duration
-    
+
     def overlap_image(self):
         """ Creates an overlay image with the provided color. """
         self.overlay = ba.newnode(
@@ -1897,12 +1897,12 @@ class Temp16to9Ratio(ChaosEvent):
                 'opacity': 0,
             },
         )
-        
+
         ba.animate(self.overlay, 'opacity', {
             0               : 0,
             self.d*0.015    : 1,
         })
-        
+
     def overgone(self):
         """ Deletes the overlay. """
         if self.overlay:
@@ -1911,15 +1911,15 @@ class Temp16to9Ratio(ChaosEvent):
                 self.d*0.015    : 0,
             })
             ba.timer(self.d*0.08, self.overlay.delete)
-            
+
         self._set_variable('as_ratio', False)
-        
+
 append_chaos_event(Temp16to9Ratio)
 
 class TempFakeCrash(ChaosEvent):
     name = 'Fake Crash'
     icon = 'chaosCrash'
-    
+
     def event(self):
         # Prevent this from running if the activity has ended
         # (else we finish prematurely and leave the host with no audio and soft-locked for like 10 seconds.)
@@ -1927,31 +1927,31 @@ class TempFakeCrash(ChaosEvent):
         try:
             has_ended = self.activity._has_ended
         except: pass
-        
+
         if has_ended: return False
-        
+
         # Make the event less likely to happen by rolling a random 0 to 1 number
         if not random.random() > 0.9: return False
-        
+
         self.activity.globalsnode.paused = True
         self.omv, self.osv = ba.app.config.get('Music Volume', 1.0), ba.app.config.get('Sound Volume', 1.0)
-        
+
         ba.app.config['Music Volume'] = 0
         ba.app.config['Sound Volume'] = 0
         ba.app.config.apply()
-        
+
         # This only applies to host, but will also make clients believe they crashed lol
         ba.internal.lock_all_input()
         _ba.set_camera_manual(True)
         delay = random.uniform(2.5, 6)
-        
+
         if random.random() > 0.69:
             ba.timer(delay * (random.uniform(0.6,0.9)), self.stutter, timetype=ba.TimeType.BASE)
-            
+
         ba.timer(delay, self.uncrash, timetype=ba.TimeType.BASE)
-        
+
         return
-    
+
     def uncrash(self):
         """ Lifts all crash "effects". """
         self.activity.globalsnode.paused = False
@@ -1960,26 +1960,26 @@ class TempFakeCrash(ChaosEvent):
         ba.app.config['Music Volume'] = self.omv
         ba.app.config['Sound Volume'] = self.osv
         ba.app.config.apply()
-        
+
     def stutter(self):
         """ Did I? """
         def p(): self.activity.globalsnode.paused = True
-            
+
         self.activity.globalsnode.paused = False
         ba.timer(0.01, p, timetype=ba.TimeType.BASE)
-        
+
 append_chaos_event(TempFakeCrash)
 
 class TempMinecraftUpdate(ChaosEvent):
     name = 'AHOY!'
     icon = ''
-    
+
     def event(self):
         """ https://www.reddit.com/r/thomastheplankengine/comments/t20gx4/mojang_added_pirate_ships_as_randomlygenerated/ """
         if not self.activity.map.name == 'Fuse Cruise' or not random.random() > 0.9: return False
         # AHOY
         ba.playsound(ba.getsound('AHOY'), volume = 0.9)
-        
+
         # AHOY
         self.AHOY = ba.newnode(
             'image',
@@ -1991,15 +1991,15 @@ class TempMinecraftUpdate(ChaosEvent):
                 'opacity': 1,
             },
         )
-        
+
         ba.animate(self.AHOY, 'opacity', {
             0       : 1,
             0.9     : 1,
             2.25    : 0,
         })
-        
+
         ba.timer(3, self.AHOY.delete)
-        
+
         return {
             'announce': False
         }
@@ -2010,23 +2010,23 @@ append_chaos_event(TempMinecraftUpdate)
 class TempCSSource(ChaosEvent):
     name = 'CS Sourcent'
     icon = 'chaosSource'
-    
+
     def event(self):
         """ Replaces *most* nodes with a missing texture. """
         if self._get_variable('texture_swap', False): return False
         self._set_variable('texture_swap', True)
         self.resdict = {
-            
+
         }
-        
+
         self.d = duration = self._get_config()['time'] * 2.75
 
         self.unskin_routine(-1)
         self._timer = ba.Timer(1/30, self.unskin_routine, repeat=True, timetype=ba.TimeType.BASE)
-        
+
         ba.timer(duration, self.unvar)
         return duration
-            
+
     def unskin_routine(self, itr = 0):
         """ Gets and wipes everyone's textures. """
         for node in ba.getnodes():
@@ -2034,41 +2034,41 @@ class TempCSSource(ChaosEvent):
                 if node.color_texture != ba.gettexture('missingTexture'):
                     self.resdict[node] = node.color_texture
                     node.color_texture = ba.gettexture('missingTexture')
-                
+
             except (AttributeError, ba.NodeNotFoundError): continue
-            
+
     def restore(self, node: ba.Node): node.color_texture = self.resdict[node]
-    
+
     def unvar(self):
         """ Resets everyone. """
         self._timer = None
-        
+
         self._set_variable('texture_swap', False)
         for node, v in self.resdict.items():
             try:
                 node.color_texture = v
             except ba.NodeNotFoundError: continue
-            
+
         self.resdict = None
-        
+
 append_chaos_event(TempCSSource)
 
 class TempDiscordBox(ChaosEvent):
     name = 'Discord Box'
     icon = 'chaosDiscordBox'
-    
+
     def event(self):
-        """ Spawns a box with the Discord logo on it. 
+        """ Spawns a box with the Discord logo on it.
             It does something silly on blast, and leaves a decal behind. """
         pos = ([p + (0.5 if i == 1 else 0) for i,p in enumerate(self.activity.map.get_flag_position())])
         TheDiscordBox(pos).autoretain()
-        
+
 class TheDiscordBox(ba.Actor):
     """ A discord box that blows up epicly after a given amount of time. """
     def __init__(self,
                  position: tuple):
         super().__init__()
-        
+
         shared = SharedObjects.get()
 
         texspeed = 33
@@ -2077,11 +2077,11 @@ class TheDiscordBox(ba.Actor):
             [ba.gettexture('discordCrate01')] * int(0.8 * texspeed) +
             [ba.gettexture('discordCrate02'), ba.gettexture('discordCrate01')] * int(0.5 * texspeed)
         )
-        
+
         self._lifespan = lifespan = 2.95
         self._spawn_pos = (position[0], position[1] + 0.5, position[2])
         mats = [shared.object_material]
-        
+
         # Nod
         self.node = ba.newnode(
             'prop',
@@ -2113,7 +2113,7 @@ class TheDiscordBox(ba.Actor):
             'output_texture', self.node, 'color_texture'
         )
         ba.timer(3, self.texture_sequence.delete)
-        
+
         # Funny sound
         self.epic_ringtone = ba.newnode(
             'sound',
@@ -2125,7 +2125,7 @@ class TheDiscordBox(ba.Actor):
             },
         )
         self.node.connectattr('position', self.epic_ringtone, 'position')
-        
+
         # Light!
         acls = [
             (0.15, 0.15, 0.3),
@@ -2150,7 +2150,7 @@ class TheDiscordBox(ba.Actor):
             lifespan*0.95   : acls[2],
             lifespan        : acls[2],
         })
-        
+
         # Light 2!
         pcls = [
             (0.3, 0.3, 0.75),
@@ -2183,11 +2183,11 @@ class TheDiscordBox(ba.Actor):
             lifespan*0.975  : self.node.model_scale*0.66,
             lifespan        : self.node.model_scale*1.75,
         })
-        
+
         self.fling_softly()
         ba.timer(lifespan*0.88, self.fling_softly)
         ba.timer(lifespan, ba.Call(self.handlemessage, ba.DieMessage()))
-        
+
         self._dying = False
 
     def fling_softly(self):
@@ -2200,7 +2200,7 @@ class TheDiscordBox(ba.Actor):
                 128, 1.5, 0, 0,
                 0.5, -1, -1
             )
-        
+
         if node.exists():
             for _ in range(2):
                 node.handlemessage(
@@ -2219,7 +2219,7 @@ class TheDiscordBox(ba.Actor):
         if self.node and not self._dying:
             self.do_blast()
             self._dying = True
-            
+
             for node in [
                 self.node,
                 self.texture_sequence,
@@ -2230,16 +2230,16 @@ class TheDiscordBox(ba.Actor):
                 try:
                     ba.timer(0.1, node.delete)
                 except: continue
-                
+
     def do_blast(self):
         """ Does a funny """
         if not self.node.exists(): return
         node = self.node
-        
+
         effects: list[callable] = [
             self.spawn_gifts,
         ]
-        
+
         exs = (
             'explosion01',
             'explosion02',
@@ -2247,7 +2247,7 @@ class TheDiscordBox(ba.Actor):
             'explosion04',
             'explosion05',
         )
-        
+
         ex = ba.newnode(
             'explosion',
             attrs={
@@ -2266,11 +2266,11 @@ class TheDiscordBox(ba.Actor):
             chunk_type='spark',
         )
         bseVFX('confetti', node.position, node.velocity)
-        
+
         random.choice(effects)()
-        
+
         ba.playsound(ba.getsound(random.choice(exs)), position = node.position, volume = 3)
-        
+
     def spawn_gifts(self):
         """ Summons powerup with a 10% chance for all of them to be curses if not in coop. """
         node = self.node
@@ -2286,7 +2286,7 @@ class TheDiscordBox(ba.Actor):
                 pt,
                 True,
             ).autoretain()
-            
+
             # Replace the powerup's texture with a funny one sent by our lovely users on Discord!
             texpool = [f'discordDecal{"{:02d}".format(v)}' for v in range(17)]
             powerup.node.color_texture = ba.gettexture(random.choice(texpool))
@@ -2318,24 +2318,24 @@ class TheDiscordBox(ba.Actor):
                 )
         else:
             super().handlemessage(msg)
-            
+
 append_chaos_event(TempDiscordBox)
 
 class TempSpazRain(ChaosEvent):
     name = 'Spaz Rain'
     icon = 'chaosSpazRain'
-    
+
     def event(self):
         self.worldbounds = self.activity.map.get_def_bound_box('map_bounds')
         self.appearances = get_appearances() if random.random() > 0.75 else ['Spaz']
-        
+
         self.duration = duration = self._get_config()['time'] * 1.8
-        
+
         rate = 1 / (4 if self._is_coop else 12)
-        
+
         self.activity._spazito_rain_clock = ba.Timer(rate, self.do_spaz, repeat=True)
         self.activity._spazito_rain_timer = ba.Timer(duration, self.stop)
-        
+
         return duration
 
     def do_spaz(self):
@@ -2384,13 +2384,13 @@ class TempSpazRain(ChaosEvent):
         spaz.node.is_area_of_interest = False
         # They're like balloons!
         spaz.impact_scale = random.uniform(0.25, 3)
-        
+
         # Make them get stunned forever and die after a set period of time
         spaz.stun_clock = ba.Timer(1, ba.Call(spaz.node.handlemessage, 'knockout', 900), repeat=True)
         ba.timer((self.duration*0.8) * random.uniform(0.95, 1.1), ba.Call(spaz.handlemessage, ba.DieMessage()))
-        
+
     def stop(self):
         self.activity._spazito_rain_clock = None
         self.activity._spazito_rain_timer = None
-    
+
 append_chaos_event(TempSpazRain)

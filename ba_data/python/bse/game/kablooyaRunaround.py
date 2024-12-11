@@ -58,22 +58,22 @@ if TYPE_CHECKING:
 class Preset(Enum):
     """Play presets."""
 
-    ENDLESS = 'endless'
-    ENDLESS_TOURNAMENT = 'endless_tournament'
-    PRO = 'pro'
-    PRO_EASY = 'pro_easy'
-    UBER = 'uber'
-    UBER_EASY = 'uber_easy'
-    TOURNAMENT = 'tournament'
-    TOURNAMENT_UBER = 'tournament_uber'
+    ENDLESS = "endless"
+    ENDLESS_TOURNAMENT = "endless_tournament"
+    PRO = "pro"
+    PRO_EASY = "pro_easy"
+    UBER = "uber"
+    UBER_EASY = "uber_easy"
+    TOURNAMENT = "tournament"
+    TOURNAMENT_UBER = "tournament_uber"
 
 
 class Point(Enum):
     """Where we can spawn stuff and the corresponding map attr name."""
 
-    BOTTOM_LEFT = 'bot_spawn_bottom_left'
-    BOTTOM_RIGHT = 'bot_spawn_bottom_right'
-    START = 'bot_spawn_start'
+    BOTTOM_LEFT = "bot_spawn_bottom_left"
+    BOTTOM_RIGHT = "bot_spawn_bottom_right"
+    START = "bot_spawn_start"
 
 
 @dataclass
@@ -100,7 +100,7 @@ class Wave:
     entries: list[Spawn | Spacing | None]
 
 
-class Player(ba.Player['Team']):
+class Player(ba.Player["Team"]):
     """Our player type for this game."""
 
     def __init__(self) -> None:
@@ -115,10 +115,12 @@ class Team(ba.Team[Player]):
 class KablooyaRunaroundGame(RunaroundGame):
     """Game involving trying to bomb bots as they walk through the map."""
 
-    name = 'Kablooya Runaround'
-    description = 'Prevent enemies from reaching the exit. And don\'t die. Really.'
+    name = "Kablooya Runaround"
+    description = (
+        "Prevent enemies from reaching the exit. And don't die. Really."
+    )
     tips = [
-        'See this green heart? When you die, it goes down. When it reaches zero... game over.',
+        "See this green heart? When you die, it goes down. When it reaches zero... game over.",
     ]
     default_music = ba.MusicType.MARCHING
 
@@ -150,41 +152,41 @@ class KablooyaRunaroundGame(RunaroundGame):
     }
 
     def __init__(self, settings: dict):
-        self._preset = Preset(settings.get('preset', 'uber'))
+        self._preset = Preset(settings.get("preset", "uber"))
         if self._preset is Preset.UBER:
-            settings['map'] = 'Tower S'
+            settings["map"] = "Tower S"
         elif self._preset is Preset.ENDLESS:
-            settings['map'] = 'Endless Tower S'
+            settings["map"] = "Endless Tower S"
         else:
-            raise Exception('Put an eggroll with it.')
+            raise Exception("Put an eggroll with it.")
         ba.CoopGameActivity.__init__(self, settings)
         shared = SharedObjects.get()
 
-        self._player_death_sound = ba.getsound('playerDeath')
-        self._new_wave_sound = ba.getsound('scoreHit01')
-        self._winsound = ba.getsound('score')
-        self._cashregistersound = ba.getsound('cashRegister')
-        self._bad_guy_score_sound = ba.getsound('shieldDown')
-        self._heart_tex = ba.gettexture('heart')
-        self._heart_model_opaque = ba.getmodel('heartOpaque')
-        self._heart_model_transparent = ba.getmodel('heartTransparent')
+        self._player_death_sound = ba.getsound("playerDeath")
+        self._new_wave_sound = ba.getsound("scoreHit01")
+        self._winsound = ba.getsound("score")
+        self._cashregistersound = ba.getsound("cashRegister")
+        self._bad_guy_score_sound = ba.getsound("shieldDown")
+        self._heart_tex = ba.gettexture("heart")
+        self._heart_model_opaque = ba.getmodel("heartOpaque")
+        self._heart_model_transparent = ba.getmodel("heartTransparent")
 
         self._a_player_has_been_killed = False
-        self._spawn_center = self._map_type.defs.points['spawn1'][0:3]
-        self._tntspawnpos = self._map_type.defs.points['tnt_loc'][0:3]
-        self._powerup_center = self._map_type.defs.boxes['powerup_region'][0:3]
+        self._spawn_center = self._map_type.defs.points["spawn1"][0:3]
+        self._tntspawnpos = self._map_type.defs.points["tnt_loc"][0:3]
+        self._powerup_center = self._map_type.defs.boxes["powerup_region"][0:3]
         self._powerup_spread = (
-            self._map_type.defs.boxes['powerup_region'][6] * 0.5,
-            self._map_type.defs.boxes['powerup_region'][8] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][6] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][8] * 0.5,
         )
 
         self._score_region_material = ba.Material()
         self._score_region_material.add_actions(
-            conditions=('they_have_material', shared.player_material),
+            conditions=("they_have_material", shared.player_material),
             actions=(
-                ('modify_part_collision', 'collide', True),
-                ('modify_part_collision', 'physical', False),
-                ('call', 'at_connect', self._handle_reached_end),
+                ("modify_part_collision", "collide", True),
+                ("modify_part_collision", "physical", False),
+                ("call", "at_connect", self._handle_reached_end),
             ),
         )
 
@@ -197,8 +199,8 @@ class KablooyaRunaroundGame(RunaroundGame):
         self._score = 0
         self._time_bonus = 0
         self._score_region: ba.Actor | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._dingsoundhigh = ba.getsound('dingSmallHigh')
+        self._dingsound = ba.getsound("dingSmall")
+        self._dingsoundhigh = ba.getsound("dingSmallHigh")
         self._exclude_powerups: list[str] | None = None
         self._have_tnt: bool | None = None
         self._waves: list[Wave] | None = None
@@ -207,7 +209,7 @@ class KablooyaRunaroundGame(RunaroundGame):
         self._lives_bg: ba.NodeActor | None = None
         self._death_lives_bg: ba.NodeActor | None = None
         self._start_lives = 10
-        self._death_start_lives =   5 if self._preset is Preset.UBER else 8
+        self._death_start_lives = 5 if self._preset is Preset.UBER else 8
         self._death_start_lives2 = 10 if self._preset is Preset.UBER else 14
         self._death_start_lives3 = 12 if self._preset is Preset.UBER else 18
         self._death_start_lives4 = 16 if self._preset is Preset.UBER else 20
@@ -222,20 +224,20 @@ class KablooyaRunaroundGame(RunaroundGame):
         self._wave_text: ba.NodeActor | None = None
         self._flawless_bonus: int | None = None
         self._wave_update_timer: ba.Timer | None = None
-            
+
     def on_transition_in(self) -> None:
         super().on_transition_in()
         self._scoreboard = Scoreboard(
-            label=ba.Lstr(resource='scoreText'), score_split=0.5
+            label=ba.Lstr(resource="scoreText"), score_split=0.5
         )
         self._score_region = ba.NodeActor(
             ba.newnode(
-                'region',
+                "region",
                 attrs={
-                    'position': self.map.defs.boxes['score_region'][0:3],
-                    'scale': self.map.defs.boxes['score_region'][6:9],
-                    'type': 'box',
-                    'materials': [self._score_region_material],
+                    "position": self.map.defs.boxes["score_region"][0:3],
+                    "scale": self.map.defs.boxes["score_region"][6:9],
+                    "type": "box",
+                    "materials": [self._score_region_material],
                 },
             )
         )
@@ -244,7 +246,7 @@ class KablooyaRunaroundGame(RunaroundGame):
         ba.CoopGameActivity.on_begin(self)
         player_count = len(self.players)
         hard = self._preset not in {Preset.PRO_EASY, Preset.UBER_EASY}
-        
+
         if player_count == 1:
             self._death_lives = self._death_start_lives
         elif player_count == 2:
@@ -254,7 +256,7 @@ class KablooyaRunaroundGame(RunaroundGame):
         elif player_count == 4:
             self._death_lives = self._death_start_lives4
 
-            self._exclude_powerups = ['curse']
+            self._exclude_powerups = ["curse"]
             self._have_tnt = True
             self._waves = [
                 Wave(
@@ -312,9 +314,11 @@ class KablooyaRunaroundGame(RunaroundGame):
                         Spacing(duration=1.0),
                         Spawn(TriggerBot, path=3),
                         Spacing(duration=1.0),
-                        Spawn(TriggerBot, path=1)
-                        if (player_count > 1 and hard)
-                        else None,
+                        (
+                            Spawn(TriggerBot, path=1)
+                            if (player_count > 1 and hard)
+                            else None
+                        ),
                         Spacing(duration=1.0),
                         Spawn(TriggerBot, path=2) if player_count > 2 else None,
                         Spacing(duration=1.0),
@@ -353,22 +357,32 @@ class KablooyaRunaroundGame(RunaroundGame):
                         Spacing(duration=1.5),
                         Spawn(BomberBotProShielded, path=1) if hard else None,
                         Spacing(duration=1.5) if hard else None,
-                        Spawn(BomberBotProShielded, path=3)
-                        if player_count > 1
-                        else None,
+                        (
+                            Spawn(BomberBotProShielded, path=3)
+                            if player_count > 1
+                            else None
+                        ),
                         Spacing(duration=1.5),
-                        Spawn(BomberBotProShielded, path=2)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(BomberBotProShielded, path=2)
+                            if player_count > 2
+                            else None
+                        ),
                         Spacing(duration=1.5),
-                        Spawn(BomberBotProShielded, path=1)
-                        if player_count > 3
-                        else None,
+                        (
+                            Spawn(BomberBotProShielded, path=1)
+                            if player_count > 3
+                            else None
+                        ),
                     ]
                 ),
             ]
-            #KABLOOYA PRESET
-        if self._preset in {Preset.UBER_EASY, Preset.UBER, Preset.TOURNAMENT_UBER }:
+            # KABLOOYA PRESET
+        if self._preset in {
+            Preset.UBER_EASY,
+            Preset.UBER,
+            Preset.TOURNAMENT_UBER,
+        }:
             self._exclude_powerups = []
             self._have_tnt = True
             self._waves = [
@@ -382,9 +396,13 @@ class KablooyaRunaroundGame(RunaroundGame):
                             BrawlerBotPro if hard else BrawlerBot,
                             point=Point.BOTTOM_LEFT,
                         ),
-                        Spawn(ExplodeyBotNoTimeLimit, point=Point.BOTTOM_RIGHT)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(
+                                ExplodeyBotNoTimeLimit, point=Point.BOTTOM_RIGHT
+                            )
+                            if player_count > 2
+                            else None
+                        ),
                     ]
                 ),
                 Wave(
@@ -405,9 +423,13 @@ class KablooyaRunaroundGame(RunaroundGame):
                         Spawn(BomberBotPro, path=3),
                         Spawn(BomberBotPro, path=3),
                         Spawn(StickyBot, point=Point.BOTTOM_RIGHT),
-                        Spawn(BrawlerBotProShielded, point=Point.BOTTOM_LEFT)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(
+                                BrawlerBotProShielded, point=Point.BOTTOM_LEFT
+                            )
+                            if player_count > 2
+                            else None
+                        ),
                     ]
                 ),
                 Wave(
@@ -418,12 +440,16 @@ class KablooyaRunaroundGame(RunaroundGame):
                         Spawn(TriggerBotPro, path=1 if hard else 2),
                         Spawn(TriggerBotPro, path=1 if hard else 2),
                         Spawn(TriggerBotPro, path=1 if hard else 2),
-                        Spawn(TriggerBotPro, path=1 if hard else 2)
-                        if player_count > 1
-                        else None,
-                        Spawn(TriggerBotPro, path=1 if hard else 2)
-                        if player_count > 3
-                        else None,
+                        (
+                            Spawn(TriggerBotPro, path=1 if hard else 2)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBotPro, path=1 if hard else 2)
+                            if player_count > 3
+                            else None
+                        ),
                     ]
                 ),
                 Wave(
@@ -432,12 +458,18 @@ class KablooyaRunaroundGame(RunaroundGame):
                             NoirBot if hard else TriggerBotPro,
                             point=Point.BOTTOM_LEFT,
                         ),
-                        Spawn(BrawlerBotProShielded, point=Point.BOTTOM_RIGHT)
-                        if hard
-                        else None,
-                        Spawn(SoldatBot, point=Point.BOTTOM_RIGHT)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(
+                                BrawlerBotProShielded, point=Point.BOTTOM_RIGHT
+                            )
+                            if hard
+                            else None
+                        ),
+                        (
+                            Spawn(SoldatBot, point=Point.BOTTOM_RIGHT)
+                            if player_count > 2
+                            else None
+                        ),
                         Spawn(SoldatBot, path=3),
                         Spawn(SoldatBot, path=3),
                         Spacing(duration=5.0),
@@ -455,15 +487,15 @@ class KablooyaRunaroundGame(RunaroundGame):
                         Spawn(StickyBot, point=Point.BOTTOM_RIGHT),
                         Spawn(ChargerBot, path=2),
                         Spawn(ChargerBotProShielded, path=2),
-                        Spawn(WaiterBot, point=Point.BOTTOM_RIGHT)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(WaiterBot, point=Point.BOTTOM_RIGHT)
+                            if player_count > 2
+                            else None
+                        ),
                         Spawn(BomberBotProShielded, path=2),
                         Spawn(ExplodeyBot, point=Point.BOTTOM_LEFT),
                         Spawn(BomberBot, path=2),
-                        Spawn(BomberBot, path=2)
-                        if player_count > 1
-                        else None,
+                        Spawn(BomberBot, path=2) if player_count > 1 else None,
                         Spacing(duration=5.0),
                         Spawn(NoirBot, point=Point.BOTTOM_LEFT),
                         Spacing(duration=2.0),
@@ -476,12 +508,20 @@ class KablooyaRunaroundGame(RunaroundGame):
                             TriggerBotProShielded if hard else TriggerBotPro,
                             point=Point.BOTTOM_LEFT,
                         ),
-                        Spawn(TriggerBotProShielded, point=Point.BOTTOM_RIGHT)
-                        if hard
-                        else None,
-                        Spawn(TriggerBotProShielded, point=Point.BOTTOM_RIGHT)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(
+                                TriggerBotProShielded, point=Point.BOTTOM_RIGHT
+                            )
+                            if hard
+                            else None
+                        ),
+                        (
+                            Spawn(
+                                TriggerBotProShielded, point=Point.BOTTOM_RIGHT
+                            )
+                            if player_count > 2
+                            else None
+                        ),
                         Spawn(SoldatBot, path=3),
                         Spawn(ExplodeyBotNoTimeLimit, path=3),
                         Spacing(duration=5.0),
@@ -499,15 +539,19 @@ class KablooyaRunaroundGame(RunaroundGame):
                         Spawn(StickyBotPro, point=Point.BOTTOM_RIGHT),
                         Spawn(BomberBotProShielded, path=2),
                         Spawn(BomberBotProShielded, path=2),
-                        Spawn(StickyBot, point=Point.BOTTOM_RIGHT)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(StickyBot, point=Point.BOTTOM_RIGHT)
+                            if player_count > 2
+                            else None
+                        ),
                         Spawn(BomberBotProShielded, path=2),
                         Spawn(ExplodeyBotNoTimeLimit, point=Point.BOTTOM_LEFT),
                         Spawn(ChargerBot, path=2),
-                        Spawn(TriggerBotProShielded, path=2)
-                        if player_count > 1
-                        else None,
+                        (
+                            Spawn(TriggerBotProShielded, path=2)
+                            if player_count > 1
+                            else None
+                        ),
                         Spacing(duration=5.0),
                         Spawn(StickyBot, point=Point.BOTTOM_LEFT),
                         Spacing(duration=2.0),
@@ -534,36 +578,34 @@ class KablooyaRunaroundGame(RunaroundGame):
         l_offs = (
             -80
             if uiscale is ba.UIScale.SMALL
-            else -40
-            if uiscale is ba.UIScale.MEDIUM
-            else 0
+            else -40 if uiscale is ba.UIScale.MEDIUM else 0
         )
 
         self._lives_bg = ba.NodeActor(
             ba.newnode(
-                'image',
+                "image",
                 attrs={
-                    'texture': self._heart_tex,
-                    'model_opaque': self._heart_model_opaque,
-                    'model_transparent': self._heart_model_transparent,
-                    'attach': 'topRight',
-                    'scale': (90, 90),
-                    'position': (-110 + l_offs, -50),
-                    'color': (1, 0.2, 0.2),
+                    "texture": self._heart_tex,
+                    "model_opaque": self._heart_model_opaque,
+                    "model_transparent": self._heart_model_transparent,
+                    "attach": "topRight",
+                    "scale": (90, 90),
+                    "position": (-110 + l_offs, -50),
+                    "color": (1, 0.2, 0.2),
                 },
             )
         )
         self._death_lives_bg = ba.NodeActor(
             ba.newnode(
-                'image',
+                "image",
                 attrs={
-                    'texture': self._heart_tex,
-                    'model_opaque': self._heart_model_opaque,
-                    'model_transparent': self._heart_model_transparent,
-                    'attach': 'topRight',
-                    'scale': (70, 70),
-                    'position': (-180 + l_offs, -60),
-                    'color': (0, 0.85, 0.2),
+                    "texture": self._heart_tex,
+                    "model_opaque": self._heart_model_opaque,
+                    "model_transparent": self._heart_model_transparent,
+                    "attach": "topRight",
+                    "scale": (70, 70),
+                    "position": (-180 + l_offs, -60),
+                    "color": (0, 0.85, 0.2),
                 },
             )
         )
@@ -572,36 +614,36 @@ class KablooyaRunaroundGame(RunaroundGame):
         vrmode = ba.app.vr_mode
         self._lives_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'right',
-                    'h_align': 'center',
-                    'color': (1, 1, 1, 1) if vrmode else (0.8, 0.8, 0.8, 1.0),
-                    'flatness': 1.0 if vrmode else 0.5,
-                    'shadow': 1.0 if vrmode else 0.5,
-                    'vr_depth': 10,
-                    'position': (-113 + l_offs, -69),
-                    'scale': 1.3,
-                    'text': str(self._lives),
+                    "v_attach": "top",
+                    "h_attach": "right",
+                    "h_align": "center",
+                    "color": (1, 1, 1, 1) if vrmode else (0.8, 0.8, 0.8, 1.0),
+                    "flatness": 1.0 if vrmode else 0.5,
+                    "shadow": 1.0 if vrmode else 0.5,
+                    "vr_depth": 10,
+                    "position": (-113 + l_offs, -69),
+                    "scale": 1.3,
+                    "text": str(self._lives),
                 },
             )
         )
 
         self._death_lives_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'right',
-                    'h_align': 'center',
-                    'color': (1, 1, 1, 1) if vrmode else (0.8, 0.8, 0.8, 1.0),
-                    'flatness': 1.0 if vrmode else 0.5,
-                    'shadow': 1.0 if vrmode else 0.5,
-                    'vr_depth': 10,
-                    'position': (-182 + l_offs, -75),
-                    'scale': 1,
-                    'text': str(self._death_lives),
+                    "v_attach": "top",
+                    "h_attach": "right",
+                    "h_align": "center",
+                    "color": (1, 1, 1, 1) if vrmode else (0.8, 0.8, 0.8, 1.0),
+                    "flatness": 1.0 if vrmode else 0.5,
+                    "shadow": 1.0 if vrmode else 0.5,
+                    "vr_depth": 10,
+                    "position": (-182 + l_offs, -75),
+                    "scale": 1,
+                    "text": str(self._death_lives),
                 },
             )
         )
@@ -661,7 +703,7 @@ class KablooyaRunaroundGame(RunaroundGame):
             if won:
                 # Give remaining players some points and have them celebrate.
                 self.show_zoom_message(
-                    ba.Lstr(resource='victoryText'), scale=1.0, duration=4.0
+                    ba.Lstr(resource="victoryText"), scale=1.0, duration=4.0
                 )
 
                 self.celebrate(10.0)
@@ -674,7 +716,7 @@ class KablooyaRunaroundGame(RunaroundGame):
                 ba.cameraflash()
                 ba.setmusic(ba.MusicType.VICTORY)
                 self._game_over = True
-                ba.timer(base_delay, ba.Call(self.do_end, 'victory'))
+                ba.timer(base_delay, ba.Call(self.do_end, "victory"))
                 return
 
             self._wavenum += 1
@@ -690,10 +732,10 @@ class KablooyaRunaroundGame(RunaroundGame):
         ba.playsound(self._cashregistersound)
         PopupText(
             ba.Lstr(
-                value='+${A} ${B}',
+                value="+${A} ${B}",
                 subs=[
-                    ('${A}', str(bonus)),
-                    ('${B}', ba.Lstr(resource='livesBonusText')),
+                    ("${A}", str(bonus)),
+                    ("${B}", ba.Lstr(resource="livesBonusText")),
                 ],
             ),
             color=(0.7, 1.0, 0.3, 1),
@@ -703,7 +745,6 @@ class KablooyaRunaroundGame(RunaroundGame):
         self._score += bonus
         self._update_scores()
 
-
     def _start_next_wave(self) -> None:
         # FIXME: Need to split this up.
         # pylint: disable=too-many-locals
@@ -711,10 +752,10 @@ class KablooyaRunaroundGame(RunaroundGame):
         # pylint: disable=too-many-statements
         self.show_zoom_message(
             ba.Lstr(
-                value='${A} ${B}',
+                value="${A} ${B}",
                 subs=[
-                    ('${A}', ba.Lstr(resource='waveText')),
-                    ('${B}', str(self._wavenum)),
+                    ("${A}", ba.Lstr(resource="waveText")),
+                    ("${B}", str(self._wavenum)),
                 ],
             ),
             scale=1.0,
@@ -771,25 +812,23 @@ class KablooyaRunaroundGame(RunaroundGame):
                 defender_types += [(WaiterBot, 0.7)] * (1 + (level - 5) // 6)
             if level > 6:
                 defender_types += [(ExplodeyBot, 0.7)] * (1 + (level - 5) // 5)
-                defender_types += [(ExplodeyBotNoTimeLimit, 0.7)] * (1 + (level - 5) // 5)
+                defender_types += [(ExplodeyBotNoTimeLimit, 0.7)] * (
+                    1 + (level - 5) // 5
+                )
                 defender_types += [(MicBot, 0.7)] * (1 + (level - 5) // 5)
                 defender_types += [(NoirBot, 0.7)] * (1 + (level - 5) // 5)
             if level > 8:
                 defender_types += [(BrawlerBotProShielded, 0.65)] * (
                     1 + (level - 5) // 4
                 )
-                defender_types += [(FrostyBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
+                defender_types += [(FrostyBot, 0.65)] * (1 + (level - 5) // 4)
                 defender_types += [(MellyBot, 0.7)] * (1 + (level - 5) // 6)
             if level > 10:
                 defender_types += [(TriggerBotProShielded, 0.6)] * (
                     1 + (level - 6) // 3
                 )
                 defender_types += [(ToxicBot, 0.7)] * (1 + (level - 5) // 6)
-                defender_types += [(SplashBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
+                defender_types += [(SplashBot, 0.65)] * (1 + (level - 5) // 4)
 
             for group in range(group_count):
                 this_target_point_s = target_points / group_count
@@ -956,26 +995,26 @@ class KablooyaRunaroundGame(RunaroundGame):
         self._flawless_bonus = this_flawless_bonus
         assert self._time_bonus_mult is not None
         txtval = ba.Lstr(
-            value='${A}: ${B}',
+            value="${A}: ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='timeBonusText')),
-                ('${B}', str(int(self._time_bonus * self._time_bonus_mult))),
+                ("${A}", ba.Lstr(resource="timeBonusText")),
+                ("${B}", str(int(self._time_bonus * self._time_bonus_mult))),
             ],
         )
         self._time_bonus_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'color': (1, 1, 0.0, 1),
-                    'shadow': 1.0,
-                    'vr_depth': -30,
-                    'flatness': 1.0,
-                    'position': (0, -60),
-                    'scale': 0.8,
-                    'text': txtval,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "color": (1, 1, 0.0, 1),
+                    "shadow": 1.0,
+                    "vr_depth": -30,
+                    "flatness": 1.0,
+                    "position": (0, -60),
+                    "scale": 0.8,
+                    "text": txtval,
                 },
             )
         )
@@ -986,37 +1025,37 @@ class KablooyaRunaroundGame(RunaroundGame):
         # dropping land-mines powerups at some point (otherwise a crafty
         # player could fill the whole map with them)
         self._last_wave_end_time = ba.time() + t_sec
-        totalwaves = str(len(self._waves)) if self._waves is not None else '??'
+        totalwaves = str(len(self._waves)) if self._waves is not None else "??"
         txtval = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='waveText')),
+                ("${A}", ba.Lstr(resource="waveText")),
                 (
-                    '${B}',
+                    "${B}",
                     str(self._wavenum)
                     + (
-                        ''
+                        ""
                         if self._preset
                         in {Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT}
-                        else f'/{totalwaves}'
+                        else f"/{totalwaves}"
                     ),
                 ),
             ],
         )
         self._wave_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'vr_depth': -10,
-                    'color': (1, 1, 1, 1),
-                    'shadow': 1.0,
-                    'flatness': 1.0,
-                    'position': (0, -40),
-                    'scale': 1.3,
-                    'text': txtval,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "vr_depth": -10,
+                    "color": (1, 1, 1, 1),
+                    "shadow": 1.0,
+                    "flatness": 1.0,
+                    "position": (0, -40),
+                    "scale": 1.3,
+                    "text": txtval,
                 },
             )
         )
@@ -1035,7 +1074,8 @@ class KablooyaRunaroundGame(RunaroundGame):
             assert self._death_lives_text is not None
             assert self._death_lives_text.node
             self._death_lives_text.node.text = str(self._death_lives)
-            
+
+
 class EndlessKablooyaRunaroundGame(KablooyaRunaroundGame):
-    name = 'Endless Kablooya Runaround'
-    description = 'Prevent enemies from reaching the exit for as long as you can.\nAnd don\'t die. Really.'
+    name = "Endless Kablooya Runaround"
+    description = "Prevent enemies from reaching the exit for as long as you can.\nAnd don't die. Really."

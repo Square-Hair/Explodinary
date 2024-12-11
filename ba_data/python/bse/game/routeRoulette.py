@@ -14,7 +14,7 @@ import random
 from typing import TYPE_CHECKING
 
 import ba
-from bastd.actor.bomb import (TNTSpawner, JumpPadSpawner)
+from bastd.actor.bomb import TNTSpawner, JumpPadSpawner
 from bastd.actor.scoreboard import Scoreboard
 from bastd.actor.respawnicon import RespawnIcon
 from bastd.gameutils import SharedObjects
@@ -61,14 +61,15 @@ from bastd.game.runaround import (
     Preset,
 )
 
+
 class RouteRouletteGame(RunaroundGame):
     """Game involving trying to bomb bots as they walk through the map."""
 
-    name = 'Route Roulette'
-    description = 'Prevent enemies from reaching the exit.'
+    name = "Route Roulette"
+    description = "Prevent enemies from reaching the exit."
     tips = [
-        'Use Jump-Pads to reach the upper level.',
-        'No, you can\'t get up on the ledge. You have to throw bombs.',
+        "Use Jump-Pads to reach the upper level.",
+        "No, you can't get up on the ledge. You have to throw bombs.",
     ]
     default_music = ba.MusicType.ROULETTE
 
@@ -99,39 +100,39 @@ class RouteRouletteGame(RunaroundGame):
     }
 
     def __init__(self, settings: dict):
-        settings['map'] = 'Route Roulette'
+        settings["map"] = "Route Roulette"
         ba.CoopGameActivity.__init__(self, settings)
         shared = SharedObjects.get()
-        self._preset = Preset(settings.get('preset', 'endless'))
+        self._preset = Preset(settings.get("preset", "endless"))
 
-        self._player_death_sound = ba.getsound('playerDeath')
-        self._new_wave_sound = ba.getsound('scoreHit01')
-        self._winsound = ba.getsound('score')
-        self._cashregistersound = ba.getsound('cashRegister')
-        self._bad_guy_score_sound = ba.getsound('shieldDown')
-        self._heart_tex = ba.gettexture('heart')
-        self._heart_model_opaque = ba.getmodel('heartOpaque')
-        self._heart_model_transparent = ba.getmodel('heartTransparent')
+        self._player_death_sound = ba.getsound("playerDeath")
+        self._new_wave_sound = ba.getsound("scoreHit01")
+        self._winsound = ba.getsound("score")
+        self._cashregistersound = ba.getsound("cashRegister")
+        self._bad_guy_score_sound = ba.getsound("shieldDown")
+        self._heart_tex = ba.gettexture("heart")
+        self._heart_model_opaque = ba.getmodel("heartOpaque")
+        self._heart_model_transparent = ba.getmodel("heartTransparent")
 
         self._a_player_has_been_killed = False
-        self._spawn_center = self._map_type.defs.points['spawn1'][0:3]
-        self._tntspawnpos = self._map_type.defs.points['tnt_loc'][0:3]
-        self._tntspawnpos2 = self._map_type.defs.points['tnt_loc2'][0:3]
-        self._jumppadspawnpos = self._map_type.defs.points['jump_loc'][0:3]
-        self._jumppad2spawnpos = self._map_type.defs.points['jump_loc_s'][0:3]
-        self._powerup_center = self._map_type.defs.boxes['powerup_region'][0:3]
+        self._spawn_center = self._map_type.defs.points["spawn1"][0:3]
+        self._tntspawnpos = self._map_type.defs.points["tnt_loc"][0:3]
+        self._tntspawnpos2 = self._map_type.defs.points["tnt_loc2"][0:3]
+        self._jumppadspawnpos = self._map_type.defs.points["jump_loc"][0:3]
+        self._jumppad2spawnpos = self._map_type.defs.points["jump_loc_s"][0:3]
+        self._powerup_center = self._map_type.defs.boxes["powerup_region"][0:3]
         self._powerup_spread = (
-            self._map_type.defs.boxes['powerup_region'][6] * 0.5,
-            self._map_type.defs.boxes['powerup_region'][8] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][6] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][8] * 0.5,
         )
 
         self._score_region_material = ba.Material()
         self._score_region_material.add_actions(
-            conditions=('they_have_material', shared.player_material),
+            conditions=("they_have_material", shared.player_material),
             actions=(
-                ('modify_part_collision', 'collide', True),
-                ('modify_part_collision', 'physical', False),
-                ('call', 'at_connect', self._handle_reached_end),
+                ("modify_part_collision", "collide", True),
+                ("modify_part_collision", "physical", False),
+                ("call", "at_connect", self._handle_reached_end),
             ),
         )
 
@@ -144,8 +145,8 @@ class RouteRouletteGame(RunaroundGame):
         self._score = 0
         self._time_bonus = 0
         self._score_region: ba.Actor | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._dingsoundhigh = ba.getsound('dingSmallHigh')
+        self._dingsound = ba.getsound("dingSmall")
+        self._dingsoundhigh = ba.getsound("dingSmallHigh")
         self._exclude_powerups: list[str] | None = None
         self._have_tnt: bool | None = None
         self._have_jumppad: bool | None = None
@@ -165,7 +166,7 @@ class RouteRouletteGame(RunaroundGame):
         self._wave_text: ba.NodeActor | None = None
         self._flawless_bonus: int | None = None
         self._wave_update_timer: ba.Timer | None = None
-        
+
         ba.getsession().max_players = 5
 
     def on_begin(self) -> None:
@@ -176,12 +177,15 @@ class RouteRouletteGame(RunaroundGame):
         if self._have_tnt:
             self._tntspawner = TNTSpawner(position=self._tntspawnpos)
             self._tntspawner2 = TNTSpawner(position=self._tntspawnpos2)
-        
-        if self._have_jumppad:
-            self._jumppadspawner = JumpPadSpawner(position=self._jumppadspawnpos)
-            self._jumppadspawner2 = JumpPadSpawner(position=self._jumppad2spawnpos)
-        self._lives_bg.node.color = (0, 0.7, 0.3)
 
+        if self._have_jumppad:
+            self._jumppadspawner = JumpPadSpawner(
+                position=self._jumppadspawnpos
+            )
+            self._jumppadspawner2 = JumpPadSpawner(
+                position=self._jumppad2spawnpos
+            )
+        self._lives_bg.node.color = (0, 0.7, 0.3)
 
     def _start_next_wave(self) -> None:
         # FIXME: Need to split this up.
@@ -190,10 +194,10 @@ class RouteRouletteGame(RunaroundGame):
         # pylint: disable=too-many-statements
         self.show_zoom_message(
             ba.Lstr(
-                value='${A} ${B}',
+                value="${A} ${B}",
                 subs=[
-                    ('${A}', ba.Lstr(resource='waveText')),
-                    ('${B}', str(self._wavenum)),
+                    ("${A}", ba.Lstr(resource="waveText")),
+                    ("${B}", str(self._wavenum)),
                 ],
             ),
             scale=1.0,
@@ -250,27 +254,23 @@ class RouteRouletteGame(RunaroundGame):
                 defender_types += [(WaiterBot, 0.7)] * (1 + (level - 5) // 6)
             if level > 6:
                 defender_types += [(ExplodeyBot, 0.7)] * (1 + (level - 5) // 5)
-                defender_types += [(ExplodeyBotNoTimeLimit, 0.7)] * (1 + (level - 5) // 5)
+                defender_types += [(ExplodeyBotNoTimeLimit, 0.7)] * (
+                    1 + (level - 5) // 5
+                )
                 defender_types += [(MicBot, 0.7)] * (1 + (level - 5) // 5)
                 defender_types += [(NoirBot, 0.7)] * (1 + (level - 5) // 5)
             if level > 8:
                 defender_types += [(BrawlerBotProShielded, 0.65)] * (
                     1 + (level - 5) // 4
                 )
-                defender_types += [(FrostyBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
+                defender_types += [(FrostyBot, 0.65)] * (1 + (level - 5) // 4)
                 defender_types += [(MellyBot, 0.7)] * (1 + (level - 5) // 6)
             if level > 10:
                 defender_types += [(TriggerBotProShielded, 0.6)] * (
                     1 + (level - 6) // 3
                 )
-                defender_types += [(SplashBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
-                defender_types += [(ToxicBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
+                defender_types += [(SplashBot, 0.65)] * (1 + (level - 5) // 4)
+                defender_types += [(ToxicBot, 0.65)] * (1 + (level - 5) // 4)
 
             for group in range(group_count):
                 this_target_point_s = target_points / group_count
@@ -437,26 +437,26 @@ class RouteRouletteGame(RunaroundGame):
         self._flawless_bonus = this_flawless_bonus
         assert self._time_bonus_mult is not None
         txtval = ba.Lstr(
-            value='${A}: ${B}',
+            value="${A}: ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='timeBonusText')),
-                ('${B}', str(int(self._time_bonus * self._time_bonus_mult))),
+                ("${A}", ba.Lstr(resource="timeBonusText")),
+                ("${B}", str(int(self._time_bonus * self._time_bonus_mult))),
             ],
         )
         self._time_bonus_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'left',
-                    'h_align': 'left',
-                    'color': (1, 1, 0.0, 1),
-                    'shadow': 1.0,
-                    'vr_depth': -30,
-                    'flatness': 1.0,
-                    'position': (18, -170),
-                    'scale': 0.8,
-                    'text': txtval,
+                    "v_attach": "top",
+                    "h_attach": "left",
+                    "h_align": "left",
+                    "color": (1, 1, 0.0, 1),
+                    "shadow": 1.0,
+                    "vr_depth": -30,
+                    "flatness": 1.0,
+                    "position": (18, -170),
+                    "scale": 0.8,
+                    "text": txtval,
                 },
             )
         )
@@ -467,37 +467,37 @@ class RouteRouletteGame(RunaroundGame):
         # dropping land-mines powerups at some point (otherwise a crafty
         # player could fill the whole map with them)
         self._last_wave_end_time = ba.time() + t_sec
-        totalwaves = str(len(self._waves)) if self._waves is not None else '??'
+        totalwaves = str(len(self._waves)) if self._waves is not None else "??"
         txtval = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='waveText')),
+                ("${A}", ba.Lstr(resource="waveText")),
                 (
-                    '${B}',
+                    "${B}",
                     str(self._wavenum)
                     + (
-                        ''
+                        ""
                         if self._preset
                         in {Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT}
-                        else f'/{totalwaves}'
+                        else f"/{totalwaves}"
                     ),
                 ),
             ],
         )
         self._wave_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'left',
-                    'h_align': 'left',
-                    'shadow': 1.0,
-                    'vr_depth': -10,
-                    'color': (1, 1, 1, 1),
-                    'flatness': 1.0,
-                    'position': (53, -145),
-                    'scale': 1,
-                    'text': txtval,
+                    "v_attach": "top",
+                    "h_attach": "left",
+                    "h_align": "left",
+                    "shadow": 1.0,
+                    "vr_depth": -10,
+                    "color": (1, 1, 1, 1),
+                    "flatness": 1.0,
+                    "position": (53, -145),
+                    "scale": 1,
+                    "text": txtval,
                 },
             )
         )
@@ -505,14 +505,14 @@ class RouteRouletteGame(RunaroundGame):
     def _update_scores(self) -> None:
         score = self._score
         unlockedAmigo = ba.app.config.get("BSE: Adios Amigo", False)
-        force_popup = False # debug
+        force_popup = False  # debug
         if score >= 2000:
             if not ba.app.config.get("BSE: Adios Amigo", False):
                 UnlockPopup()
                 self._popuped = True
-                ba.app.config['BSE: Adios Amigo'] = True
+                ba.app.config["BSE: Adios Amigo"] = True
                 ba.app.config.commit()
-            
+
         assert self._scoreboard is not None
         self._scoreboard.set_team_value(self.teams[0], score, max_score=None)
 
@@ -526,44 +526,43 @@ class RouteRouletteGame(RunaroundGame):
         assert bot.node
 
         # FIXME: Do this in a type safe way.
-        r_walk_speed: float = getattr(bot, 'r_walk_speed')
-        r_walk_row: int = getattr(bot, 'r_walk_row')
+        r_walk_speed: float = getattr(bot, "r_walk_speed")
+        r_walk_row: int = getattr(bot, "r_walk_row")
 
         speed = r_walk_speed
         pos = bot.node.position
         boxes = self.map.defs.boxes
 
-
-        if ba.is_point_in_box(pos, boxes['b1']):
+        if ba.is_point_in_box(pos, boxes["b1"]):
             bot.node.move_up_down = speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
 
         # All bots settle for the third row.
-        if ba.is_point_in_box(pos, boxes['b7']):
+        if ba.is_point_in_box(pos, boxes["b7"]):
             bot.node.move_up_down = speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if ba.is_point_in_box(pos, boxes['b2']):
+        if ba.is_point_in_box(pos, boxes["b2"]):
             bot.node.move_up_down = -speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if ba.is_point_in_box(pos, boxes['b3']):
+        if ba.is_point_in_box(pos, boxes["b3"]):
             bot.node.move_up_down = -speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if ba.is_point_in_box(pos, boxes['b6']):
+        if ba.is_point_in_box(pos, boxes["b6"]):
             bot.node.move_up_down = speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
         if (
-            ba.is_point_in_box(pos, boxes['b8'])
-            and not ba.is_point_in_box(pos, boxes['b9'])
+            ba.is_point_in_box(pos, boxes["b8"])
+            and not ba.is_point_in_box(pos, boxes["b9"])
         ) or pos == (0.0, 0.0, 0.0):
 
             # Default to walking right if we're still in the walking area.
@@ -619,13 +618,15 @@ class RouteRouletteGame(RunaroundGame):
                             importance=importance,
                         )
                         ba.playsound(
-                            self._dingsound
-                            if importance == 1
-                            else self._dingsoundhigh,
+                            (
+                                self._dingsound
+                                if importance == 1
+                                else self._dingsoundhigh
+                            ),
                             volume=0.6,
                         )
                 except Exception:
-                    ba.print_exception('Error on SpazBotDiedMessage.')
+                    ba.print_exception("Error on SpazBotDiedMessage.")
 
             # Normally we pull scores from the score-set, but if there's no
             # player lets be explicit.

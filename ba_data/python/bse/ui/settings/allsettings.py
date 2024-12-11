@@ -8,16 +8,21 @@ from typing import TYPE_CHECKING
 
 import bauiv1 as bui
 
+
 # Store some data here.
 class _v:
     has_overwritten_plugin = False
+
+
 somevars = _v()
+
+
 class AllSettingsWindow(bui.Window):
     """Window for selecting a settings category."""
 
     def __init__(
         self,
-        transition: str = 'in_right',
+        transition: str = "in_right",
         origin_widget: bui.Widget | None = None,
     ):
         # pylint: disable=too-many-statements
@@ -28,20 +33,20 @@ class AllSettingsWindow(bui.Window):
         # have a visual hitch when the user taps them.
         threading.Thread(target=self._preload_modules).start()
 
-        bui.set_analytics_screen('Settings Window')
+        bui.set_analytics_screen("Settings Window")
         scale_origin: tuple[float, float] | None
         if origin_widget is not None:
-            self._transition_out = 'out_scale'
+            self._transition_out = "out_scale"
             scale_origin = origin_widget.get_screen_space_center()
-            transition = 'in_scale'
+            transition = "in_scale"
         else:
-            self._transition_out = 'out_right'
+            self._transition_out = "out_right"
             scale_origin = None
         uiscale = bui.app.ui_v1.uiscale
         width = 900 if uiscale is bui.UIScale.SMALL else 750
         x_inset = 75 if uiscale is bui.UIScale.SMALL else 0
         height = 435
-        self._r = 'settingsWindow'
+        self._r = "settingsWindow"
         top_extra = 20 if uiscale is bui.UIScale.SMALL else 0
 
         uiscale = bui.app.ui_v1.uiscale
@@ -50,16 +55,16 @@ class AllSettingsWindow(bui.Window):
                 size=(width, height + top_extra),
                 color=(0.1, 0.4, 0.3),
                 transition=transition,
-                toolbar_visibility='menu_minimal',
+                toolbar_visibility="menu_minimal",
                 scale_origin_stack_offset=scale_origin,
                 scale=(
                     1.75
                     if uiscale is bui.UIScale.SMALL
-                    else 1.35
-                    if uiscale is bui.UIScale.MEDIUM
-                    else 1.0
+                    else 1.35 if uiscale is bui.UIScale.MEDIUM else 1.0
                 ),
-                stack_offset=(0, -8) if uiscale is bui.UIScale.SMALL else (0, 0),
+                stack_offset=(
+                    (0, -8) if uiscale is bui.UIScale.SMALL else (0, 0)
+                ),
             )
         )
 
@@ -72,12 +77,17 @@ class AllSettingsWindow(bui.Window):
             self._back_button = btn = bui.buttonwidget(
                 parent=self._root_widget,
                 autoselect=True,
-                position=(40 + x_inset + (45 if not uiscale is bui.UIScale.SMALL else 0), height - 55),
+                position=(
+                    40
+                    + x_inset
+                    + (45 if not uiscale is bui.UIScale.SMALL else 0),
+                    height - 55,
+                ),
                 size=(130, 60),
                 scale=0.8,
                 text_scale=1.2,
-                label=bui.Lstr(resource='backText'),
-                button_type='back',
+                label=bui.Lstr(resource="backText"),
+                button_type="back",
                 on_activate_call=self._do_back,
             )
             bui.containerwidget(edit=self._root_widget, cancel_button=btn)
@@ -86,17 +96,17 @@ class AllSettingsWindow(bui.Window):
             parent=self._root_widget,
             position=(0, height - 44),
             size=(width, 25),
-            text=bui.Lstr(resource=self._r + '.titleText'),
+            text=bui.Lstr(resource=self._r + ".titleText"),
             color=bui.app.ui_v1.title_color,
-            h_align='center',
-            v_align='center',
+            h_align="center",
+            v_align="center",
             maxwidth=130,
         )
 
         if self._back_button is not None:
             bui.buttonwidget(
                 edit=self._back_button,
-                button_type='backSmall',
+                button_type="backSmall",
                 size=(60, 60),
                 label=bui.charstr(bui.SpecialChar.BACK),
             )
@@ -111,8 +121,8 @@ class AllSettingsWindow(bui.Window):
         )  # now unused
         x_offs2 = x_offs + basew - 7
         x_offs3 = x_offs + 2 * (basew - 7)
-        x_offs4 = x_offs2 # Efro what the hell
-        x_offs5 = x_offs3 # ????
+        x_offs4 = x_offs2  # Efro what the hell
+        x_offs5 = x_offs3  # ????
 
         # Explodivariables
         ex_offs = x_offs2 + 2 * (basew - 7)
@@ -121,40 +131,40 @@ class AllSettingsWindow(bui.Window):
         def _b_title(
             x: float, y: float, button: bui.Widget, text: str | bui.Lstr
         ):
-            return(bui.textwidget(
+            return bui.textwidget(
                 parent=self._root_widget,
                 text=text,
                 position=(x + basew * 0.47, y + baseh * 0.22),
                 maxwidth=basew * 0.7,
                 size=(0, 0),
-                h_align='center',
-                v_align='center',
+                h_align="center",
+                v_align="center",
                 draw_controller=button,
                 color=(0.7, 0.9, 0.7, 1.0),
-            ))
+            )
 
         ctb = self._controllers_button = bui.buttonwidget(
             parent=self._root_widget,
             autoselect=True,
-            color = (0.1, 0.55, 0.3),
+            color=(0.1, 0.55, 0.3),
             position=(x_offs2, v),
             size=(basew, baseh),
-            button_type='square',
-            label='',
+            button_type="square",
+            label="",
             on_activate_call=self._do_controllers,
         )
         if bui.app.ui_v1.use_toolbars and self._back_button is None:
-            bbtn = bui.internal.get_special_widget('back_button')
+            bbtn = bui.internal.get_special_widget("back_button")
             bui.widget(edit=ctb, left_widget=bbtn)
         _b_title(
-            x_offs2, v, ctb, bui.Lstr(resource=self._r + '.controllersText')
+            x_offs2, v, ctb, bui.Lstr(resource=self._r + ".controllersText")
         )
         imgw = imgh = 130
         bui.imagewidget(
             parent=self._root_widget,
             position=(x_offs2 + basew * 0.49 - imgw * 0.5, v + 35),
             size=(imgw, imgh),
-            texture=bui.gettexture('controllerIcon'),
+            texture=bui.gettexture("controllerIcon"),
             draw_controller=ctb,
         )
 
@@ -163,21 +173,21 @@ class AllSettingsWindow(bui.Window):
             autoselect=True,
             position=(x_offs3, v),
             size=(basew, baseh),
-            color = (0.1, 0.55, 0.3),
-            button_type='square',
-            label='',
+            color=(0.1, 0.55, 0.3),
+            button_type="square",
+            label="",
             on_activate_call=self._do_graphics,
         )
         if bui.app.ui_v1.use_toolbars:
-            pbtn = bui.internal.get_special_widget('party_button')
+            pbtn = bui.internal.get_special_widget("party_button")
             bui.widget(edit=gfxb, up_widget=pbtn, right_widget=pbtn)
-        _b_title(x_offs3, v, gfxb, bui.Lstr(resource=self._r + '.graphicsText'))
+        _b_title(x_offs3, v, gfxb, bui.Lstr(resource=self._r + ".graphicsText"))
         imgw = imgh = 110
         bui.imagewidget(
             parent=self._root_widget,
             position=(x_offs3 + basew * 0.49 - imgw * 0.5, v + 42),
             size=(imgw, imgh),
-            texture=bui.gettexture('graphicsIcon'),
+            texture=bui.gettexture("graphicsIcon"),
             draw_controller=gfxb,
         )
         # Explodinario settings button
@@ -186,9 +196,9 @@ class AllSettingsWindow(bui.Window):
             autoselect=True,
             position=(ex_offs, v),
             size=(basew, baseh),
-            color = (0.1, 0.55, 0.3),
-            button_type='square',
-            label='',
+            color=(0.1, 0.55, 0.3),
+            button_type="square",
+            label="",
             on_activate_call=self._do_explodinary_settings,
         )
         imgw = imgh = 120
@@ -197,41 +207,49 @@ class AllSettingsWindow(bui.Window):
             position=(ex_offs + basew * 0.49 - imgw * 0.5 + 5, v + 35),
             size=(imgw, imgh),
             color=(0.8, 0.95, 1),
-            texture=bui.gettexture('bse_explodinarySettingsIcon'),
+            texture=bui.gettexture("bse_explodinarySettingsIcon"),
             draw_controller=exst,
         )
-        exstt = _b_title(ex_offs, v, exst, bui.Lstr(resource='explodinary.bseSettingsWindow.titleShort'))
+        exstt = _b_title(
+            ex_offs,
+            v,
+            exst,
+            bui.Lstr(resource="explodinary.bseSettingsWindow.titleShort"),
+        )
 
         v -= baseh - 5
 
         # Plugin manager offset
         try:
-            from bauiv1lib.settings.allsettings import AllSettingsWindow as aswold
+            from bauiv1lib.settings.allsettings import (
+                AllSettingsWindow as aswold,
+            )
+
             aswold._do_modmanager
         except:
             # uh-huh
-            x_offs2 = x_offs + (basew/2) + basew - 7
-            x_offs3 = x_offs + (basew/2) + 2 * (basew - 7)
-            x_offs4 = x_offs2 # Efro what the hell
-            x_offs5 = x_offs3 # ????
+            x_offs2 = x_offs + (basew / 2) + basew - 7
+            x_offs3 = x_offs + (basew / 2) + 2 * (basew - 7)
+            x_offs4 = x_offs2  # Efro what the hell
+            x_offs5 = x_offs3  # ????
         abtn = self._audio_button = bui.buttonwidget(
             parent=self._root_widget,
             autoselect=True,
             position=(x_offs4, v),
             size=(basew, baseh),
-            color = (0.1, 0.55, 0.3),
-            button_type='square',
-            label='',
+            color=(0.1, 0.55, 0.3),
+            button_type="square",
+            label="",
             on_activate_call=self._do_audio,
         )
-        _b_title(x_offs4, v, abtn, bui.Lstr(resource=self._r + '.audioText'))
+        _b_title(x_offs4, v, abtn, bui.Lstr(resource=self._r + ".audioText"))
         imgw = imgh = 120
         bui.imagewidget(
             parent=self._root_widget,
             position=(x_offs4 + basew * 0.49 - imgw * 0.5 + 5, v + 35),
             size=(imgw, imgh),
             color=(1, 1, 0),
-            texture=bui.gettexture('audioIcon'),
+            texture=bui.gettexture("audioIcon"),
             draw_controller=abtn,
         )
 
@@ -239,41 +257,50 @@ class AllSettingsWindow(bui.Window):
             parent=self._root_widget,
             autoselect=True,
             position=(x_offs5, v),
-            color = (0.1, 0.55, 0.3),
+            color=(0.1, 0.55, 0.3),
             size=(basew, baseh),
-            button_type='square',
-            label='',
+            button_type="square",
+            label="",
             on_activate_call=self._do_advanced,
         )
-        _b_title(x_offs5, v, avb, bui.Lstr(resource=self._r + '.advancedText'))
+        _b_title(x_offs5, v, avb, bui.Lstr(resource=self._r + ".advancedText"))
         imgw = imgh = 120
         bui.imagewidget(
             parent=self._root_widget,
             position=(x_offs5 + basew * 0.49 - imgw * 0.5 + 5, v + 35),
             size=(imgw, imgh),
             color=(0.8, 0.95, 1),
-            texture=bui.gettexture('advancedIcon'),
+            texture=bui.gettexture("advancedIcon"),
             draw_controller=avb,
         )
         # Plugin manager button (only appears when plugin manager is installed).
         try:
             import bauiv1lib.settings.allsettings
+
             # Check for a modmanager function and manually re-overwrite the settings menu as plugin manager doesn't like the vanilla one.
             if not somevars.has_overwritten_plugin:
-                modfunc = bauiv1lib.settings.allsettings.AllSettingsWindow._do_modmanager 
-                bauiv1lib.settings.allsettings.AllSettingsWindow = AllSettingsWindow
-                bauiv1lib.settings.allsettings.AllSettingsWindow._do_modmanager = modfunc
+                modfunc = (
+                    bauiv1lib.settings.allsettings.AllSettingsWindow._do_modmanager
+                )
+                bauiv1lib.settings.allsettings.AllSettingsWindow = (
+                    AllSettingsWindow
+                )
+                bauiv1lib.settings.allsettings.AllSettingsWindow._do_modmanager = (
+                    modfunc
+                )
                 somevars.has_overwritten_plugin = True
-            
-            exst = self._modmgr_button = self._plugin_manager_button = bui.buttonwidget(
-                parent=self._root_widget,
-                autoselect=True,
-                position=(ex_offs, v),
-                size=(basew, baseh),
-                color = (0.1, 0.55, 0.3),
-                button_type='square',
-                label='',
-                on_activate_call=bui.Call(aswold._do_modmanager, self),
+
+            exst = self._modmgr_button = self._plugin_manager_button = (
+                bui.buttonwidget(
+                    parent=self._root_widget,
+                    autoselect=True,
+                    position=(ex_offs, v),
+                    size=(basew, baseh),
+                    color=(0.1, 0.55, 0.3),
+                    button_type="square",
+                    label="",
+                    on_activate_call=bui.Call(aswold._do_modmanager, self),
+                )
             )
             imgw = imgh = 120
             exsti = bui.imagewidget(
@@ -281,10 +308,10 @@ class AllSettingsWindow(bui.Window):
                 position=(ex_offs + basew * 0.49 - imgw * 0.5 + 5, v + 35),
                 size=(imgw, imgh),
                 color=(0.8, 0.95, 1),
-                texture=bui.gettexture('bse_pluginsIcon'),
+                texture=bui.gettexture("bse_pluginsIcon"),
                 draw_controller=exst,
             )
-            exstt = _b_title(ex_offs, v, exst, 'Plugin Manager')
+            exstt = _b_title(ex_offs, v, exst, "Plugin Manager")
         except Exception:
             exst = self._plugin_manager_button = None
             # Deprecated design (w/o Plugin Manager)
@@ -323,7 +350,7 @@ class AllSettingsWindow(bui.Window):
             edit=self._root_widget, transition=self._transition_out
         )
         bui.app.ui_v1.set_main_menu_window(
-            MainMenuWindow(transition='in_left').get_root_widget()
+            MainMenuWindow(transition="in_left").get_root_widget()
         )
 
     def _do_controllers(self) -> None:
@@ -331,7 +358,7 @@ class AllSettingsWindow(bui.Window):
         from bauiv1lib.settings.controls import ControlsSettingsWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
             ControlsSettingsWindow(
                 origin_widget=self._controllers_button
@@ -343,7 +370,7 @@ class AllSettingsWindow(bui.Window):
         from bauiv1lib.settings.graphics import GraphicsSettingsWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
             GraphicsSettingsWindow(
                 origin_widget=self._graphics_button
@@ -355,7 +382,7 @@ class AllSettingsWindow(bui.Window):
         from bauiv1lib.settings.audio import AudioSettingsWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
             AudioSettingsWindow(
                 origin_widget=self._audio_button
@@ -367,7 +394,7 @@ class AllSettingsWindow(bui.Window):
         from bauiv1lib.settings.advanced import AdvancedSettingsWindow
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
             AdvancedSettingsWindow(
                 origin_widget=self._advanced_button
@@ -379,7 +406,7 @@ class AllSettingsWindow(bui.Window):
         from bse.ui.settings.bsesettings import ExplodinarySettings
 
         self._save_state()
-        bui.containerwidget(edit=self._root_widget, transition='out_left')
+        bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
             ExplodinarySettings(
                 origin_widget=self._explodinary_settings_button
@@ -390,49 +417,49 @@ class AllSettingsWindow(bui.Window):
         try:
             sel = self._root_widget.get_selected_child()
             if sel == self._controllers_button:
-                sel_name = 'Controllers'
+                sel_name = "Controllers"
             elif sel == self._graphics_button:
-                sel_name = 'Graphics'
+                sel_name = "Graphics"
             elif sel == self._audio_button:
-                sel_name = 'Audio'
+                sel_name = "Audio"
             elif sel == self._advanced_button:
-                sel_name = 'Advanced'
+                sel_name = "Advanced"
             # Explodinary
             elif sel == self._explodinary_settings_button:
-                sel_name = 'Settings_EX'
+                sel_name = "Settings_EX"
             elif sel == self._plugin_manager_button:
-                sel_name = 'Plugins_EX'
+                sel_name = "Plugins_EX"
             elif sel == self._back_button:
-                sel_name = 'Back'
+                sel_name = "Back"
             else:
-                raise ValueError(f'unrecognized selection \'{sel}\'')
-            bui.app.ui_v1.window_states[type(self)] = {'sel_name': sel_name}
+                raise ValueError(f"unrecognized selection '{sel}'")
+            bui.app.ui_v1.window_states[type(self)] = {"sel_name": sel_name}
         except Exception:
-            bui.print_exception(f'Error saving state for {self}.')
+            bui.print_exception(f"Error saving state for {self}.")
 
     def _restore_state(self) -> None:
         try:
             sel_name = bui.app.ui_v1.window_states.get(type(self), {}).get(
-                'sel_name'
+                "sel_name"
             )
             sel: bui.Widget | None
-            if sel_name == 'Controllers':
+            if sel_name == "Controllers":
                 sel = self._controllers_button
-            elif sel_name == 'Graphics':
+            elif sel_name == "Graphics":
                 sel = self._graphics_button
-            elif sel_name == 'Audio':
+            elif sel_name == "Audio":
                 sel = self._audio_button
-            elif sel_name == 'Advanced':
+            elif sel_name == "Advanced":
                 sel = self._advanced_button
-            elif sel_name == 'Settings_EX':
+            elif sel_name == "Settings_EX":
                 sel = self._explodinary_settings_button
-            elif sel_name == 'Plugins_EX':
+            elif sel_name == "Plugins_EX":
                 sel = self._plugin_manager_button
-            elif sel_name == 'Back':
+            elif sel_name == "Back":
                 sel = self._back_button
             else:
                 sel = self._controllers_button
             if sel is not None:
                 bui.containerwidget(edit=self._root_widget, selected_child=sel)
         except Exception:
-            bui.print_exception(f'Error restoring state for {self}.')
+            bui.print_exception(f"Error restoring state for {self}.")

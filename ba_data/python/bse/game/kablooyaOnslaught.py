@@ -56,6 +56,7 @@ if TYPE_CHECKING:
     from typing import Any, Sequence
     from bastd.actor.spazbot import SpazBot
 
+
 @dataclass
 class Wave:
     """A wave of enemies."""
@@ -90,44 +91,44 @@ class Delay:
 class Preset(Enum):
     """Game presets we support."""
 
-    ENDLESS = 'endless'
-    KABLOOYA = 'kablooya'
+    ENDLESS = "endless"
+    KABLOOYA = "kablooya"
 
 
 @unique
 class Point(Enum):
     """Points on the map we can spawn at."""
 
-    LEFT_UPPER_MORE = 'bot_spawn_left_upper_more'
-    LEFT_UPPER = 'bot_spawn_left_upper'
-    TURRET_TOP_RIGHT = 'bot_spawn_turret_top_right'
-    RIGHT_UPPER = 'bot_spawn_right_upper'
-    TURRET_TOP_MIDDLE_LEFT = 'bot_spawn_turret_top_middle_left'
-    TURRET_TOP_MIDDLE_RIGHT = 'bot_spawn_turret_top_middle_right'
-    TURRET_TOP_LEFT = 'bot_spawn_turret_top_left'
-    TOP_RIGHT = 'bot_spawn_top_right'
-    TOP_LEFT = 'bot_spawn_top_left'
-    TOP = 'bot_spawn_top'
-    BOTTOM = 'bot_spawn_bottom'
-    LEFT = 'bot_spawn_left'
-    RIGHT = 'bot_spawn_right'
-    RIGHT_UPPER_MORE = 'bot_spawn_right_upper_more'
-    RIGHT_LOWER = 'bot_spawn_right_lower'
-    RIGHT_LOWER_MORE = 'bot_spawn_right_lower_more'
-    BOTTOM_RIGHT = 'bot_spawn_bottom_right'
-    BOTTOM_LEFT = 'bot_spawn_bottom_left'
-    TURRET_BOTTOM_RIGHT = 'bot_spawn_turret_bottom_right'
-    TURRET_BOTTOM_LEFT = 'bot_spawn_turret_bottom_left'
-    LEFT_LOWER = 'bot_spawn_left_lower'
-    LEFT_LOWER_MORE = 'bot_spawn_left_lower_more'
-    TURRET_TOP_MIDDLE = 'bot_spawn_turret_top_middle'
-    BOTTOM_HALF_RIGHT = 'bot_spawn_bottom_half_right'
-    BOTTOM_HALF_LEFT = 'bot_spawn_bottom_half_left'
-    TOP_HALF_RIGHT = 'bot_spawn_top_half_right'
-    TOP_HALF_LEFT = 'bot_spawn_top_half_left'
+    LEFT_UPPER_MORE = "bot_spawn_left_upper_more"
+    LEFT_UPPER = "bot_spawn_left_upper"
+    TURRET_TOP_RIGHT = "bot_spawn_turret_top_right"
+    RIGHT_UPPER = "bot_spawn_right_upper"
+    TURRET_TOP_MIDDLE_LEFT = "bot_spawn_turret_top_middle_left"
+    TURRET_TOP_MIDDLE_RIGHT = "bot_spawn_turret_top_middle_right"
+    TURRET_TOP_LEFT = "bot_spawn_turret_top_left"
+    TOP_RIGHT = "bot_spawn_top_right"
+    TOP_LEFT = "bot_spawn_top_left"
+    TOP = "bot_spawn_top"
+    BOTTOM = "bot_spawn_bottom"
+    LEFT = "bot_spawn_left"
+    RIGHT = "bot_spawn_right"
+    RIGHT_UPPER_MORE = "bot_spawn_right_upper_more"
+    RIGHT_LOWER = "bot_spawn_right_lower"
+    RIGHT_LOWER_MORE = "bot_spawn_right_lower_more"
+    BOTTOM_RIGHT = "bot_spawn_bottom_right"
+    BOTTOM_LEFT = "bot_spawn_bottom_left"
+    TURRET_BOTTOM_RIGHT = "bot_spawn_turret_bottom_right"
+    TURRET_BOTTOM_LEFT = "bot_spawn_turret_bottom_left"
+    LEFT_LOWER = "bot_spawn_left_lower"
+    LEFT_LOWER_MORE = "bot_spawn_left_lower_more"
+    TURRET_TOP_MIDDLE = "bot_spawn_turret_top_middle"
+    BOTTOM_HALF_RIGHT = "bot_spawn_bottom_half_right"
+    BOTTOM_HALF_LEFT = "bot_spawn_bottom_half_left"
+    TOP_HALF_RIGHT = "bot_spawn_top_half_right"
+    TOP_HALF_LEFT = "bot_spawn_top_half_left"
 
 
-class Player(ba.Player['Team']):
+class Player(ba.Player["Team"]):
     """Our player type for this game."""
 
     def __init__(self) -> None:
@@ -142,16 +143,16 @@ class Team(ba.Team[Player]):
 class KablooyaOnslaughtGame(OnslaughtGame):
     """Co-op game where players try to survive attacking waves of enemies."""
 
-    name = 'Kablooya Onslaught'
-    description = 'Make it through!'
+    name = "Kablooya Onslaught"
+    description = "Make it through!"
 
     tips: list[str | ba.GameTip] = [
-        'insert useful tip here',
-        'Try not to die. Very useful, huh?',
-        'Use Flutter Bombs to send your enemies flying.',
-        'Lite-Mines are a perfect way to keep more bots away from you.',
-        'Steam Bombs are perfect for groups.',
-        'Try to get group of bots near TNT - multikill guaranteed!',
+        "insert useful tip here",
+        "Try not to die. Very useful, huh?",
+        "Use Flutter Bombs to send your enemies flying.",
+        "Lite-Mines are a perfect way to keep more bots away from you.",
+        "Steam Bombs are perfect for groups.",
+        "Try to get group of bots near TNT - multikill guaranteed!",
     ]
 
     # Show messages when players die since it matters here.
@@ -159,19 +160,19 @@ class KablooyaOnslaughtGame(OnslaughtGame):
 
     def __init__(self, settings: dict):
 
-        self._preset = Preset(settings.get('preset', 'kablooya'))
+        self._preset = Preset(settings.get("preset", "kablooya"))
         if self._preset is Preset.KABLOOYA:
-            settings['map'] = 'Kablooya'
+            settings["map"] = "Kablooya"
         elif self._preset is Preset.ENDLESS:
-            settings['map'] = 'Endless Kablooya'
+            settings["map"] = "Endless Kablooya"
         else:
-            raise Exception('Put an eggroll with it.')
+            raise Exception("Put an eggroll with it.")
 
         ba.CoopGameActivity.__init__(self, settings)
 
-        self._new_wave_sound = ba.getsound('scoreHit01')
-        self._winsound = ba.getsound('score')
-        self._cashregistersound = ba.getsound('cashRegister')
+        self._new_wave_sound = ba.getsound("scoreHit01")
+        self._winsound = ba.getsound("score")
+        self._cashregistersound = ba.getsound("cashRegister")
         self._a_player_has_been_hurt = False
         self._player_has_dropped_bomb = False
 
@@ -187,8 +188,8 @@ class KablooyaOnslaughtGame(OnslaughtGame):
         self._score = 0
         self._time_bonus = 0
         self._spawn_info_text: ba.NodeActor | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._dingsoundhigh = ba.getsound('dingSmallHigh')
+        self._dingsound = ba.getsound("dingSmall")
+        self._dingsoundhigh = ba.getsound("dingSmallHigh")
         self._have_tnt = False
         self._excluded_powerups: list[str] | None = None
         self._waves: list[Wave] = []
@@ -203,7 +204,7 @@ class KablooyaOnslaughtGame(OnslaughtGame):
         self._throw_off_kills = 0
         self._land_mine_kills = 0
         self._tnt_kills = 0
-        
+
         if self._preset in [Preset.ENDLESS]:
             ba.getsession().max_players = 5
 
@@ -211,24 +212,26 @@ class KablooyaOnslaughtGame(OnslaughtGame):
         super().on_transition_in()
 
         if self._preset is Preset.KABLOOYA:
-            self.tips.append('You really think you can beat it? Well. Maybe you can..')
+            self.tips.append(
+                "You really think you can beat it? Well. Maybe you can.."
+            )
         self._spawn_info_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'position': (15, -130),
-                    'h_attach': 'left',
-                    'v_attach': 'top',
-                    'scale': 0.55,
-                    'color': (0.3, 0.8, 0.3, 1.0),
-                    'text': '',
+                    "position": (15, -130),
+                    "h_attach": "left",
+                    "v_attach": "top",
+                    "scale": 0.55,
+                    "color": (0.3, 0.8, 0.3, 1.0),
+                    "text": "",
                 },
             )
         )
         ba.setmusic(ba.MusicType.KABLOOYA)
 
         self._scoreboard = Scoreboard(
-            label=ba.Lstr(resource='scoreText'), score_split=0.5
+            label=ba.Lstr(resource="scoreText"), score_split=0.5
         )
 
     def on_begin(self) -> None:
@@ -241,45 +244,63 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                 Wave(
                     base_angle=-80,
                     entries=[
-                        Spawn(ExplodeyBot, spacing=15)
-                        if player_count > 3
-                        else None,
+                        (
+                            Spawn(ExplodeyBot, spacing=15)
+                            if player_count > 3
+                            else None
+                        ),
                         Spawn(SoldatBot, spacing=37),
                         Spawn(SplashBot, spacing=80),
                         Spawn(BrawlerBot, spacing=100),
-                        Spawn(NoirBot, spacing=110)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(BomberBot, spacing=6)
-                        if player_count > 1
-                        else None,
+                        (
+                            Spawn(NoirBot, spacing=110)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(BomberBot, spacing=6)
+                            if player_count > 1
+                            else None
+                        ),
                         Spawn(SplashBot, spacing=7),
-                        Spawn(BrawlerBotPro, spacing=35)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(BrawlerBotPro, spacing=35)
+                            if player_count > 2
+                            else None
+                        ),
                     ],
                 ),
                 Wave(
                     base_angle=180,
                     entries=[
-                        Spawn(BouncyBot, spacing=6)
-                        if player_count > 3
-                        else None,
-                        Spawn(MicBot, spacing=6)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
+                        (
+                            Spawn(BouncyBot, spacing=6)
+                            if player_count > 3
+                            else None
+                        ),
+                        (
+                            Spawn(MicBot, spacing=6)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
                         Spawn(MicBot, spacing=6),
                         Spawn(WaiterBot, spacing=45),
-                        Spawn(ChargerBot, spacing=45)
-                        if player_count > 1
-                        else None,
+                        (
+                            Spawn(ChargerBot, spacing=45)
+                            if player_count > 1
+                            else None
+                        ),
                         Spawn(BrawlerBotPro, spacing=6),
-                        Spawn(BrawlerBotPro, spacing=6)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(BrawlerBot, spacing=6)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(BrawlerBotPro, spacing=6)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(BrawlerBot, spacing=6)
+                            if player_count > 2
+                            else None
+                        ),
                     ],
                 ),
                 Wave(
@@ -288,15 +309,21 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                         Spawn(ChargerBotProShielded, spacing=30),
                         Spawn(TriggerBotPro, spacing=30),
                         Spawn(TriggerBotPro, spacing=30),
-                        Spawn(TriggerBot, spacing=30)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(TriggerBot, spacing=30)
-                        if player_count > 1
-                        else None,
-                        Spawn(TriggerBotPro, spacing=30)
-                        if player_count > 3
-                        else None,
+                        (
+                            Spawn(TriggerBot, spacing=30)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBot, spacing=30)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBotPro, spacing=30)
+                            if player_count > 3
+                            else None
+                        ),
                         Spawn(ChargerBotProShielded, spacing=30),
                     ],
                 ),
@@ -305,19 +332,25 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(StickyBotPro, spacing=70),
                         Spawn(WaiterBotPro, spacing=50),
-                        Spawn(MellyBot, spacing=80)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
+                        (
+                            Spawn(MellyBot, spacing=80)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
                         Spawn(WaiterBotPro, spacing=70),
                         Spawn(StickyBotPro, spacing=50),
-                        Spawn(MellyBot, spacing=120)
-                        if player_count > 1
-                        else None,
-                        Spawn(MellyBot, spacing=70)
-                        if player_count > 3
-                        else None,
+                        (
+                            Spawn(MellyBot, spacing=120)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(MellyBot, spacing=70)
+                            if player_count > 3
+                            else None
+                        ),
                         Spawn(StickyBotPro, spacing=80),
-                        Spawn(WaiterBotPro, spacing=70)
+                        Spawn(WaiterBotPro, spacing=70),
                     ],
                 ),
                 Wave(
@@ -325,14 +358,18 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(ChargerBot, spacing=72),
                         Spawn(BrawlerBotPro, spacing=72),
-                        Spawn(SplashBot, spacing=72)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
+                        (
+                            Spawn(SplashBot, spacing=72)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
                         Spawn(SplashBot, spacing=72),
                         Spawn(SantaBot, spacing=72),
-                        Spawn(NoirBot, spacing=36)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(NoirBot, spacing=36)
+                            if player_count > 2
+                            else None
+                        ),
                     ],
                 ),
                 Wave(
@@ -340,15 +377,21 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(BrawlerBotProShielded, spacing=50),
                         Spawn(BrawlerBotProShielded, spacing=50),
-                        Spawn(BomberBotProShielded, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(BomberBotProShielded, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(BrawlerBotProShielded, spacing=50)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(BomberBotProShielded, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(BomberBotProShielded, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(BrawlerBotProShielded, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
                     ],
                 ),
                 Wave(
@@ -356,15 +399,21 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(BomberBotProShielded, spacing=50),
                         Spawn(StickyBotPro, spacing=50),
-                        Spawn(BomberBotPro, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(BomberBotProShielded, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(StickyBotPro, spacing=50)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(BomberBotPro, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(BomberBotProShielded, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(StickyBotPro, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
                     ],
                 ),
                 Wave(
@@ -372,16 +421,22 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(BrawlerBotPro, spacing=50),
                         Spawn(MicBotPro, spacing=50),
-                        Spawn(BomberBotPro, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(ChargerBotProShielded, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(ChargerBotProShielded, spacing=50)
-                        if player_count > 2
-                        else None,
-                        Spawn(BrawlerBotProShielded, spacing=50)
+                        (
+                            Spawn(BomberBotPro, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(ChargerBotProShielded, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(ChargerBotProShielded, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
+                        Spawn(BrawlerBotProShielded, spacing=50),
                     ],
                 ),
                 Wave(
@@ -389,16 +444,22 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(TriggerBot, spacing=50),
                         Spawn(TriggerBotProShielded, spacing=50),
-                        Spawn(TriggerBot, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(TriggerBotProShielded, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(TriggerBot, spacing=50)
-                        if player_count > 2
-                        else None,
-                        Spawn(TriggerBotProShielded, spacing=50)
+                        (
+                            Spawn(TriggerBot, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBotProShielded, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBot, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
+                        Spawn(TriggerBotProShielded, spacing=50),
                     ],
                 ),
                 Wave(
@@ -406,16 +467,22 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(ChargerBotProShielded, spacing=50),
                         Spawn(TriggerBotProShielded, spacing=50),
-                        Spawn(ChargerBotProShielded, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(TriggerBotProShielded, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(TriggerBotProShielded, spacing=50)
-                        if player_count > 2
-                        else None,
-                        Spawn(ChargerBotProShielded, spacing=50)
+                        (
+                            Spawn(ChargerBotProShielded, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBotProShielded, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBotProShielded, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
+                        Spawn(ChargerBotProShielded, spacing=50),
                     ],
                 ),
                 Wave(
@@ -423,17 +490,23 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(NoirBot, spacing=50),
                         Spawn(SoldatBot, spacing=50),
-                        Spawn(SplashBot, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(SoldatBot, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(SplashBot, spacing=50)
-                        if player_count > 2
-                        else None,
+                        (
+                            Spawn(SplashBot, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(SoldatBot, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(SplashBot, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
                         Spawn(SoldatBot, spacing=50),
-                        Spawn(SplashBot, spacing=50)
+                        Spawn(SplashBot, spacing=50),
                     ],
                 ),
                 Wave(
@@ -441,16 +514,22 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                     entries=[
                         Spawn(SantaBotPro, spacing=50),
                         Spawn(WaiterBotProShielded, spacing=50),
-                        Spawn(ChargerBotProShielded, spacing=50)
-                        if self._preset is Preset.KABLOOYA
-                        else None,
-                        Spawn(TriggerBotProShielded, spacing=50)
-                        if player_count > 1
-                        else None,
-                        Spawn(BomberBotProShielded, spacing=50)
-                        if player_count > 2
-                        else None,
-                        Spawn(SantaBotPro, spacing=50)
+                        (
+                            Spawn(ChargerBotProShielded, spacing=50)
+                            if self._preset is Preset.KABLOOYA
+                            else None
+                        ),
+                        (
+                            Spawn(TriggerBotProShielded, spacing=50)
+                            if player_count > 1
+                            else None
+                        ),
+                        (
+                            Spawn(BomberBotProShielded, spacing=50)
+                            if player_count > 2
+                            else None
+                        ),
+                        Spawn(SantaBotPro, spacing=50),
                     ],
                 ),
             ]
@@ -462,16 +541,14 @@ class KablooyaOnslaughtGame(OnslaughtGame):
             self._waves = []
 
         else:
-            raise RuntimeError(f'Invalid preset: {self._preset}')
+            raise RuntimeError(f"Invalid preset: {self._preset}")
 
         # FIXME: Should migrate to use setup_standard_powerup_drops().
         # Spit out a few powerups and start dropping more shortly.
         self._drop_powerups(
             standard_points=True,
             poweruptype=(
-                'shield'
-                if self._preset in [Preset.KABLOOYA]
-                else None
+                "shield" if self._preset in [Preset.KABLOOYA] else None
             ),
         )
         ba.timer(4.0, self._start_powerup_drops)
@@ -485,10 +562,8 @@ class KablooyaOnslaughtGame(OnslaughtGame):
         self._bots = SpazBotSet()
         ba.timer(4.0, self._start_updating_waves)
 
-
     def _award_completion_achievements(self) -> None:
-        return 'unused'
-
+        return "unused"
 
     def _bot_levels_for_wave(self) -> list[list[type[SpazBot]]]:
         level = self._wavenum
@@ -564,7 +639,6 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                 StickyBotPro,
                 StickyBotPro,
                 ExplodeyBotNoTimeLimit,
-                
             ]
         bot_levels = [
             [b for b in bot_types if b.points_mult == 1],
@@ -575,11 +649,11 @@ class KablooyaOnslaughtGame(OnslaughtGame):
 
         # Make sure all lists have something in them
         if not all(bot_levels):
-            raise RuntimeError('Got empty bot level')
+            raise RuntimeError("Got empty bot level")
         return bot_levels
 
     def _handle_kill_achievements(self, msg: SpazBotDiedMessage) -> None:
-        return 'unused'
+        return "unused"
 
     def end_game(self) -> None:
         super().end_game()
@@ -628,7 +702,7 @@ class KablooyaOnslaughtGame(OnslaughtGame):
 
             if won:
                 self.show_zoom_message(
-                    ba.Lstr(resource='victoryText'), scale=1.0, duration=4.0
+                    ba.Lstr(resource="victoryText"), scale=1.0, duration=4.0
                 )
                 self.celebrate(20.0)
                 self._award_completion_achievements()
@@ -642,7 +716,7 @@ class KablooyaOnslaughtGame(OnslaughtGame):
                 # Can't just pass delay to do_end because our extra bonuses
                 # haven't been added yet (once we call do_end the score
                 # gets locked in).
-                ba.timer(base_delay, ba.WeakCall(self.do_end, 'victory'))
+                ba.timer(base_delay, ba.WeakCall(self.do_end, "victory"))
                 return
 
             self._wavenum += 1
@@ -651,11 +725,11 @@ class KablooyaOnslaughtGame(OnslaughtGame):
             if self._wavenum > 1:
                 self.celebrate(0.5)
             ba.timer(base_delay, ba.WeakCall(self._start_next_wave))
-            
+
     def _start_next_wave(self) -> None:
         if self._game_over:
             return
-        
+
         self._respawn_players_for_wave()
         if self._preset in {Preset.ENDLESS}:
             wave = self._generate_random_wave()
@@ -668,17 +742,16 @@ class KablooyaOnslaughtGame(OnslaughtGame):
 
     def _update_endless_wave_text(self) -> None:
         wttxt = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='waveText')),
+                ("${A}", ba.Lstr(resource="waveText")),
                 (
-                    '${B}',
+                    "${B}",
                     str(self._wavenum)
                     + (
-                        ''
-                        if self._preset
-                        in [Preset.ENDLESS]
-                        else ('/' + str(len(self._waves)))
+                        ""
+                        if self._preset in [Preset.ENDLESS]
+                        else ("/" + str(len(self._waves)))
                     ),
                 ),
             ],
@@ -688,7 +761,8 @@ class KablooyaOnslaughtGame(OnslaughtGame):
     def _update_wave_ui_and_bonuses(self) -> None:
         super()._update_wave_ui_and_bonuses()
         self._update_endless_wave_text()
-        
+
+
 class EndlessKablooyaOnslaughtGame(KablooyaOnslaughtGame):
-    name = 'Endless Kablooya Onslaught'
-    description = 'Kablooya Onslaught, but endless!'
+    name = "Endless Kablooya Onslaught"
+    description = "Kablooya Onslaught, but endless!"

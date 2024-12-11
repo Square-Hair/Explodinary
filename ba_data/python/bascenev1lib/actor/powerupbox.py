@@ -49,8 +49,8 @@ class PowerupBoxFactory:
 
         shared = SharedObjects.get()
         self._lastpoweruptype: str | None = None
-        self.model = bs.getmesh('powerup')
-        self.model_simple = bs.getmesh('powerupSimple')
+        self.mesh = bs.getmesh('powerup')
+        self.mesh_simple = bs.getmesh('powerupSimple')
         # Note from Temp: Don't forget to add your textures as well @ def poweruptex()!
         self.tex_bomb =                 bs.gettexture('powerupBomb')
         self.tex_punch =                bs.gettexture('powerupPunch')
@@ -245,8 +245,8 @@ class PowerupBox(bs.Actor):
             attrs={
                 'body': 'box',
                 'position': position,
-                'model': factory.model,
-                'light_model': factory.model_simple,
+                'mesh': factory.mesh,
+                'light_mesh': factory.mesh_simple,
                 'shadow_size': 0.5,
                 'color_texture': tex,
                 'reflection': 'powerup',
@@ -256,7 +256,7 @@ class PowerupBox(bs.Actor):
         )  # yapf: disable
 
         # Animate in.
-        curve = bs.animate(self.node, 'model_scale', {0: 0, 0.14: 1.6, 0.2: 1})
+        curve = bs.animate(self.node, 'mesh_scale', {0: 0, 0.14: 1.6, 0.2: 1})
         bs.timer(0.2, curve.delete)
 
         if expire:
@@ -385,7 +385,7 @@ class PowerupBox(bs.Actor):
                 if msg.immediate:
                     self.node.delete()
                 else:
-                    bs.animate(self.node, 'model_scale', {0: 1, 0.1: 0})
+                    bs.animate(self.node, 'mesh_scale', {0: 1, 0.1: 0})
                     bs.timer(0.1, self.node.delete)
 
         elif isinstance(msg, bs.OutOfBoundsMessage):
@@ -402,7 +402,7 @@ class PowerupBox(bs.Actor):
             # Handle a good fling when hit by a flutter bomb / mine.
             elif msg.hit_subtype == 'vital':
                 self.node.color_texture = bs.gettexture("powerupVitamin")
-                self.node.model = bs.getmesh("powerupLittle")
+                self.node.mesh = bs.getmesh("powerupLittle")
                 self.poweruptype = 'vitamin'
             elif msg.hit_subtype == 'lite':
                 if self.poweruptype in ['health','shield','vitamin']: return

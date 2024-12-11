@@ -50,17 +50,18 @@ from bastd.game.runaround import (
     Wave,
 )
 
+
 class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
     """Game involving trying to bomb bots as they walk through the map."""
 
-    name = 'Explodinary Infinite Runaround'
-    description = 'Prevent enemies from reaching the exit.'
+    name = "Explodinary Infinite Runaround"
+    description = "Prevent enemies from reaching the exit."
     tips = [
-        'Jump just as you\'re throwing to get bombs up to the highest levels.',
-        'No, you can\'t get up on the ledge. You have to throw bombs.',
-        'Whip back and forth to get more distance on your throws..',
-        'Beware the new defenders! They won\'t resist until you\'re dead..',
-        'Try to multi-task around the wall - position is the key.',
+        "Jump just as you're throwing to get bombs up to the highest levels.",
+        "No, you can't get up on the ledge. You have to throw bombs.",
+        "Whip back and forth to get more distance on your throws..",
+        "Beware the new defenders! They won't resist until you're dead..",
+        "Try to multi-task around the wall - position is the key.",
     ]
     default_music = ba.MusicType.MOUNTAINKING
 
@@ -91,39 +92,39 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
     }
 
     def __init__(self, settings: dict):
-        settings['map'] = 'Explodinary Runaround'
+        settings["map"] = "Explodinary Runaround"
         ba.CoopGameActivity.__init__(self, settings)
         shared = SharedObjects.get()
-        self._preset = Preset(settings.get('preset', 'endless'))
+        self._preset = Preset(settings.get("preset", "endless"))
 
-        self._player_death_sound = ba.getsound('playerDeath')
-        self._special_point = ba.getsound('specialPoint')
-        self._special_point2 = ba.getsound('specialPoint2')
-        self._special_point3 = ba.getsound('specialPoint3')
-        self._new_wave_sound = ba.getsound('scoreHit01')
-        self._winsound = ba.getsound('score')
-        self._cashregistersound = ba.getsound('cashRegister')
-        self._bad_guy_score_sound = ba.getsound('shieldDown')
-        self._heart_tex = ba.gettexture('heart')
-        self._heart_model_opaque = ba.getmodel('heartOpaque')
-        self._heart_model_transparent = ba.getmodel('heartTransparent')
+        self._player_death_sound = ba.getsound("playerDeath")
+        self._special_point = ba.getsound("specialPoint")
+        self._special_point2 = ba.getsound("specialPoint2")
+        self._special_point3 = ba.getsound("specialPoint3")
+        self._new_wave_sound = ba.getsound("scoreHit01")
+        self._winsound = ba.getsound("score")
+        self._cashregistersound = ba.getsound("cashRegister")
+        self._bad_guy_score_sound = ba.getsound("shieldDown")
+        self._heart_tex = ba.gettexture("heart")
+        self._heart_model_opaque = ba.getmodel("heartOpaque")
+        self._heart_model_transparent = ba.getmodel("heartTransparent")
 
         self._a_player_has_been_killed = False
-        self._spawn_center = self._map_type.defs.points['spawn1'][0:3]
-        self._tntspawnpos = self._map_type.defs.points['tnt_loc'][0:3]
-        self._powerup_center = self._map_type.defs.boxes['powerup_region'][0:3]
+        self._spawn_center = self._map_type.defs.points["spawn1"][0:3]
+        self._tntspawnpos = self._map_type.defs.points["tnt_loc"][0:3]
+        self._powerup_center = self._map_type.defs.boxes["powerup_region"][0:3]
         self._powerup_spread = (
-            self._map_type.defs.boxes['powerup_region'][6] * 0.5,
-            self._map_type.defs.boxes['powerup_region'][8] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][6] * 0.5,
+            self._map_type.defs.boxes["powerup_region"][8] * 0.5,
         )
 
         self._score_region_material = ba.Material()
         self._score_region_material.add_actions(
-            conditions=('they_have_material', shared.player_material),
+            conditions=("they_have_material", shared.player_material),
             actions=(
-                ('modify_part_collision', 'collide', True),
-                ('modify_part_collision', 'physical', False),
-                ('call', 'at_connect', self._handle_reached_end),
+                ("modify_part_collision", "collide", True),
+                ("modify_part_collision", "physical", False),
+                ("call", "at_connect", self._handle_reached_end),
             ),
         )
 
@@ -136,8 +137,8 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
         self._score = 0
         self._time_bonus = 0
         self._score_region: ba.Actor | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._dingsoundhigh = ba.getsound('dingSmallHigh')
+        self._dingsound = ba.getsound("dingSmall")
+        self._dingsoundhigh = ba.getsound("dingSmallHigh")
         self._exclude_powerups: list[str] | None = None
         self._have_tnt: bool | None = None
         self._waves: list[Wave] | None = None
@@ -157,16 +158,16 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
 
     def on_begin(self) -> None:
         super().on_begin()
-        self._exclude_powerups = [] #['curse']
+        self._exclude_powerups = []  # ['curse']
 
-    def _do_tnt(self): self._tntspawner = TNTSpawner(position=self._tntspawnpos)
+    def _do_tnt(self):
+        self._tntspawner = TNTSpawner(position=self._tntspawnpos)
 
     def end_game(self) -> None:
-        super().end_game() 
+        super().end_game()
         ba.setmusic(ba.MusicType.DEFEAT)
         assert self._bots is not None
         self._bots.final_celebrate()
-
 
     def _start_next_wave(self) -> None:
         # FIXME: Need to split this up.
@@ -175,10 +176,10 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
         # pylint: disable=too-many-statements
         self.show_zoom_message(
             ba.Lstr(
-                value='${A} ${B}',
+                value="${A} ${B}",
                 subs=[
-                    ('${A}', ba.Lstr(resource='waveText')),
-                    ('${B}', str(self._wavenum)),
+                    ("${A}", ba.Lstr(resource="waveText")),
+                    ("${B}", str(self._wavenum)),
                 ],
             ),
             scale=1.0,
@@ -191,14 +192,14 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
         delay = 0.0
         bot_types: list[Spawn | Spacing | None] = []
         level = self._wavenum
-        
+
         if level == 10:
             ba.playsound(self._special_point, 0.4)
         elif level == 15:
             ba.playsound(self._special_point2)
         elif level == 20:
             ba.playsound(self._special_point3)
-            
+
         if self._preset in {Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT}:
             level = self._wavenum
             target_points = (level + 1) * 8.0
@@ -243,27 +244,23 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
                 defender_types += [(WaiterBot, 0.7)] * (1 + (level - 5) // 6)
             if level > 6:
                 defender_types += [(ExplodeyBot, 0.7)] * (1 + (level - 5) // 5)
-                defender_types += [(ExplodeyBotNoTimeLimit, 0.7)] * (1 + (level - 5) // 5)
+                defender_types += [(ExplodeyBotNoTimeLimit, 0.7)] * (
+                    1 + (level - 5) // 5
+                )
                 defender_types += [(MicBot, 0.7)] * (1 + (level - 5) // 5)
                 defender_types += [(NoirBot, 0.7)] * (1 + (level - 5) // 5)
             if level > 8:
                 defender_types += [(BrawlerBotProShielded, 0.65)] * (
                     1 + (level - 5) // 4
                 )
-                defender_types += [(FrostyBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
+                defender_types += [(FrostyBot, 0.65)] * (1 + (level - 5) // 4)
                 defender_types += [(MellyBot, 0.7)] * (1 + (level - 5) // 6)
             if level > 10:
                 defender_types += [(TriggerBotProShielded, 0.6)] * (
                     1 + (level - 6) // 3
                 )
-                defender_types += [(SplashBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
-                defender_types += [(ToxicBot, 0.65)] * (
-                    1 + (level - 5) // 4
-                )
+                defender_types += [(SplashBot, 0.65)] * (1 + (level - 5) // 4)
+                defender_types += [(ToxicBot, 0.65)] * (1 + (level - 5) // 4)
 
             for group in range(group_count):
                 this_target_point_s = target_points / group_count
@@ -430,26 +427,26 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
         self._flawless_bonus = this_flawless_bonus
         assert self._time_bonus_mult is not None
         txtval = ba.Lstr(
-            value='${A}: ${B}',
+            value="${A}: ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='timeBonusText')),
-                ('${B}', str(int(self._time_bonus * self._time_bonus_mult))),
+                ("${A}", ba.Lstr(resource="timeBonusText")),
+                ("${B}", str(int(self._time_bonus * self._time_bonus_mult))),
             ],
         )
         self._time_bonus_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'color': (1, 1, 0.0, 1),
-                    'shadow': 1.0,
-                    'vr_depth': -30,
-                    'flatness': 1.0,
-                    'position': (0, -60),
-                    'scale': 0.8,
-                    'text': txtval,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "color": (1, 1, 0.0, 1),
+                    "shadow": 1.0,
+                    "vr_depth": -30,
+                    "flatness": 1.0,
+                    "position": (0, -60),
+                    "scale": 0.8,
+                    "text": txtval,
                 },
             )
         )
@@ -460,37 +457,37 @@ class ExplodinaryInfiniteRunaroundGame(RunaroundGame):
         # dropping land-mines powerups at some point (otherwise a crafty
         # player could fill the whole map with them)
         self._last_wave_end_time = ba.time() + t_sec
-        totalwaves = str(len(self._waves)) if self._waves is not None else '??'
+        totalwaves = str(len(self._waves)) if self._waves is not None else "??"
         txtval = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='waveText')),
+                ("${A}", ba.Lstr(resource="waveText")),
                 (
-                    '${B}',
+                    "${B}",
                     str(self._wavenum)
                     + (
-                        ''
+                        ""
                         if self._preset
                         in {Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT}
-                        else f'/{totalwaves}'
+                        else f"/{totalwaves}"
                     ),
                 ),
             ],
         )
         self._wave_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'vr_depth': -10,
-                    'color': (1, 1, 1, 1),
-                    'shadow': 1.0,
-                    'flatness': 1.0,
-                    'position': (0, -40),
-                    'scale': 1.3,
-                    'text': txtval,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "vr_depth": -10,
+                    "color": (1, 1, 1, 1),
+                    "shadow": 1.0,
+                    "flatness": 1.0,
+                    "position": (0, -40),
+                    "scale": 1.3,
+                    "text": txtval,
                 },
             )
         )

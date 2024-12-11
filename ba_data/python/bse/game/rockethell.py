@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from typing import Any, Sequence
 
 
-class Player(ba.Player['Team']):
+class Player(ba.Player["Team"]):
     """Our player type for this game."""
 
 
@@ -33,8 +33,8 @@ class Team(ba.Team[Player]):
 class RocketHellGame(ba.TeamGameActivity[Player, Team]):
     """A game type based on acquiring kills."""
 
-    name = 'Rocket Hell'
-    description = 'Kill a set number of enemies\nwith Cloud Cuffs to win.'
+    name = "Rocket Hell"
+    description = "Kill a set number of enemies\nwith Cloud Cuffs to win."
 
     # Print messages when players die since it matters here.
     announce_player_deaths = True
@@ -45,35 +45,35 @@ class RocketHellGame(ba.TeamGameActivity[Player, Team]):
     ) -> list[ba.Setting]:
         settings = [
             ba.IntSetting(
-                'Kills to Win Per Player',
+                "Kills to Win Per Player",
                 min_value=1,
                 default=5,
                 increment=1,
             ),
             ba.IntChoiceSetting(
-                'Time Limit',
+                "Time Limit",
                 choices=[
-                    ('None', 0),
-                    ('1 Minute', 60),
-                    ('2 Minutes', 120),
-                    ('5 Minutes', 300),
-                    ('10 Minutes', 600),
-                    ('20 Minutes', 1200),
+                    ("None", 0),
+                    ("1 Minute", 60),
+                    ("2 Minutes", 120),
+                    ("5 Minutes", 300),
+                    ("10 Minutes", 600),
+                    ("20 Minutes", 1200),
                 ],
                 default=0,
             ),
             ba.FloatChoiceSetting(
-                'Respawn Times',
+                "Respawn Times",
                 choices=[
-                    ('Shorter', 0.25),
-                    ('Short', 0.5),
-                    ('Normal', 1.0),
-                    ('Long', 2.0),
-                    ('Longer', 4.0),
+                    ("Shorter", 0.25),
+                    ("Short", 0.5),
+                    ("Normal", 1.0),
+                    ("Long", 2.0),
+                    ("Longer", 4.0),
                 ],
                 default=1.0,
             ),
-            ba.BoolSetting('Epic Mode', default=False),
+            ba.BoolSetting("Epic Mode", default=False),
         ]
 
         # In teams mode, a suicide gives a point to the other team, but in
@@ -83,7 +83,7 @@ class RocketHellGame(ba.TeamGameActivity[Player, Team]):
         # suiciding until you get a good drop)
         if issubclass(sessiontype, ba.FreeForAllSession):
             settings.append(
-                ba.BoolSetting('Allow Negative Scores', default=False)
+                ba.BoolSetting("Allow Negative Scores", default=False)
             )
 
         return settings
@@ -96,18 +96,18 @@ class RocketHellGame(ba.TeamGameActivity[Player, Team]):
 
     @classmethod
     def get_supported_maps(cls, sessiontype: type[ba.Session]) -> list[str]:
-        return ba.getmaps('rocket_hell')
+        return ba.getmaps("rocket_hell")
 
     def __init__(self, settings: dict):
         super().__init__(settings)
         self._scoreboard = Scoreboard()
         self._score_to_win: int | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._epic_mode = bool(settings['Epic Mode'])
-        self._kills_to_win_per_player = int(settings['Kills to Win Per Player'])
-        self._time_limit = float(settings['Time Limit'])
+        self._dingsound = ba.getsound("dingSmall")
+        self._epic_mode = bool(settings["Epic Mode"])
+        self._kills_to_win_per_player = int(settings["Kills to Win Per Player"])
+        self._time_limit = float(settings["Time Limit"])
         self._allow_negative_scores = bool(
-            settings.get('Allow Negative Scores', False)
+            settings.get("Allow Negative Scores", False)
         )
 
         # Base class overrides.
@@ -115,7 +115,7 @@ class RocketHellGame(ba.TeamGameActivity[Player, Team]):
         self.default_music = (
             ba.MusicType.EPIC if self._epic_mode else ba.MusicType.TO_THE_DEATH
         )
-    
+
     def spawn_player_spaz(
         self,
         player: PlayerType,
@@ -128,12 +128,12 @@ class RocketHellGame(ba.TeamGameActivity[Player, Team]):
         spaz._punch_cooldown = 500
         spaz.connect_controls_to_player(enable_bomb=False)
         return spaz
-        
+
     def get_instance_description(self) -> str | Sequence:
-        return 'Crush ${ARG1} of your enemies.', self._score_to_win
+        return "Crush ${ARG1} of your enemies.", self._score_to_win
 
     def get_instance_description_short(self) -> str | Sequence:
-        return 'kill ${ARG1} enemies', self._score_to_win
+        return "kill ${ARG1} enemies", self._score_to_win
 
     def on_team_join(self, team: Team) -> None:
         if self.has_begun():
@@ -188,7 +188,7 @@ class RocketHellGame(ba.TeamGameActivity[Player, Team]):
                 # In FFA show scores since its hard to find on the scoreboard.
                 if isinstance(killer.actor, PlayerSpaz) and killer.actor:
                     killer.actor.set_score_text(
-                        str(killer.team.score) + '/' + str(self._score_to_win),
+                        str(killer.team.score) + "/" + str(self._score_to_win),
                         color=killer.team.color,
                         flash=True,
                     )

@@ -10,11 +10,14 @@ import random
 from bastd.gameutils import SharedObjects
 from explodinary.custom.particle import bseVFX
 
-class Player(ba.Player['Team']):
+
+class Player(ba.Player["Team"]):
     """Our player type for this game."""
+
 
 class Team(ba.Team[Player]):
     """Our team type for this game."""
+
 
 class BasketballDiedMessage:
     """Inform something that a basketball has died."""
@@ -22,12 +25,13 @@ class BasketballDiedMessage:
     def __init__(self, basketball: Basketball):
         self.basketball = basketball
 
+
 class Basketball(ba.Actor):
     """A lovely basketball."""
-    
+
     def setballstart(self):
         self.node.gravity_scale = 1
-        
+
     def __init__(self, position: Sequence[float] = (0.0, 1.0, 0.0)):
         super().__init__()
         shared = SharedObjects.get()
@@ -40,23 +44,28 @@ class Basketball(ba.Actor):
         assert activity is not None
         pmats = [shared.object_material, activity.basketball_material]
         self.node = ba.newnode(
-            'prop',
+            "prop",
             delegate=self,
             attrs={
-                'model': activity.basketball_model,
-                'color_texture': activity.basketball_tex,
-                'body': 'sphere',
-                'reflection': 'soft',
-                'reflection_scale': [0.25],
-                'shadow_size': 0.3,
-                'is_area_of_interest': False,
-                'position': self._spawn_pos,
-                'materials': pmats,
-                'density': 1.0,
+                "model": activity.basketball_model,
+                "color_texture": activity.basketball_tex,
+                "body": "sphere",
+                "reflection": "soft",
+                "reflection_scale": [0.25],
+                "shadow_size": 0.3,
+                "is_area_of_interest": False,
+                "position": self._spawn_pos,
+                "materials": pmats,
+                "density": 1.0,
             },
         )
-        ba.animate(self.node, 'model_scale', {0: 0, 0.2: 1.3, 0.26: 1})
-        ba.timer(100,self.setballstart,timeformat = ba.TimeFormat.MILLISECONDS,timetype = ba.TimeType.SIM)
+        ba.animate(self.node, "model_scale", {0: 0, 0.2: 1.3, 0.26: 1})
+        ba.timer(
+            100,
+            self.setballstart,
+            timeformat=ba.TimeFormat.MILLISECONDS,
+            timetype=ba.TimeType.SIM,
+        )
 
     def handlemessage(self, msg: Any) -> Any:
         if isinstance(msg, ba.DieMessage):
@@ -69,16 +78,16 @@ class Basketball(ba.Actor):
         # If we go out of bounds, move back to where we started.
         elif isinstance(msg, ba.OutOfBoundsMessage):
             assert self.node
-            bseVFX('puff', self.node.position, (0,0,0))
+            bseVFX("puff", self.node.position, (0, 0, 0))
             self.node.position = self._spawn_pos
-            self.node.velocity = (0,0,0)
-            ba.animate(self.node, 'model_scale', {0: 0, 0.2: 1.3, 0.26: 1})
+            self.node.velocity = (0, 0, 0)
+            ba.animate(self.node, "model_scale", {0: 0, 0.2: 1.3, 0.26: 1})
 
         elif isinstance(msg, ba.HitMessage):
             assert self.node
             assert msg.force_direction is not None
             self.node.handlemessage(
-                'impulse',
+                "impulse",
                 msg.pos[0],
                 msg.pos[1],
                 msg.pos[2],
@@ -104,13 +113,13 @@ class Basketball(ba.Actor):
         else:
             super().handlemessage(msg)
 
+
 # ba_meta export game
 class HubGame(ba.HubGameActivity[Player, Team]):
-    """
-    """
+    """ """
 
-    name = 'Hub'
-    description = ''
+    name = "Hub"
+    description = ""
     allow_mid_activity_joins = True
     announce_player_deaths = False
     default_music = ba.MusicType.HUB
@@ -120,39 +129,39 @@ class HubGame(ba.HubGameActivity[Player, Team]):
         # For now we're hard-coding spawn positions and whatnot
         # so we need to be sure to specify that we only support
         # a specific map.
-        return ['Hub']
+        return ["Hub"]
 
     def __init__(self, settings: dict):
         super().__init__(settings)
         shared = SharedObjects.get()
-        self.basketball_model = ba.getmodel('basketball')
-        self.basketball_tex = ba.gettexture('basketballColor')
+        self.basketball_model = ba.getmodel("basketball")
+        self.basketball_tex = ba.gettexture("basketballColor")
         self.basketball_material = ba.Material()
         self.basketball_material.add_actions(
-            actions=('modify_part_collision', 'friction', 0.5)
+            actions=("modify_part_collision", "friction", 0.5)
         )
         self.basketball_material.add_actions(
-            conditions=('they_have_material', shared.pickup_material),
-            actions=('modify_part_collision', 'collide', True),
+            conditions=("they_have_material", shared.pickup_material),
+            actions=("modify_part_collision", "collide", True),
         )
         self.basketball_material.add_actions(
             conditions=(
-                ('we_are_younger_than', 100),
-                'and',
-                ('they_have_material', shared.object_material),
+                ("we_are_younger_than", 100),
+                "and",
+                ("they_have_material", shared.object_material),
             ),
-            actions=('modify_node_collision', 'collide', False),
+            actions=("modify_node_collision", "collide", False),
         )
-        
+
         self._Basketball_spawn_pos: Sequence[float] | None = None
         self._score_regions: list[ba.NodeActor] | None = None
         self._basketball: Basketball | None = None
-        
+
         ba.getsession().max_players = 12
 
     def on_begin(self) -> None:
         super().on_begin()
-        
+
         self.propertoppers()
         self.no_map_barrier()
         self.setup_standard_powerup_drops()
@@ -162,12 +171,14 @@ class HubGame(ba.HubGameActivity[Player, Team]):
 
     def _kill_basketball(self) -> None:
         self._basketball = None
-        
-    def _show_info(self) -> None: return
-    #def _show_scoreboard_info(self) -> None: return
+
+    def _show_info(self) -> None:
+        return
+
+    # def _show_scoreboard_info(self) -> None: return
 
     def spawn_player(self, player: Player) -> ba.Actor:
-        spawn_points = ba.getactivity().map.get_def_points('ffa_spawn') or [
+        spawn_points = ba.getactivity().map.get_def_points("ffa_spawn") or [
             (0, 0, 0, 0, 0, 0)
         ]
         point = random.choice(spawn_points)
@@ -191,9 +202,11 @@ class HubGame(ba.HubGameActivity[Player, Team]):
 
     def no_map_barrier(self) -> None:
         map = ba.getactivity().map
-        try: map.player_wall.delete()
-        except: return
-    
+        try:
+            map.player_wall.delete()
+        except:
+            return
+
     def _spawn_basketball(self) -> None:
         assert self._Basketball_spawn_pos is not None
         self._basketball = Basketball(position=self._Basketball_spawn_pos)

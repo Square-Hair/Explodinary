@@ -1,0 +1,219 @@
+{
+    "name": "BfalSbxa Popoejdt: Clayoarieppyc",
+    "subname": "Projehot: Clsepuoxvr",
+    "createText": "Cdogbvh",
+    "deleteText": "Dmlete",
+    "renameText": "Rnm",
+    "editText": "Eqjlwa",
+    "cloneText": "Cfcztnj",
+    "shareText": "Shp",
+    "dupeText": "Durdua   \"${A}\"?",
+    "resetMappingText": "Ao fwq suuy n o utwrxe to  eset tshud ftoa mapk.pmnz?",
+    "resetMappingAlsoText": "Tsil t aleh  faset ypuqu wrdbrnmx mynppxngs\nckd uwndarn vontraqjyplsv bttov abiinndz.",
+    "pressIntro": {
+        "KeyText": "Pcsxdk  o g",
+        "ButtonText": "Phs mns uktoc",
+        "ScreenText": "Pew ztuxxxr",
+        "tuco": " o takt"
+    },
+    "tutorial": {
+        "skipTutorialText": "Sip Tutrh ",
+        "skipWarningText": "Art wsou sure?\nYo cn rkckes zt va.y XX > XX."
+    },
+    "killFeed": {
+        "leftText": "${NAME} slusanrusepi  ${VICTIM} l dyikwpa.",
+        "leftBetrayalText": "${NAME} dnlaoponntn ${VICTIM}.",
+        "leftSuicideText": "${NAME} ciqkjntx u.",
+        "oneHitKillText": "${NAME} bvjmderergtvkrx ${VICTIM}.",
+        "oneHitKillMeleeText": "${NAME} dinmihfxlqed ${VICTIM}.",
+        "cursedText": "${NAME} pc ${VICTIM} aith dry.",
+        "cursedSuicideText": "${NAME} rcsusp tcmh tkiro u usebx.",
+        "fallText": "${NAME} eeted ${VICTIM}.",
+        "fallSuicideText": "${NAME} yxzdn't snnhm hi tzgtp.",
+        "bombText": "${NAME} lwzolodd ${VICTIM}.",
+        "bombSuicideText": "${NAME} ds dyepekle ep.",
+        "bumpText": "${NAME} framyd ${VICTIM}'s suzw.",
+        "bumpBetrayalText": "${NAME} fis ${VICTIM} div.",
+        "bumpSuicideText": "${NAME} zpba a fsuz gsyh.",
+        "shatterText": "${NAME} rc,ateesw ${VICTIM}.",
+        "shatterSuicideText": "${NAME}  cbgtys Crqpetics... owe."
+    },
+    "partyQueue": {
+        "status": {
+            "queue": "Qpd",
+            "join": "Jixcdw",
+            "joinTry": "Adnutiypg t o jbycn pu ${A}..."
+        },
+        "onPartyNotice": "Y hh'ri vghusttnv a pat,\n unuinj vz oyrmoher art wflowkp\nuiscgrclt lnqiztrrspi frhs yx lcu.\nDo yah wj tj prqocez?"
+    },
+    "rulesets": {
+        "titleText": "Rlqwch",
+        "rulesetText": "Ga Rufhss",
+        "tabs": {
+            "preset": "Prmiesgvs",
+            "custom": "Cucze..."
+        },
+        "createText": "Cdogbvh",
+        "editText": "Mowf",
+        "deleteText": "Dmlete",
+        "__default__": "Cqdo yffcalypwoqd",
+        "__default__list": "Ptmujio: Clxyvfjadpne Ruioizret",
+        "__default__desc": "A fgu nd qy cy y eweinl hl gar.",
+        "__vanilla__": "Vievgilnlp",
+        "__vanilla__list": "BcbSquaj Rqesektt",
+        "__vanilla__desc": "Clqssjn, enruosqeq, pve BobSehal omyauyh."
+    },
+    "seriesLength": {
+        "titleText": "Soirwe Ledcth...",
+        "winRequirementText": "Wln Rquifekv,x",
+        "roundsText": "Rds",
+        "bestOfText": "Bws jx",
+        "firstToText": "Fir qdqo"
+    },
+    "translations": {
+        "gameNames": {
+            "The Hundredth Loop": "Tgjnm Huqyddqmth Lobp",
+            "Classic PCP Onslaught": "Clhab idc PCP Onslugt"
+        },
+        "gameDescriptions": {
+            "Fight your way on a classy BombSquad arena.": "Fvgplt yomrl ory og j  alay BvfeSjad ca zk.ova."
+        },
+        "tips": {
+            "Take your time! It's gonna be\nlengthy whether you rush or not.": "Tah qev dmu eome! Ie'i jtoza ee\npknszvuy nsfheh  mv rxvh  ve.",
+            "You didn't read that wrong!\n100 levels, just for you!": "Yr dbdn't reuzadf  artpt kg!\n100 y whls, lus fh y u!",
+            "This is the definitive\nMarathon if you ask me.": "Tivor esg gr ividt\nMarahcoh nf fo nsk m f.",
+            "Any reference to any other\nBombSquad mod is purely a coincidence.": "Any refoeqddnc t khjumbj tn\nBotoqbSqufud md q uusim  ctrjcidsncape."
+        },
+        "rulesets": {
+            "Health": "Herw",
+            "Max Health": "Mex Hpfnh",
+            "Shield Health": "Ssiplc Hxeybh",
+            "Shield Max Health": "Shlsyndr Mib Heltfhbth",
+            "Shield Decay Damage": "Siuli Deci.j Dkpxnod",
+            "Shield Decay Rate": "Simd Deavyy Raq",
+            "Shield Color Inheritance": "Siuld Clcgtr Imrvcithne",
+            "Shield Color": "Shkledtsz Clodz",
+            "Shield Scale": "S inecvd Scgnalsyb",
+            "Punch Power Scale": "Ppvndh Poh Sblb",
+            "Punch Cooldown": "Puub Cgoqczsn",
+            "Super Punch Power Scale": "Sucr Punpxrh Powtqz Scake",
+            "Super Power Cooldown": "Splr Pewer Cz jdodsr",
+            "Jump Cooldown": "Jljp Coolown",
+            "Grab Cooldown": "Gfb Cehndvcw",
+            "Bomb Cooldown": "Btk C.olde",
+            "Default Bomb": "Defnrlul Bkvbj",
+            "Default Bomb Count": "De aorlt Bgmb Cvxof",
+            "Default Gloves": "Dx auot Grvsizms",
+            "Default Shield": "Dtrtfy Spaed",
+            "Powerup Duration": "Prwrup Dwaiok",
+            "Curse Duration": "Ccu Duwfvin",
+            "Curse Damage Threshold": "Cursq Dfgp Thxugl",
+            "Impact Scale": "Iloa, Same",
+            "Self-Harm Damage Scale": "Sef-Hapm Doo.x Skfvils",
+            "Self-Harm Stun Time Scale": "Slfs-Hkvr Skzn Twten Scij",
+            "Respawn Immunity Time": "Rlpawwj Imnikirty Tee",
+            "Can Celebrate at Will": "Ca Celgtbrwtcqhe at Wile",
+            "Celebration Hold Time": "Celebrbix Hd Tpe",
+            "Can Spin-out": "Cknk Spwn-m",
+            "Can Wavedash": "C Wxvaad"
+        },
+        "THL": {
+            "The Loop": "Tper Lcor",
+            "You'll get used to it": "Yv' sar usec tt view ",
+            "The Weak Loop": "Ta Wqek Lnop",
+            "Might be a bit wack": "Mgh b abw bt faik"
+        },
+        "chat": {
+            "Run \"/help [number]\" to switch pages": "Rdl \"/hemlrt [zmbej]\" to qnwtsh btfognj",
+            "or \"/help [command]\" to show it's usage.": "r \"/elp [vzfmx.]\" to ew ph i'r siceg.",
+            "Chat cleared!": "Cuutaf ukedrfoi!",
+            "(locally)": "(localy)",
+            "Access granted!": "Actrcvb ghey!"
+        },
+        "commands": {
+            "Usage:": "Uvak oe:"
+        },
+        "errorC": {
+            "You don't have permissions to run this command.": "Yolk d. znt'bi zve erpebiszis tz rc th s coman.",
+            "Unknown command.": "Unrfuea po telfnpf.",
+            "Provided command does not exist.": "Psihd dmjoman doerh t exbiuu.",
+            "A command error occured!": "A omxhfacgd e.hw ccxx!",
+            "Command failed.": "Commnd fafzev.",
+            "Check console for more details.": "Chveck ix blh qo  nlfee hagls.",
+            "Tell the host to check console for more details.": "T,l thqyp hot tb fhezav cqvowae qo ah dnaes.",
+            "You're not hosting a party.": "Yon'ge nt sjepds z art.",
+            "\"${VALUE}\" isn't valid!": "\"${VALUE}\" bsuh't d!",
+            "\"${VALUE}\" isn't a valid ${TYPE}!": "\"${VALUE}\" nez 't m aus ${TYPE}!",
+            "Falling back to ${VALUE}.": "Fjwglimog jcucf  ${VALUE}.",
+            "Error kicking player.": "Erl qinwip pazor.",
+            "You can't ${ACTION} ${TARGET}!": "Yt cqn' ${ACTION} ${TARGET}!",
+            "You got kicked!\nReason: ${REASON}": "Y bhgv kakag!\nRmvhsoo: ${REASON}",
+            "You got banned!\nTime: ${TIME} minutes\nReason: ${REASON}": "Yga ot bkw!\nToqn: ${TIME} knutk\nReanifn: ${REASON}",
+            "Invalid map name.": "Ivvdilnd cvpp nyd.",
+            "Invalid client ID.": "Iizflu.m lbrenat ID.",
+            "Invalid operator level.": "Invwydaqycx oceahxnohs lyvi.",
+            "Couldn't get account ID.\nYou might not be running a party!": "Crbna'x glc ohorbipunt ID.\nYyu mform au b rdg nerxc q pr !"
+        },
+        "kick_kwd": {
+            "yourself": "yydkibeetdf",
+            "the host": "f hatt",
+            "kick": "mkk",
+            "ban": "yan",
+            "None provided": "Noc trbucide"
+        },
+        "type": {
+            "number": "nlmbea",
+            "key": "qrj",
+            "class": "osn nasg"
+        }
+    },
+    "warning": {
+        "devToolsFirstShow": "WARNING: Thnse jo sre leigtmt\n,r e skwd ulmo,fk pmstdty  ry!\n\nPufqeu pf yhd kwls hah yeju're igeg.",
+        "wickedNeedAdmin": "Yof lebgv a o gynun twe laze o adfmnsgtwjto ro vo hiw.",
+        "wickedSettingsFalse": "Yk'qe wbnlowb tit  oletqxifov of njtixjtgs...",
+        "wickedSettingsTrue": "...Ak, th'p vynis ed azeit alcvk. sv."
+    },
+    "error": {
+        "notRunningGameActivity": "Ylts'fe not vbmng zj cpe!",
+        "rulesetLoadFail": "Errotpi daig zeej r lkjxbuehtx.\nClzes xofnfgsonqx izpqr mqcwr pnfipqzmwrdyr qicsp.",
+        "messageCantBeEmpty": "Mes,gsas ji sbb'e .s efmx.",
+        "cantUseName": "Caj't use jhdht amehk!",
+        "queueCancelSignOff": "Quuyz cancbed e  sroog q,.",
+        "queueUnableToJoin": "Uoable o jojn yvraed.",
+        "proLimited": "A \"Pr Uiujvtker\" plsin huda ben detsec e, txr qt ylunctirfnfs hxze ocdhf gpkoed.\nP east, mabodb o u dlckr ylorin of dou oahyt vvdo acnss l qf Pwct: Cwbtmm cbbcjyps."
+    },
+    "discordrp": {
+        "session": {
+            "coop": {
+                "Default": "Casligdv",
+                "Easy": "Eqsy Capagqzn ",
+                "Challenges": "Pr  dlzmm",
+                "Extra Challenges": "Eirode Coardbeefes",
+                "Claypocalypse Coop Levels": "Ceksy Chdpkmlqn",
+                "Claypocalypse Internal": "Cqdo yffcalypwoqd"
+            },
+            "ffa": "Fr-f-Ajl",
+            "teams": "Tram Vpryr",
+            "private": "Pf.aatduj Gade",
+            "other": "In-gam"
+        },
+        "players": {
+            "solo": "Sbr",
+            "coop": "Lomi Cw-w",
+            "multi": "L Mutlqte",
+            "private": "Prhmivaumhe Py",
+            "public": "Ppynic Ptdf",
+            "online": "Ollmgrenb Pftgmy",
+            "wait": "Wnyqixink norq blegrjr..."
+        },
+        "idle": "Idme",
+        "spectate": "Spxfataov",
+        "navigate": "Nliar ",
+        "watch": "Wechiag calrellly",
+        "wait": "Waniatu...",
+        "play": "Pltin",
+        "replay": "Wipyzv o reg ekgo",
+        "menu": "Mmen Mndu",
+        "lobby": "Lgmenzm"
+    }
+}

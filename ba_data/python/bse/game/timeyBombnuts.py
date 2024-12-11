@@ -48,22 +48,25 @@ from bastd.game.onslaught import (
     Preset,
 )
 
+
 class TimeyBombnutsGame(OnslaughtGame):
     """Co-op game where players try to survive attacking waves of enemies."""
 
-    name = 'Timey Bombnuts'
-    description = 'This level is timed, get the best score before the time runs out!'
+    name = "Timey Bombnuts"
+    description = (
+        "This level is timed, get the best score before the time runs out!"
+    )
 
     def __init__(self, settings: dict):
 
-        self._preset = Preset(settings.get('preset', 'training'))
-        settings['map'] = 'Tree'
+        self._preset = Preset(settings.get("preset", "training"))
+        settings["map"] = "Tree"
 
         ba.CoopGameActivity.__init__(self, settings)
 
-        self._new_wave_sound = ba.getsound('scoreHit01')
-        self._winsound = ba.getsound('score')
-        self._cashregistersound = ba.getsound('cashRegister')
+        self._new_wave_sound = ba.getsound("scoreHit01")
+        self._winsound = ba.getsound("score")
+        self._cashregistersound = ba.getsound("cashRegister")
         self._a_player_has_been_hurt = False
         self._player_has_dropped_bomb = False
 
@@ -79,8 +82,8 @@ class TimeyBombnutsGame(OnslaughtGame):
         self._score = 0
         self._time_bonus = 0
         self._spawn_info_text: ba.NodeActor | None = None
-        self._dingsound = ba.getsound('dingSmall')
-        self._dingsoundhigh = ba.getsound('dingSmallHigh')
+        self._dingsound = ba.getsound("dingSmall")
+        self._dingsoundhigh = ba.getsound("dingSmallHigh")
         self._have_tnt = False
         self._excluded_powerups: list[str] | None = None
         self._waves: list[Wave] = []
@@ -99,14 +102,15 @@ class TimeyBombnutsGame(OnslaughtGame):
     def on_transition_in(self) -> None:
         super().on_transition_in()
         ba.setmusic(ba.MusicType.BOMBNUTS)
-        
+
     def on_begin(self) -> None:
         super().on_begin()
-        self._time_limit = (300)
+        self._time_limit = 300
         self.setup_standard_time_limit(self._time_limit)
         self._excluded_powerups = []
-        
-    def _do_tnt(self): self._tntspawner = TNTSpawner(position=self._tntspawnpos)
+
+    def _do_tnt(self):
+        self._tntspawner = TNTSpawner(position=self._tntspawnpos)
 
     def _start_next_wave(self) -> None:
 
@@ -123,15 +127,15 @@ class TimeyBombnutsGame(OnslaughtGame):
         self._setup_wave_spawns(wave)
         self._update_wave_ui_and_bonuses()
         ba.timer(0.4, ba.Call(ba.playsound, self._new_wave_sound))
-        
+
     def _update_wave_ui_and_bonuses(self) -> None:
 
         self.show_zoom_message(
             ba.Lstr(
-                value='${A} ${B}',
+                value="${A} ${B}",
                 subs=[
-                    ('${A}', ba.Lstr(resource='waveText')),
-                    ('${B}', str(self._wavenum)),
+                    ("${A}", ba.Lstr(resource="waveText")),
+                    ("${B}", str(self._wavenum)),
                 ],
             ),
             scale=1.0,
@@ -142,26 +146,26 @@ class TimeyBombnutsGame(OnslaughtGame):
         # Reset our time bonus.
         tbtcolor = (1, 1, 0, 1)
         tbttxt = ba.Lstr(
-            value='${A}: ${B}',
+            value="${A}: ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='timeBonusText')),
-                ('${B}', str(self._time_bonus)),
+                ("${A}", ba.Lstr(resource="timeBonusText")),
+                ("${B}", str(self._time_bonus)),
             ],
         )
         self._time_bonus_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'vr_depth': -30,
-                    'color': tbtcolor,
-                    'shadow': 1.0,
-                    'flatness': 1.0,
-                    'position': (15, -105),
-                    'scale': 0.8,
-                    'text': tbttxt,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "vr_depth": -30,
+                    "color": tbtcolor,
+                    "shadow": 1.0,
+                    "flatness": 1.0,
+                    "position": (15, -105),
+                    "scale": 0.8,
+                    "text": tbttxt,
                 },
             )
         )
@@ -169,35 +173,35 @@ class TimeyBombnutsGame(OnslaughtGame):
         ba.timer(5.0, ba.WeakCall(self._start_time_bonus_timer))
         wtcolor = (1, 1, 1, 1)
         wttxt = ba.Lstr(
-            value='${A} ${B}',
+            value="${A} ${B}",
             subs=[
-                ('${A}', ba.Lstr(resource='waveText')),
+                ("${A}", ba.Lstr(resource="waveText")),
                 (
-                    '${B}',
+                    "${B}",
                     str(self._wavenum)
                     + (
-                        ''
+                        ""
                         if self._preset
                         in [Preset.ENDLESS, Preset.ENDLESS_TOURNAMENT]
-                        else ('/' + str(len(self._waves)))
+                        else ("/" + str(len(self._waves)))
                     ),
                 ),
             ],
         )
         self._wave_text = ba.NodeActor(
             ba.newnode(
-                'text',
+                "text",
                 attrs={
-                    'v_attach': 'top',
-                    'h_attach': 'center',
-                    'h_align': 'center',
-                    'vr_depth': -10,
-                    'color': wtcolor,
-                    'shadow': 1.0,
-                    'flatness': 1.0,
-                    'position': (15, -85),
-                    'scale': 1.3,
-                    'text': wttxt,
+                    "v_attach": "top",
+                    "h_attach": "center",
+                    "h_align": "center",
+                    "vr_depth": -10,
+                    "color": wtcolor,
+                    "shadow": 1.0,
+                    "flatness": 1.0,
+                    "position": (15, -85),
+                    "scale": 1.3,
+                    "text": wttxt,
                 },
             )
         )
@@ -288,9 +292,8 @@ class TimeyBombnutsGame(OnslaughtGame):
 
         # Make sure all lists have something in them
         if not all(bot_levels):
-            raise RuntimeError('Got empty bot level')
+            raise RuntimeError("Got empty bot level")
         return bot_levels
-
 
     def end_game(self) -> None:
         super().end_game()

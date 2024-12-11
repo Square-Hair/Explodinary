@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 import bauiv1 as bui
 
+
 class CreditsContributorsWindow(bui.Window):
     """Window for displaying game credits."""
 
@@ -16,54 +17,54 @@ class CreditsContributorsWindow(bui.Window):
         # pylint: disable=too-many-statements
         import json
 
-        bui.set_analytics_screen('Credits BS Window')
-        
+        bui.set_analytics_screen("Credits BS Window")
+
         self.sok_color = (0.1, 0.4, 0.3)
-        
+
         self._back_button: bui.Widget | None = None
-        
-        #PFPs
-        self.miki_tex = bui.gettexture('bse_pfpMiki')
-        self.neo_tex = bui.gettexture('bse_pfpNeo')
-        self.shadow_tex = bui.gettexture('bse_pfpShadow')
-        self.angel_tex = bui.gettexture('bse_pfpAngel')
-        self.freaky_tex = bui.gettexture('bse_pfpFreaky')
-        #Icons
-        self.yt_tex = bui.gettexture('bse_youtubeIcon')
-        self.sc_tex = bui.gettexture('bse_soundcloudIcon')
-        
+
+        # PFPs
+        self.miki_tex = bui.gettexture("bse_pfpMiki")
+        self.neo_tex = bui.gettexture("bse_pfpNeo")
+        self.shadow_tex = bui.gettexture("bse_pfpShadow")
+        self.angel_tex = bui.gettexture("bse_pfpAngel")
+        self.freaky_tex = bui.gettexture("bse_pfpFreaky")
+        # Icons
+        self.yt_tex = bui.gettexture("bse_youtubeIcon")
+        self.sc_tex = bui.gettexture("bse_soundcloudIcon")
+
         # if they provided an origin-widget, scale up from that
         scale_origin: tuple[float, float] | None
         if origin_widget is not None:
-            self._transition_out = 'out_scale'
+            self._transition_out = "out_scale"
             scale_origin = origin_widget.get_screen_space_center()
-            transition = 'in_scale'
+            transition = "in_scale"
         else:
-            self._transition_out = 'out_right'
+            self._transition_out = "out_right"
             scale_origin = None
-            transition = 'in_right'
+            transition = "in_right"
 
         uiscale = bui.app.ui_v1.uiscale
         width = 870 if uiscale is bui.UIScale.SMALL else 670
         x_inset = 100 if uiscale is bui.UIScale.SMALL else 0
         height = 398 if uiscale is bui.UIScale.SMALL else 500
 
-        self._r = 'explodinary.bseCredits'
+        self._r = "explodinary.bseCredits"
         super().__init__(
             root_widget=bui.containerwidget(
                 size=(width, height),
                 transition=transition,
                 color=self.sok_color,
-                toolbar_visibility='menu_minimal',
+                toolbar_visibility="menu_minimal",
                 scale_origin_stack_offset=scale_origin,
                 scale=(
                     2.0
                     if uiscale is bui.UIScale.SMALL
-                    else 1.3
-                    if uiscale is bui.UIScale.MEDIUM
-                    else 1.0
+                    else 1.3 if uiscale is bui.UIScale.MEDIUM else 1.0
                 ),
-                stack_offset=(0, -8) if uiscale is bui.UIScale.SMALL else (0, 0),
+                stack_offset=(
+                    (0, -8) if uiscale is bui.UIScale.SMALL else (0, 0)
+                ),
             )
         )
 
@@ -80,16 +81,18 @@ class CreditsContributorsWindow(bui.Window):
                 ),
                 size=(140, 60),
                 scale=0.8,
-                label=bui.Lstr(resource='backText'),
-                button_type='back',
+                label=bui.Lstr(resource="backText"),
+                button_type="back",
                 on_activate_call=self._back,
                 autoselect=True,
             )
-            bui.containerwidget(edit=self._root_widget, cancel_button=self._back_button)
+            bui.containerwidget(
+                edit=self._root_widget, cancel_button=self._back_button
+            )
 
             bui.buttonwidget(
                 edit=self._back_button,
-                button_type='backSmall',
+                button_type="backSmall",
                 position=(
                     40 + x_inset,
                     height - (68 if uiscale is bui.UIScale.SMALL else 62) + 5,
@@ -102,11 +105,11 @@ class CreditsContributorsWindow(bui.Window):
             parent=self._root_widget,
             position=(0, height - (59 if uiscale is bui.UIScale.SMALL else 54)),
             size=(width, 30),
-            text=bui.Lstr(resource=f'{self._r}.btn.cont'),
-            h_align='center',
+            text=bui.Lstr(resource=f"{self._r}.btn.cont"),
+            h_align="center",
             color=bui.app.ui_v1.title_color,
             maxwidth=330,
-            v_align='center',
+            v_align="center",
         )
 
         scroll = bui.scrollwidget(
@@ -122,46 +125,74 @@ class CreditsContributorsWindow(bui.Window):
             if uiscale is bui.UIScale.SMALL:
                 bui.widget(
                     edit=scroll,
-                    left_widget=bui.internal.get_special_widget('back_button'),
+                    left_widget=bui.internal.get_special_widget("back_button"),
                 )
 
         fellas = [
             (
-                'TheMikirog',
-                bui.Lstr(resource=f'{self._r}.contributors.mikiDesc'),
-                bui.gettexture('bse_pfpMiki'),
-                [(self.yt_tex, (0.8, 0.3, 0.25), 'https://www.youtube.com/@TheMikirog')],
+                "TheMikirog",
+                bui.Lstr(resource=f"{self._r}.contributors.mikiDesc"),
+                bui.gettexture("bse_pfpMiki"),
+                [
+                    (
+                        self.yt_tex,
+                        (0.8, 0.3, 0.25),
+                        "https://www.youtube.com/@TheMikirog",
+                    )
+                ],
             ),
             (
-                'Nęo',
-                bui.Lstr(resource=f'{self._r}.contributors.bitcDesc'),
-                bui.gettexture('bse_pfpNeo'),
-                [(self.yt_tex, (0.8, 0.3, 0.25), 'https://www.youtube.com/@nyooon516')],
+                "Nęo",
+                bui.Lstr(resource=f"{self._r}.contributors.bitcDesc"),
+                bui.gettexture("bse_pfpNeo"),
+                [
+                    (
+                        self.yt_tex,
+                        (0.8, 0.3, 0.25),
+                        "https://www.youtube.com/@nyooon516",
+                    )
+                ],
             ),
             (
-                'ShadowQ',
-                bui.Lstr(resource=f'{self._r}.contributors.shadDesc'),
-                bui.gettexture('bse_pfpShadow'),
-                [(self.yt_tex, (0.8, 0.3, 0.25), 'https://www.youtube.com/@TheShadowQ'),
-                 (self.sc_tex, (1, 0.5, 0), 'https://soundcloud.com/kacperrrmusic'),],
+                "ShadowQ",
+                bui.Lstr(resource=f"{self._r}.contributors.shadDesc"),
+                bui.gettexture("bse_pfpShadow"),
+                [
+                    (
+                        self.yt_tex,
+                        (0.8, 0.3, 0.25),
+                        "https://www.youtube.com/@TheShadowQ",
+                    ),
+                    (
+                        self.sc_tex,
+                        (1, 0.5, 0),
+                        "https://soundcloud.com/kacperrrmusic",
+                    ),
+                ],
             ),
             (
-                'byANG3L',
-                bui.Lstr(resource=f'{self._r}.contributors.byanDesc'),
-                bui.gettexture('bse_pfpAngel'),
-                [(self.yt_tex, (0.8, 0.3, 0.25), 'https://www.youtube.com/results?search_query=byangel+bombsquad')],
+                "byANG3L",
+                bui.Lstr(resource=f"{self._r}.contributors.byanDesc"),
+                bui.gettexture("bse_pfpAngel"),
+                [
+                    (
+                        self.yt_tex,
+                        (0.8, 0.3, 0.25),
+                        "https://www.youtube.com/results?search_query=byangel+bombsquad",
+                    )
+                ],
             ),
             (
-                'Freakyyyy',
-                bui.Lstr(resource=f'{self._r}.contributors.freaDesc'),
-                bui.gettexture('bse_pfpFreaky'),
+                "Freakyyyy",
+                bui.Lstr(resource=f"{self._r}.contributors.freaDesc"),
+                bui.gettexture("bse_pfpFreaky"),
                 [],
             ),
         ]
         fella_amount = len(fellas)
-        
+
         yoff_base = 120
-        
+
         scale = 1
         self._sub_width = width - 80
         self._sub_height = yoff_base * fella_amount
@@ -173,8 +204,8 @@ class CreditsContributorsWindow(bui.Window):
             claims_left_right=True,
             claims_tab=False,
         )
-        
-        yoff = self._sub_height - yoff_base/1.65
+
+        yoff = self._sub_height - yoff_base / 1.65
         btnitr = 0
         # Create a line for each fella
         for name, desc, icon, buttons in fellas:
@@ -185,8 +216,8 @@ class CreditsContributorsWindow(bui.Window):
                 scale=1.25,
                 res_scale=2.0,
                 maxwidth=400,
-                h_align='left',
-                v_align='center',
+                h_align="left",
+                v_align="center",
             )
             desc_node = bui.textwidget(
                 parent=container,
@@ -195,8 +226,8 @@ class CreditsContributorsWindow(bui.Window):
                 scale=0.975,
                 res_scale=2.0,
                 maxwidth=400,
-                h_align='left',
-                v_align='center',
+                h_align="left",
+                v_align="center",
             )
             icon_node = bui.imagewidget(
                 parent=container,
@@ -211,12 +242,10 @@ class CreditsContributorsWindow(bui.Window):
                     position=(140 + btnoff, yoff + 15),
                     autoselect=True,
                     color=b_color,
-                    button_type='square',
+                    button_type="square",
                     size=(25, 25),
-                    label='',
-                    on_activate_call=bui.Call(
-                        bui.open_url, b_link
-                    ),
+                    label="",
+                    on_activate_call=bui.Call(bui.open_url, b_link),
                 )
                 bui.imagewidget(
                     parent=container,
@@ -238,10 +267,10 @@ class CreditsContributorsWindow(bui.Window):
     def _back(self) -> None:
         # pylint: disable=cyclic-import
         from bse.ui.credits.creditslist_bse import CreditsBSEWindow
+
         bui.containerwidget(
             edit=self._root_widget, transition=self._transition_out
         )
         bui.app.ui_v1.set_main_menu_window(
-            CreditsBSEWindow(transition='in_left').get_root_widget()
+            CreditsBSEWindow(transition="in_left").get_root_widget()
         )
-

@@ -47,37 +47,39 @@ from bascenev1lib.game.onslaught import (
     Preset,
 )
 
+
 class ExplodinaryOnslaughtGame(OnslaughtGame):
     """Co-op game where players try to survive attacking waves of enemies."""
 
-    name = 'Explodinary Infinite Onslaught'
-    description = 'This level is infinite; Defeat enemies to increase your score.'
+    name = "Explodinary Infinite Onslaught"
+    description = (
+        "This level is infinite; Defeat enemies to increase your score."
+    )
 
     tips: list[str | bs.GameTip] = [
-        'Hold any button to run.'
-        '  (Trigger buttons work well if you have them)',
-        'Try tricking enemies into killing eachother or running off cliffs.',
-        'Try \'Cooking off\' bombs for a second or two before throwing them.',
-        'It\'s easier to win with a friend or two helping.',
-        'If you stay in one place, you\'re toast. Run and dodge to survive..',
-        'Practice using your momentum to throw bombs more accurately.',
-        'Your punches do much more damage if you are running or spinning.',
-        'Lite-Mines are a perfect way to keep more bots away from you.',
-        'Steam Bombs are perfect for groups.',
-        'Try to get group of bots near TNT - multikill guaranteed!',
+        "Hold any button to run."
+        "  (Trigger buttons work well if you have them)",
+        "Try tricking enemies into killing eachother or running off cliffs.",
+        "Try 'Cooking off' bombs for a second or two before throwing them.",
+        "It's easier to win with a friend or two helping.",
+        "If you stay in one place, you're toast. Run and dodge to survive..",
+        "Practice using your momentum to throw bombs more accurately.",
+        "Your punches do much more damage if you are running or spinning.",
+        "Lite-Mines are a perfect way to keep more bots away from you.",
+        "Steam Bombs are perfect for groups.",
+        "Try to get group of bots near TNT - multikill guaranteed!",
     ]
-
 
     def __init__(self, settings: dict):
 
-        self._preset = Preset(settings.get('preset', 'training'))
-        settings['map'] = 'Onslaught Arena'
+        self._preset = Preset(settings.get("preset", "training"))
+        settings["map"] = "Onslaught Arena"
 
         bs.CoopGameActivity.__init__(self, settings)
 
-        self._new_wave_sound = bs.getsound('scoreHit01')
-        self._winsound = bs.getsound('score')
-        self._cashregistersound = bs.getsound('cashRegister')
+        self._new_wave_sound = bs.getsound("scoreHit01")
+        self._winsound = bs.getsound("score")
+        self._cashregistersound = bs.getsound("cashRegister")
         self._a_player_has_been_hurt = False
         self._player_has_dropped_bomb = False
 
@@ -93,8 +95,8 @@ class ExplodinaryOnslaughtGame(OnslaughtGame):
         self._score = 0
         self._time_bonus = 0
         self._spawn_info_text: bs.NodeActor | None = None
-        self._dingsound = bs.getsound('dingSmall')
-        self._dingsoundhigh = bs.getsound('dingSmallHigh')
+        self._dingsound = bs.getsound("dingSmall")
+        self._dingsoundhigh = bs.getsound("dingSmallHigh")
         self._have_tnt = False
         self._excluded_powerups: list[str] | None = None
         self._waves: list[Wave] = []
@@ -112,7 +114,7 @@ class ExplodinaryOnslaughtGame(OnslaughtGame):
 
     def on_transition_in(self) -> None:
         super().on_transition_in()
-        
+
     def on_begin(self) -> None:
         super().on_begin()
         self._excluded_powerups = []
@@ -203,10 +205,11 @@ class ExplodinaryOnslaughtGame(OnslaughtGame):
 
         # Make sure all lists have something in them
         if not all(bot_levels):
-            raise RuntimeError('Got empty bot level')
+            raise RuntimeError("Got empty bot level")
         return bot_levels
 
-    def _do_tnt(self): self._tntspawner = TNTSpawner(position=self._tntspawnpos)
+    def _do_tnt(self):
+        self._tntspawner = TNTSpawner(position=self._tntspawnpos)
 
     def end_game(self) -> None:
         super().end_game()
