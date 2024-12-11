@@ -38,7 +38,7 @@ class ReplaceFunction:
         Move files from bse/installer/replacement
         to their respective locations.
         """
-        replacement_dir = f'{self.where}/.basereplace'
+        replacement_dir = f'{self.where}/.base'
         subdirs = [
             d for d in os.listdir(replacement_dir)
             if os.path.isdir(os.path.join(replacement_dir, d))

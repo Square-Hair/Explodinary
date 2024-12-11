@@ -1,7 +1,5 @@
-""" Load wrappers! """
+"""Wrap loader module."""
 
-from bse.wrappers.ui import (
-    mainmenu,
-    credits,
-    settings,
+from . import (
+    uiwrap
 )
