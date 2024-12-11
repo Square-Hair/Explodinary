@@ -49,7 +49,7 @@ class CreditsContributorsWindow(bui.Window):
         x_inset = 100 if uiscale is bui.UIScale.SMALL else 0
         height = 398 if uiscale is bui.UIScale.SMALL else 500
 
-        self._r = "explodinary.bseCredits"
+        self._r = "bseCredits"
         super().__init__(
             root_widget=bui.containerwidget(
                 size=(width, height),

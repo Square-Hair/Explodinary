@@ -51,7 +51,7 @@ class CreditsMenuWindow(bui.Window):
             self._transition_out = "out_right"
             scale_origin = None
 
-        self._r = "explodinary.credits"
+        self._r = "credits"
 
         super().__init__(
             root_widget=bui.containerwidget(

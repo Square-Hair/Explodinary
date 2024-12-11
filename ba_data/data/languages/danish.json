@@ -1616,7 +1616,7 @@
     "macInstructions2TextScale": 0.76,
     "macInstructionsText": "For at bruge Xbox 360-controllere skal du installere en\nMacdriver, der er tilgængelig i linket herunder.\nDet virker både med controllere med og uden ledninger.",
     "macInstructionsTextScale": 0.8,
-    "ouyaInstructionsText": "For at bruge Xbox 360-controllere til BombSquad, tilslut dem din enheds USB-port.\nDu kan bruge en USB-hub\ntil at forbinde flere controllere. \n\nFor at bruge trådløse controllere skal du bruge en trådløs modtager,\ntilgængelig som en del af \"Xbox 360 wireless Controller for Windows\"-\npakken eller solgt seperat. Hver modtager puttes ind i en USB port\nog tillader dig at forbinde op til 4 trådløse controllers.",
+    "ouyaInstructionsText": "For at bruge Xbox 360-controllere til BombSquad, tilslut dem din enheds USB-port.\nDu kan bruge en USB-hub\ntil at forbinde flere controllere. \n\nFor at bruge trådløse controllere skal du bruge en trådløs modtager,\ntilgængelig som en del af \"Xbox 360 wireless Controller for Windows\"-\npakken eller solgt seperat. Hver modtager puttes ind i en USB port\nog tillader dig at forbinde op til 4 trådløse controllers. ",
     "ouyaInstructionsTextScale": 0.8,
     "titleText": "Hvordan man bruger Xbox 360-controllere med BombSquad:"
   },

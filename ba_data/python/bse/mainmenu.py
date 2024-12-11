@@ -204,7 +204,7 @@ class ExplodinaryMainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                     "maxwidth": 280,
                     "position": (79, 200),
                     "text": bs.Lstr(
-                        translate=("explodinary.splashes", rawsplash),
+                        translate=("splashes", rawsplash),
                     ),
                 },
             )

@@ -879,7 +879,7 @@ class MainMenuWindow(bui.Window):
             scale=scale,
             autoselect=self._use_autoselect,
             size=(self._button_width, self._button_height),
-            label=bui.Lstr(resource="explodinary.changelogText"),
+            label=bui.Lstr(resource="changelogText"),
             transition_delay=self._tdelay,
             on_activate_call=self._what_you_know_about_changing_down_in_the_logs,
         )

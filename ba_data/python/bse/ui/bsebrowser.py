@@ -11,12 +11,13 @@ from typing import TYPE_CHECKING
 import bascenev1 as bs
 import bauiv1 as bui
 import random
-from bauiv1lib.coop import tips
+from bse import _data
+from bse._data import cooptips as tips
 
 if TYPE_CHECKING:
     from typing import Any
 
-from explodinary import loader, _versiondata
+from bse import loader
 
 
 class BSECoopBrowserWindow(bui.Window):
@@ -386,7 +387,7 @@ class BSECoopBrowserWindow(bui.Window):
 
         self._plot_button = bui.buttonwidget(
             parent=parent_widget,
-            label=bui.Lstr(resource="explodinary.plotButtonText"),
+            label=bui.Lstr(resource="plotButtonText"),
             size=(120, 70),
             text_scale=1,
             position=(h + 30, v2 + 80),
@@ -413,7 +414,7 @@ class BSECoopBrowserWindow(bui.Window):
 
         h_spacing = 200
         campaign_buttons = []
-        campaignname = _versiondata.campaignsub
+        campaignname = _data.sndata['campaign']
         items = loader.campaign_levels
         if self._selected_campaign_level is None:
             self._selected_campaign_level = items[0]
@@ -458,7 +459,7 @@ class BSECoopBrowserWindow(bui.Window):
         # pylint: disable=cyclic-import
         from bauiv1lib.confirm import ConfirmWindow
 
-        txt = bui.Lstr(resource="explodinary.plotText")
+        txt = bui.Lstr(resource="plotText")
         ConfirmWindow(
             txt,
             text_scale=2,
@@ -542,7 +543,7 @@ class BSECoopBrowserWindow(bui.Window):
 
             return {
                 "prefix": bui.Lstr(
-                    resource=f"explodinary.bsebrowser.{prefix}.header"
+                    resource=f"bsebrowser.{prefix}.header"
                 ),
                 "text": bui.Lstr(translate=(f"bsetiptrans.{prefix}", tip[4:])),
                 "chaos": is_chaos,
@@ -620,7 +621,7 @@ class BSECoopBrowserWindow(bui.Window):
             autoselect=True,
             textcolor=(1, 0.75, 1),
             color=(1.2, 0.4, 1.1),
-            label=bui.Lstr(resource="explodinary.chaosModeText"),
+            label=bui.Lstr(resource="chaosModeText"),
         )
 
         # Tournaments
@@ -636,7 +637,7 @@ class BSECoopBrowserWindow(bui.Window):
             position=(h_base + 27, v + 30 + 198),
             size=(0, 0),
             text=bui.Lstr(
-                resource="explodinary.additionalText",
+                resource="additionalText",
                 fallback_resource="coopSelectWindow.customText",
             ),
             h_align="left",

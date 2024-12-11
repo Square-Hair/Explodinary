@@ -1895,7 +1895,7 @@
   "xbox360ControllersWindow": {
     "getDriverText": "Nabavi driver",
     "macInstructions2Text": "Da možeš koristiti kontrolere bežično, trebat ćeš i reciever koji\ndolazi u 'Xbox 360 Wireless Controller for Windows' paketu.\nJedan reciever omogućuje ti da povežeš do 4 kontrolera.\n\nVažno: recieveri trećih strana neće raditi s ovim driverom; \nprovjeri da na tvom recieveru piše 'Microsoft', a ne 'XBOX 360'.\nMicrosoft ih više ne prodaje odvojeno, pa ćeš morati nabaviti\njednoga u paketu s kontrolerom ili potraži na ebayu.\n\nAko ti je ovo bilo korisno, molim te razmisli o donaciji\nprogrameru drivera na njegovoj stranici.",
-    "macInstructionsText": "Da možeš koristiti Xbox 360 kontrolere, morat ćeš instalirati\nMac driver dostupan na poveznici ispod. \nRadi i sa žičnim i s bežičnim kontrolerima.",
+    "macInstructionsText": "Da možeš koristiti Xbox 360 kontrolere, morat ćeš instalirati\nMac driver dostupan na poveznici ispod. \nRadi i sa žičnim i s bežičnim kontrolerima. ",
     "ouyaInstructionsText": "Za korištenje žičnih Xbox 360 kontrolera s BombSquadom, jednostavno\nih uključi u USB ulaz tvog uređaja. Možeš koristiti USB hub\nda priključiš više kontrolera.\n\nZa korištenje bežičnih kontrolera trebat ćeš bežični reciever, \nkoji je dostupan kao dio \"Xbox 360 wireless Controller for Windows\" \npaketa ili u slobodnoj prodaji. Svaki se reciever priključuje u USB ulaz i\nomogućuje ti da povežeš do 4 bežična kontrolera.",
     "titleText": "Korišćenje Xbox 360 kontrolera sa $(APP_NAME)"
   },

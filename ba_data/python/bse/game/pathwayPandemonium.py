@@ -252,7 +252,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         textval = ba.Lstr(
             value="${A} ${B}",
             subs=[
-                ("${A}", ba.Lstr(resource="explodinary.dayText")),
+                ("${A}", ba.Lstr(resource="dayText")),
                 ("${B}", str(self._daynum)),
             ],
         )
@@ -261,7 +261,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
             ba.Lstr(
                 value="${A} ${B}",
                 subs=[
-                    ("${A}", ba.Lstr(resource="explodinary.dayText")),
+                    ("${A}", ba.Lstr(resource="dayText")),
                     ("${B}", str(self._daynum)),
                 ],
             ),
@@ -281,7 +281,7 @@ class PathwayPandemoniumGame(ba.CoopGameActivity[Player, Team]):
         textval = ba.Lstr(
             value="${A} ${B}",
             subs=[
-                ("${A}", ba.Lstr(resource="explodinary.dayText")),
+                ("${A}", ba.Lstr(resource="dayText")),
                 ("${B}", str(self._daynum)),
             ],
         )

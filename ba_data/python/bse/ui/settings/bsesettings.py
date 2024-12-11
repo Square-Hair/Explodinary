@@ -38,7 +38,7 @@ class ExplodinarySettings(bui.Window):
             self._transition_out = "out_right"
             scale_origin = None
 
-        self._r = "explodinary.bseSettingsWindow"
+        self._r = "bseSettingsWindow"
 
         uiscale = bui.app.ui_v1.uiscale
         height = self.height = 575 if uiscale is bui.UIScale.SMALL else 550

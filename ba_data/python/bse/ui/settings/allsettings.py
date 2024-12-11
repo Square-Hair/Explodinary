@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import bauiv1 as bui
 
 
@@ -214,7 +212,7 @@ class AllSettingsWindow(bui.Window):
             ex_offs,
             v,
             exst,
-            bui.Lstr(resource="explodinary.bseSettingsWindow.titleShort"),
+            bui.Lstr(resource="bseSettingsWindow.titleShort"),
         )
 
         v -= baseh - 5

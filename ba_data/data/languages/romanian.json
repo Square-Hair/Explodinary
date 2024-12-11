@@ -9,6 +9,7 @@
     "changeOncePerSeasonError": "Trebuie să aștepți până la următorul sezon (timp de ${NUM} (de) zile) dacă vrei să schimbi acest lucru din nou",
     "customName": "Nume Personalizat",
     "deviceSpecificAccountText": "Foloseşti un cont specific dispozitivului: ${NAME}",
+    "googlePlayGamesAccountSwitchText": "Dacă doriți să utilizați un alt cont Google,\nutilizați aplicația Jocuri Google Play pentru a comuta.",
     "linkAccountsEnterCodeText": "Introdu Codul",
     "linkAccountsGenerateCodeText": "Generează Codul",
     "linkAccountsInfoText": "(împărtășeşte-ți progresul făcut pe platforme diferite)",
@@ -16,6 +17,7 @@
     "linkAccountsInstructionsText": "Pentru a conecta 2 conturi, generează un cod pe\nunul din ele şi introdu acelmcod pe celălalt.\nProgresul şi inventarul tău vor fi combinate.\nPoți conecta până la ${COUNT} conturi.\n\nAi grijă; acest lucru nu poate fi şters!",
     "linkAccountsText": "Conectează Conturi",
     "linkedAccountsText": "Conturi Conectate:",
+    "manageAccountText": "Gestionează contul",
     "nameChangeConfirm": "Vrei să schimbi numele contului tău în ${NAME}?",
     "resetProgressConfirmNoAchievementsText": "Această acțiune îți va reseta progresul co-op\nși high-score-urile locale (dar nu și biletele).\nAcest lucru nu este reversibil. Sigur vrei să continui?",
     "resetProgressConfirmText": "Această acțiune îți va reseta progresul\nco-op, realizările și high-score-urile\n(dar nu și biletele). Acest lucru nu\neste reversibil. Ești sigur(ă) că vrei să continui?",
@@ -24,12 +26,14 @@
     "setAccountNameDesc": "Scrie un nume dorit de tine care vrei să se afișeze pe contul tău.\nPoți folosi și numele unui alt cont conectat de tine\nsau poți să creezi un nume unic personalizat.",
     "signInInfoText": "Conectează-te cu un cont pentru a colecta bilete, a concura online,\nşi pentru a te juca cu acelaşi cont pe dispozitive diferite.",
     "signInText": "Conectează-te",
+    "signInWithAnEmailAddressText": "Conectați-vă cu o adresă de e-mail",
     "signInWithDeviceInfoText": "(un cont automat care este disponibil doar pe acest dispozitiv)",
     "signInWithDeviceText": "Conectează-te cu contul dispozitivului",
     "signInWithGameCircleText": "Conectează-te cu Game Circle",
     "signInWithGooglePlayText": "Conectează-te cu Google Play",
     "signInWithTestAccountInfoText": "(tip de cont normal; foloseşte conturile de tip 'dispozitiv' şi cele noi)",
     "signInWithTestAccountText": "Conectează-te cu un cont de test",
+    "signInWithText": "Conectați-vă alb ${SERVICE}",
     "signInWithV2InfoText": "(un cont care funcționează pe toate platformele)",
     "signInWithV2Text": "Conectează-te cu un cont Bombsquad",
     "signOutText": "Deconectează-te",
@@ -42,6 +46,7 @@
     "titleText": "Contul tău",
     "unlinkAccountsInstructionsText": "Selectează un cont pentru a-l deconecta",
     "unlinkAccountsText": "Deconectează Conturi",
+    "unlinkLegacyV1AccountsText": "Deconectați conturile vechi (V1).",
     "v2LinkInstructionsText": "Folosește acest link pentru a creea un cont sau pentru a te autentifica.",
     "viaAccount": "(prin contul ${NAME})",
     "youAreSignedInAsText": "Ești conectat ca și:"
@@ -335,6 +340,9 @@
     "getMoreGamesText": "Ia mai multe MiniJocuri...",
     "titleText": "Adaugă un joc"
   },
+  "addToFavoritesText": "Adauga la favorite",
+  "addedToFavoritesText": "S-a adăugat '${NAME}' la Favorite.",
+  "allText": "Toate",
   "allowText": "Permite",
   "alreadySignedInText": "Contul tău este deja conectat de pe un alt dispozitiv;\nte rog să schimbi conturile sau să închizi jocul de pe\nalte dispozitive și să încerci din nou.",
   "apiVersionErrorText": "Nu se poate încărca modulul ${NAME}; acesta țintește versiunea API ${VERSION_USED}, iar versiunea ${VERSION_REQUIRED} nu îl mai suportă.",
@@ -368,6 +376,7 @@
   "chatMutedText": "Chat-ul Este Amuțit",
   "chatUnMuteText": "Dezamuțește Chat-ul",
   "choosingPlayerText": "<se alege jucătorul>",
+  "codesExplainText": "Codurile sunt furnizate de dezvoltator pentru\ndiagnosticați și corectați problemele legate de cont.",
   "completeThisLevelToProceedText": "Trebuie să completezi\nacest nivel pentru a continua!",
   "completionBonusText": "Bonus De Completare",
   "configControllersWindow": {
@@ -502,6 +511,7 @@
     "welcome2Text": "Mai poți primi bilete şi prin alte activități de acelaşi fel.\nBiletele se pot folosi pentru a debloca charactere, hărți,\nmini-jocuri, pentru a intra în concursurii, şi multe altele.",
     "yourPowerRankingText": "Rankul tău de Putere:"
   },
+  "copyConfirmText": "Copiat în clipboard.",
   "copyOfText": "Copie de ${NAME}",
   "copyText": "Copiază",
   "createEditPlayerText": "<Creează/Editează un Profil>",
@@ -1878,7 +1888,7 @@
   "xbox360ControllersWindow": {
     "getDriverText": "Instalează Driver-ul.",
     "macInstructions2Text": "Pentru a folosi controllerele fără fir, vei avea nevoie de un receptor\ncare vine cu pachetul 'Xbox 360 Wireless Controller for Windows'.\nFiecare receptor te lasă să conectezi până la 4 controllere.\n\nImportant: Receptoare de tip 3rd-party nu vor funcționa cu acest driver;\nAsigură-te că pe receptor scrie 'Microsoft', nu 'XBOX 360'.\nMicrosoft nu mai le vinde separat, deci va trebui să iei unul\nîmpreună cu controllerul sau de pe un site, cum ar fi Ebay.\n\nDacă ai găsit acest mesaj folositor, consideră faptul să-i donezi programatorului\ndriverului pe site-ul lui.",
-    "macInstructionsText": "Pentru a folosi controllere de Xbox 360, va trebui să instalezi \ndriver-ul pentru Mac disponibil din link-ul de mai jos. \nFuncționează pentru controalele cu/fără fir.",
+    "macInstructionsText": "Pentru a folosi controllere de Xbox 360, va trebui să instalezi \ndriver-ul pentru Mac disponibil din link-ul de mai jos. \nFuncționează pentru controalele cu/fără fir. ",
     "ouyaInstructionsText": "Pentru a folosi controllere de Xbox 360 cu fir, pur și simplu\nconectează-le la un port USB. Poți folosi un USB-hub pentru a\nconecta mai multe controllere.\n\nPentru a folosi controllere fără fir vei avea nevoie de un receptor\nwireless, valabil ca parte a pachetului \"Xbox 360 wireless controller\nfor Windows\" sau vândut separat. Fiecare receptor intră într-un port\nUSB și te lasă să conectezi până la 4 controllere.",
     "titleText": "Se folosesc controllere de Xbox 360 cu ${APP_NAME}:"
   },

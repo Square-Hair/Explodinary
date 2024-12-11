@@ -44,7 +44,7 @@ class ChangelogWindow(bui.Window):
         self.height = height = 398 if uiscale is bui.UIScale.SMALL else 500
         x_inset = 100 if uiscale is bui.UIScale.SMALL else 0
 
-        self._r = "explodinary.explodinaryChangelog"
+        self._r = "explodinaryChangelog"
         super().__init__(
             root_widget=bui.containerwidget(
                 size=(width, height),

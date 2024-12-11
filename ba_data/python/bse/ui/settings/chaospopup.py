@@ -36,7 +36,7 @@ class ChaosSettingsPopupWindow(popup.PopupWindow):
         )
         self.popup_menu_scale = pscale * 1.2
 
-        self._r = "explodinary.bseSettingsWindow.chaosSubMenu.main"
+        self._r = "bseSettingsWindow.chaosSubMenu.main"
         super().__init__(position=scale_origin, size=(w, h), scale=scale)
 
         cancelbtn = ba.buttonwidget(
@@ -53,7 +53,7 @@ class ChaosSettingsPopupWindow(popup.PopupWindow):
 
         title = ba.textwidget(
             parent=self.root_widget,
-            text=ba.Lstr(resource="explodinary.chaosModeText"),
+            text=ba.Lstr(resource="chaosModeText"),
             position=(w / 2, h * 0.92),
             size=(0, 0),
             scale=1.2,
@@ -80,7 +80,7 @@ class ChaosSettingsPopupWindow(popup.PopupWindow):
                             resource="configGamepadWindow.secondaryEnableText"
                         ),
                     ),
-                    ("${B}", ba.Lstr(resource="explodinary.chaosModeText")),
+                    ("${B}", ba.Lstr(resource="chaosModeText")),
                 ],
             ),
             autoselect=True,
@@ -226,11 +226,11 @@ class ChaosSettingsPopupWindow(popup.PopupWindow):
         if not choices_display:
             choices_display = [
                 ba.Lstr(
-                    resource="explodinary.bseSettingsWindow"
+                    resource="bseSettingsWindow"
                     + ".generic.enabled"
                 ),
                 ba.Lstr(
-                    resource="explodinary.bseSettingsWindow"
+                    resource="bseSettingsWindow"
                     + ".generic.disabled"
                 ),
             ]
@@ -335,7 +335,7 @@ class ChaosSubsettingsPopup(popup.PopupWindow):
 
         self.popup_menu_scale = pscale * 1.2
 
-        self._r = f"explodinary.bseSettingsWindow.chaosSubMenu.{self.sub}"
+        self._r = f"bseSettingsWindow.chaosSubMenu.{self.sub}"
         super().__init__(position=scale_origin, size=(w, h), scale=scale)
 
         cancelbtn = ba.buttonwidget(
@@ -362,7 +362,7 @@ class ChaosSubsettingsPopup(popup.PopupWindow):
             v_align="center",
         )
 
-        alr = f"explodinary.bseSettingsWindow.chaosSubMenu.align"
+        alr = f"bseSettingsWindow.chaosSubMenu.align"
         if self.sub == "timer":
             # Enable timer
             ba.checkboxwidget(
@@ -507,11 +507,11 @@ class ChaosSubsettingsPopup(popup.PopupWindow):
         if not choices_display:
             choices_display = [
                 ba.Lstr(
-                    resource="explodinary.bseSettingsWindow"
+                    resource="bseSettingsWindow"
                     + ".generic.enabled"
                 ),
                 ba.Lstr(
-                    resource="explodinary.bseSettingsWindow"
+                    resource="bseSettingsWindow"
                     + ".generic.disabled"
                 ),
             ]
@@ -609,7 +609,7 @@ class ChaosEventToggler(popup.PopupWindow):
             else 1.15 if uiscale is ba.UIScale.MEDIUM else 1
         )
 
-        self._r = "explodinary.bseSettingsWindow.chaosEvToggle"
+        self._r = "bseSettingsWindow.chaosEvToggle"
         super().__init__(position=scale_origin, size=(w, h), scale=scale)
 
         tabs_def = [
@@ -632,7 +632,7 @@ class ChaosEventToggler(popup.PopupWindow):
 
         title = ba.textwidget(
             parent=self.root_widget,
-            text=ba.Lstr(resource="explodinary.chaosEventTogglerText"),
+            text=ba.Lstr(resource="chaosEventTogglerText"),
             position=(w / 1.69, h * 0.86),
             size=(0, 0),
             scale=1.4,
