@@ -46,7 +46,8 @@ class CreditsWrapper(CreditsListWindow):
         )
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            CreditsMenuWindow(transition="in_left").get_root_widget()
+            CreditsMenuWindow(transition="in_left").get_root_widget(),
+            from_window=False
         )
 CreditsListWindow._back = CreditsWrapper._back
 

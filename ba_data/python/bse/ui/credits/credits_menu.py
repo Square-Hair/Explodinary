@@ -305,7 +305,8 @@ class CreditsMenuWindow(bui.Window):
 
             self._save_state()
             bui.app.ui_v1.set_main_menu_window(
-                MainMenuWindow(transition="in_left").get_root_widget()
+                MainMenuWindow(transition="in_left").get_root_widget(),
+                from_window=False
             )
             bui.containerwidget(
                 edit=self._root_widget, transition=self._transition_out
@@ -315,7 +316,8 @@ class CreditsMenuWindow(bui.Window):
 
             self._save_state()
             bui.app.ui_v1.set_main_menu_window(
-                GatherWindow(transition="in_left").get_root_widget()
+                GatherWindow(transition="in_left").get_root_widget(),
+                from_window=False
             )
             bui.containerwidget(
                 edit=self._root_widget, transition=self._transition_out
@@ -328,7 +330,8 @@ class CreditsMenuWindow(bui.Window):
         self._save_state()
         bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
-            CreditsBSEWindow(origin_widget=self._bse_button).get_root_widget()
+            CreditsBSEWindow(origin_widget=self._bse_button).get_root_widget(),
+            from_window=False
         )
 
     def _bombsquad(self) -> None:
@@ -338,7 +341,8 @@ class CreditsMenuWindow(bui.Window):
         self._save_state()
         bui.containerwidget(edit=self._root_widget, transition="out_left")
         bui.app.ui_v1.set_main_menu_window(
-            CreditsListWindow(origin_widget=self._bse_button).get_root_widget()
+            CreditsListWindow(origin_widget=self._bse_button).get_root_widget(),
+            from_window=False
         )
 
     def _team_tourney(self) -> None:
@@ -351,7 +355,8 @@ class CreditsMenuWindow(bui.Window):
             PlaylistBrowserWindow(
                 origin_widget=self._bombsq_button,
                 sessiontype=bui.DualTeamSession,
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _save_state(self) -> None:

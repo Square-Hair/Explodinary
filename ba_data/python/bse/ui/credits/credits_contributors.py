@@ -272,5 +272,6 @@ class CreditsContributorsWindow(bui.Window):
             edit=self._root_widget, transition=self._transition_out
         )
         bui.app.ui_v1.set_main_menu_window(
-            CreditsBSEWindow(transition="in_left").get_root_widget()
+            CreditsBSEWindow(transition="in_left").get_root_widget(),
+            from_window=False
         )

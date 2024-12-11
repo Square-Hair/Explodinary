@@ -1137,7 +1137,8 @@ class MainMenuWindow(bui.Window):
         bui.containerwidget(edit=self._root_widget, transition="out_right")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            KioskWindow(transition="in_left").get_root_widget()
+            KioskWindow(transition="in_left").get_root_widget(),
+            from_window=False
         )
 
     def _show_account_window(self) -> None:
@@ -1171,7 +1172,8 @@ class MainMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             StoreBrowserWindow(
                 origin_widget=self._store_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _is_benchmark(self) -> bool:
@@ -1454,7 +1456,8 @@ class MainMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             ChangelogWindow(
                 origin_widget=self._how_to_play_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
 

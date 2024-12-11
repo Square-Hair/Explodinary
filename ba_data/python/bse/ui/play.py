@@ -9,6 +9,7 @@ from typing import Any, Dict, Optional, Type
 import bascenev1 as bs
 import bauiv1 as bui
 
+
 # Quick Game
 from bauiv1lib.playlist.addgame import PlaylistAddGameWindow
 from bascenev1._freeforallsession import FreeForAllSession
@@ -731,7 +732,8 @@ class PlayWindow(bui.Window):
 
             self._save_state()
             bs.app.ui_v1.set_main_menu_window(
-                MainMenuWindow(transition='in_left').get_root_widget()
+                MainMenuWindow(transition='in_left').get_root_widget(),
+                from_window=False
             )
             bui.containerwidget(
                 edit=self._root_widget, transition=self._transition_out
@@ -741,7 +743,8 @@ class PlayWindow(bui.Window):
 
             self._save_state()
             bs.app.ui_v1.set_main_menu_window(
-                GatherWindow(transition='in_left').get_root_widget()
+                GatherWindow(transition='in_left').get_root_widget(),
+                from_window=False
             )
             bui.containerwidget(
                 edit=self._root_widget, transition=self._transition_out
@@ -752,13 +755,14 @@ class PlayWindow(bui.Window):
         from bauiv1lib.account import show_sign_in_prompt
         from bauiv1lib.coop.browser import CoopBrowserWindow
 
-        if bui.get_v1_account_state() != 'signed_in':
+        if bui.app.plus.get_v1_account_state() != 'signed_in':
             show_sign_in_prompt()
             return
         self._save_state()
         bui.containerwidget(edit=self._root_widget, transition='out_left')
         bs.app.ui_v1.set_main_menu_window(
-            CoopBrowserWindow(origin_widget=self._coop_button).get_root_widget()
+            CoopBrowserWindow(origin_widget=self._coop_button).get_root_widget(),
+            from_window=False
         )
 
     def _bse_coop(self) -> None:
@@ -766,29 +770,33 @@ class PlayWindow(bui.Window):
         from bauiv1lib.account import show_sign_in_prompt
         from bse.ui.bsebrowser import BSECoopBrowserWindow
 
-        if bui.get_v1_account_state() != 'signed_in':
+        if bui.app.plus.get_v1_account_state() != 'signed_in':
             show_sign_in_prompt()
             return
         self._save_state()
         bui.containerwidget(edit=self._root_widget, transition='out_left')
         bs.app.ui_v1.set_main_menu_window(
-            BSECoopBrowserWindow(origin_widget=self._bse_coop_button).get_root_widget()
+            BSECoopBrowserWindow(origin_widget=self._bse_coop_button).get_root_widget(),
+            from_window=False
         )
 
     def _press_hub(self):
         self._save_state()
         # Input locking
         bui.lock_all_input()
-        bs.timer(0.25, bui.unlock_all_input, timetype=bs.TimeType.REAL)
+        bs.AppTimer(0.25, bui.unlock_all_input)
 
         # Run mode
         from bse import _data
-        bs.app.launch_hub_game(f"{_data.sndata['internal']}:Hub")
+        launch_hub_game(f"{_data.sndata['internal']}:Hub")
 
     def _do_quick_game(self) -> None:
         self._save_state()
         bui.containerwidget(edit=self._root_widget, transition='out_left')
-        bs.app.ui_v1.set_main_menu_window(SelectGameWindow().get_root_widget())
+        bs.app.ui_v1.set_main_menu_window(
+            SelectGameWindow().get_root_widget(),
+            from_window=False
+        )
 
     def _team_tourney(self) -> None:
         # pylint: disable=cyclic-import
@@ -799,7 +807,8 @@ class PlayWindow(bui.Window):
         bs.app.ui_v1.set_main_menu_window(
             PlaylistBrowserWindow(
                 origin_widget=self._teams_button, sessiontype=bs.DualTeamSession
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _free_for_all(self) -> None:
@@ -812,7 +821,8 @@ class PlayWindow(bui.Window):
             PlaylistBrowserWindow(
                 origin_widget=self._free_for_all_button,
                 sessiontype=bs.FreeForAllSession,
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _draw_dude(
@@ -1229,12 +1239,16 @@ class SelectGameWindow(PlaylistAddGameWindow):
         else:
             bs.app.ui_v1.clear_main_menu_window(transition='out_right')
             bs.app.ui_v1.set_main_menu_window(
-                SelectGameWindow(transition='in_left').get_root_widget())
+                SelectGameWindow(transition='in_left').get_root_widget(),
+                from_window=False
+            )
 
     def _back(self) -> None:
         bui.containerwidget(edit=self._root_widget, transition='out_left')
         bs.app.ui_v1.set_main_menu_window(
-            PlayWindow(transition='in_left').get_root_widget())
+            PlayWindow(transition='in_left').get_root_widget(),
+            from_window=False
+        )
 
     def start_game(self, session: bs.Session, fadeout: bool = True):
         def callback():
@@ -1256,3 +1270,43 @@ class SelectGameWindow(PlaylistAddGameWindow):
             bui.lock_all_input()
         else:
             callback()
+
+def launch_hub_game(game: str) -> bool:
+    """High level way to launch a local co-op session."""
+    # pylint: disable=cyclic-import
+    from bauiv1lib.coop.level import CoopLevelLockedWindow
+    args = {}
+    if game == '':
+        raise ValueError('empty game name')
+    campaignname, levelname = game.split(':')
+    campaign = bs.app.classic.getcampaign(campaignname)
+    # If this campaign is sequential, make sure we've completed the
+    # one before this.
+    if campaign.sequential:
+        for level in campaign.levels:
+            if level.name == levelname:
+                break
+            if not level.complete:
+                CoopLevelLockedWindow(
+                    campaign.getlevel(levelname).displayname,
+                    campaign.getlevel(level.name).displayname,
+                )
+                return False
+    # Ok, we're good to go.
+    bs.app.classic.coop_session_args = {
+        'campaign': campaignname,
+        'level': levelname,
+    }
+    for arg_name, arg_val in list(args.items()):
+        bs.app.classic.coop_session_args[arg_name] = arg_val
+    def _fade_end() -> None:
+        from bse.custom.hub import _hubsession
+        try:
+            bs.new_host_session(_hubsession.HubSession)
+        except Exception:
+            from babase import _error
+            _error.print_exception()
+            from bascenev1lib.mainmenu import MainMenuSession
+            bs.new_host_session(MainMenuSession)
+    bui.fade_screen(False, endcall=_fade_end)
+    return True

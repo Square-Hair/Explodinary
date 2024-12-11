@@ -348,7 +348,8 @@ class AllSettingsWindow(bui.Window):
             edit=self._root_widget, transition=self._transition_out
         )
         bui.app.ui_v1.set_main_menu_window(
-            MainMenuWindow(transition="in_left").get_root_widget()
+            MainMenuWindow(transition="in_left").get_root_widget(),
+            from_window=False
         )
 
     def _do_controllers(self) -> None:
@@ -360,7 +361,8 @@ class AllSettingsWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             ControlsSettingsWindow(
                 origin_widget=self._controllers_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _do_graphics(self) -> None:
@@ -372,7 +374,8 @@ class AllSettingsWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             GraphicsSettingsWindow(
                 origin_widget=self._graphics_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _do_audio(self) -> None:
@@ -384,7 +387,8 @@ class AllSettingsWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             AudioSettingsWindow(
                 origin_widget=self._audio_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _do_advanced(self) -> None:
@@ -396,7 +400,8 @@ class AllSettingsWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             AdvancedSettingsWindow(
                 origin_widget=self._advanced_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _do_explodinary_settings(self) -> None:
@@ -408,7 +413,8 @@ class AllSettingsWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             ExplodinarySettings(
                 origin_widget=self._explodinary_settings_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _save_state(self) -> None:

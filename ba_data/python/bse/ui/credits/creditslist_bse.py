@@ -170,7 +170,7 @@ class CreditsBSEWindow(bui.Window):
                 "mult": 1 - 0.2,
                 "icon": bui.gettexture("bse_pfpTemp"),
                 "desc": bui.Lstr(resource=f"{self._r}.desc01"),
-                "ybut": "https://www.youtube.com/@trialtemp",
+                "ybut": "https://www.youtube.com/@3altemp",
                 "dbut": "https://paypal.me/3alTemp",
             },
         }
@@ -301,7 +301,8 @@ class CreditsBSEWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             CreditsContributorsWindow(
                 origin_widget=self._contr_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _testers(self) -> None:
@@ -314,7 +315,8 @@ class CreditsBSEWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             CreditsTestersWindow(
                 origin_widget=self._contr_button
-            ).get_root_widget()
+            ).get_root_widget(),
+            from_window=False
         )
 
     def _back(self) -> None:
@@ -326,5 +328,6 @@ class CreditsBSEWindow(bui.Window):
             edit=self._root_widget, transition=self._transition_out
         )
         bui.app.ui_v1.set_main_menu_window(
-            CreditsMenuWindow(transition="in_left").get_root_widget()
+            CreditsMenuWindow(transition="in_left").get_root_widget(),
+            from_window=False
         )

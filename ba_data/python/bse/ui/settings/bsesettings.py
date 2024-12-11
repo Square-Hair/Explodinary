@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING
 import bauiv1 as bui
 from bauiv1lib import popup
 
+import bse
+
 if TYPE_CHECKING:
     pass
 
@@ -26,7 +28,6 @@ class ExplodinarySettings(bui.Window):
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-branches
         # pylint: disable=too-many-statements
-        from bauiv1lib.config import ConfigCheckBox, ConfigNumberEdit
 
         # if they provided an origin-widget, scale up from that
         scale_origin: tuple[float, float] | None
@@ -212,7 +213,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.tntVariants.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.tntVariants.sub"),
-                key="BSE: TNT Variants",
+                key="tnt_variants",
                 default=True,
             )
             s_pos_y -= 67.5
@@ -223,7 +224,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=self._r + ".powerupPopups.name"),
                 subtitle=bui.Lstr(resource=self._r + ".powerupPopups.sub"),
-                key="BSE: Powerup Popups",
+                key="powerup_text",
             )
             s_pos_y -= 60
 
@@ -256,21 +257,11 @@ class ExplodinarySettings(bui.Window):
                 v_align="center",
             )
             s_pos_y -= 62
-            # Create quickturn value if it doesn't exist
-            from bascenev1._powerup import all_powerup_dists
+            from bse._powerup import all_powerup_dists
 
-            bui.app.config["BSE: Powerup Distribution"] = bui.app.config.get(
-                "BSE: Powerup Distribution", "Explodinary"
-            )
-            if (
-                all_powerup_dists().get(
-                    bui.app.config["BSE: Powerup Distribution"]
-                )
-                == None
-            ):  # This should only happen when having an unkown dist.
-                bui.app.config["BSE: Powerup Distribution"] = "Explodinary"
-            bui.app.config.commit()
-            #
+            # powerup distribution
+            bse.cfg.fetch("powerup_dist", "Explodinary", do_set=True) # assign
+
             suffix = self._r + ".powerupDist.dists."
 
             dist_choice: list[list, list] = [[], []]
@@ -291,7 +282,7 @@ class ExplodinarySettings(bui.Window):
                 scale=self.popup_menu_scale,
                 choices=dist_choice[0],
                 choices_display=dist_choice[1],
-                current_choice=bui.app.config["BSE: Powerup Distribution"],
+                current_choice=bse.cfg.fetch("powerup_dist"),
                 on_value_change_call=self._set_powerup_dist,
             )
             s_pos_y -= 14.5
@@ -323,9 +314,7 @@ class ExplodinarySettings(bui.Window):
                 selection_loops_to_parent=True,
                 capture_arrows=True,
             )
-            self._update_powerup_container(
-                bui.app.config["BSE: Powerup Distribution"]
-            )
+            self._update_powerup_container(bse.cfg.fetch('powerup_dist'))
         elif self._section == 1:
             # Gameplay subtitle
             bui.textwidget(
@@ -338,7 +327,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.quickturn.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.quickturn.sub"),
-                key="BSE: Quickturn",
+                key="quickturn",
             )
             s_pos_y -= 67.5
             bui.widget(edit=self._backbtn, down_widget=qt.get_button())
@@ -348,7 +337,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.chaos.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.chaos.sub"),
-                key="BSE: Chaos Mode",
+                key="chaos.enabled",
                 default=False,
             )
             s_pos_y -= 67.5
@@ -364,7 +353,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.skipscene.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.skipscene.sub"),
-                key="BSE: Skip Cutscenes",
+                key="skip_cutscenes",
                 choices_display=[
                     bui.Lstr(resource=f"{thk}.y"),
                     bui.Lstr(resource=f"{thk}.n"),
@@ -386,7 +375,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.menuTheme.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.menuTheme.sub"),
-                key="BSE: Menu Theme",
+                key="menu_theme",
                 default="Classic",
                 choices=[
                     "Classic",
@@ -414,7 +403,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.bseParticles.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.bseParticles.sub"),
-                key="BSE: Custom Particles",
+                key="particle_custom",
                 default="Max",
                 choices=["Max", "Min", "None"],
                 choices_display=[
@@ -430,7 +419,7 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=f"{self._r}.reducedParticles.name"),
                 subtitle=bui.Lstr(resource=f"{self._r}.reducedParticles.sub"),
-                key="BSE: Reduced Particles",
+                key="particle_redux",
                 default=False,
             )
             s_pos_y -= 67.5
@@ -440,15 +429,13 @@ class ExplodinarySettings(bui.Window):
                 position=(s_pos_x, s_pos_y),
                 title=bui.Lstr(resource=self._r + ".announceGame.name"),
                 subtitle=bui.Lstr(resource=self._r + ".announceGame.sub"),
-                key="BSE: Announce Games",
+                key="game_announcer",
                 default=False,
             )
             s_pos_y -= 67.5
 
     def _set_powerup_dist(self, v: str) -> None:
-        cfg = bui.app.config
-        cfg["BSE: Powerup Distribution"] = v
-        cfg.apply_and_commit()
+        bse.cfg.write('powerup_dist', v)
         self._update_powerup_container(v)
 
     def _update_powerup_container(self, dist: str) -> None:
@@ -628,7 +615,8 @@ class ExplodinarySettings(bui.Window):
             bui.app.ui_v1.set_main_menu_window(
                 allsettings.AllSettingsWindow(
                     transition="in_left"
-                ).get_root_widget()
+                ).get_root_widget(),
+                from_window=False
             )
 
     def _travel(self, left_right: int) -> None:
@@ -713,14 +701,10 @@ class ExplodinarySettings(bui.Window):
                 v_align="center",
             )
 
-        # Create quickturn value if it doesn't exist
-        bui.app.config[key] = bui.app.config.get(key, default)
-        bui.app.config.commit()
+        bse.cfg.fetch(key, default, do_set=True)
 
         def generic_save(v):
-            cfg = bui.app.config
-            cfg[key] = v
-            cfg.apply_and_commit()
+            bse.cfg.write(key, v)
 
             if on_change_call:
                 on_change_call()
@@ -733,6 +717,6 @@ class ExplodinarySettings(bui.Window):
             scale=self.popup_menu_scale,
             choices=choices,
             choices_display=choices_display,
-            current_choice=bui.app.config[key],
+            current_choice=bse.cfg.fetch(key),
             on_value_change_call=generic_save,
         )

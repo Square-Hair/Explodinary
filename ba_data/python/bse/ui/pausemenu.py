@@ -1052,7 +1052,8 @@ class PauseMenuWindow(bui.Window):
         bui.containerwidget(edit=self._root_widget, transition="out_right")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            KioskWindow(transition="in_left").get_root_widget()
+            KioskWindow(transition="in_left").get_root_widget(),
+            from_window=False
         )
 
     def _show_account_window(self) -> None:
@@ -1065,7 +1066,7 @@ class PauseMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             AccountSettingsWindow(
                 origin_widget=self._account_button
-            ).get_root_widget()
+            ).get_root_widget(), from_window=False
         )
 
     def _on_store_pressed(self) -> None:
@@ -1085,7 +1086,7 @@ class PauseMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             StoreBrowserWindow(
                 origin_widget=self._store_button
-            ).get_root_widget()
+            ).get_root_widget(), from_window=False
         )
 
     def _is_benchmark(self) -> bool:
@@ -1173,7 +1174,7 @@ class PauseMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             CreditsListWindow(
                 origin_widget=self._credits_button
-            ).get_root_widget()
+            ).get_root_widget(), from_window=False
         )
 
     def _howtoplay(self) -> None:
@@ -1186,7 +1187,7 @@ class PauseMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             HelpWindow(
                 main_menu=True, origin_widget=self._how_to_play_button
-            ).get_root_widget()
+            ).get_root_widget(), from_window=False
         )
 
     def _settings(self) -> None:
@@ -1199,7 +1200,7 @@ class PauseMenuWindow(bui.Window):
         bui.app.ui_v1.set_main_menu_window(
             AllSettingsWindow(
                 origin_widget=self._settings_button
-            ).get_root_widget()
+            ).get_root_widget(), from_window=False
         )
 
     def _resume_and_call(self, call: Callable[[], Any]) -> None:
@@ -1286,7 +1287,8 @@ class PauseMenuWindow(bui.Window):
         bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            GatherWindow(origin_widget=self._gather_button).get_root_widget()
+            GatherWindow(origin_widget=self._gather_button).get_root_widget(),
+            from_window=False
         )
 
     def _watch_press(self) -> None:
@@ -1297,7 +1299,8 @@ class PauseMenuWindow(bui.Window):
         bui.containerwidget(edit=self._root_widget, transition="out_left")
         assert bui.app.classic is not None
         bui.app.ui_v1.set_main_menu_window(
-            WatchWindow(origin_widget=self._watch_button).get_root_widget()
+            WatchWindow(origin_widget=self._watch_button).get_root_widget(),
+            from_window=False
         )
 
     def _play_press(self) -> None:
@@ -1310,7 +1313,8 @@ class PauseMenuWindow(bui.Window):
         assert bui.app.classic is not None
         bui.app.ui_v1.selecting_private_party_playlist = False
         bui.app.ui_v1.set_main_menu_window(
-            PlayWindow(origin_widget=self._start_button).get_root_widget()
+            PlayWindow(origin_widget=self._start_button).get_root_widget(),
+            from_window=False
         )
 
     def _resume(self) -> None:
